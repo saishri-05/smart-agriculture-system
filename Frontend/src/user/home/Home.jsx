@@ -10,7 +10,7 @@ import {
   ShieldAlert,
   Sprout,
 } from "lucide-react";
-import heroImage from "../../assets/hero.png";
+import heroImage from "../../assets/mycrop.jpg";
 
 const features = [
   { icon: BarChart3, title: "Real-time Farm Monitoring", text: "Monitor your farm conditions 24/7 with live sensor data." },
