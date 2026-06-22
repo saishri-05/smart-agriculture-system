@@ -1,5 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Home from "../user/home/Home";
+import Login from "../user/pages/Login";
+import Register from "../user/pages/Register";
 import Onboarding from "../user/onboarding/Onboarding";
 import Dashboard from "../user/dashboard/Dashboard";
 import Farms from "../user/farms/Farms";
@@ -15,7 +17,8 @@ function UserRoutes() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Navigate to="/onboarding" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/farms" element={<Farms />} />

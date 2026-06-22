@@ -9,58 +9,64 @@ const steps = [
   { label: "Confirmation", icon: Check },
 ];
 
+const inputClass = "w-full rounded-xl border-2 border-[#e8d5f5] bg-white px-6 py-5 text-lg outline-none transition-all duration-200 focus:border-[#c4a3e0] focus:ring-4 focus:ring-[#f0e6f6] placeholder:text-slate-400";
+const selectClass = "w-full rounded-xl border-2 border-[#e8d5f5] bg-white px-6 py-5 text-lg outline-none transition-all duration-200 focus:border-[#c4a3e0] focus:ring-4 focus:ring-[#f0e6f6]";
+
 function Onboarding() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const StepIcon = steps[step].icon;
 
   return (
-    <main className="min-h-screen bg-[#f7faf4] px-4 py-10 text-[#00112b]">
-      <section className="mx-auto max-w-5xl">
+    <main className="min-h-screen bg-gradient-to-br from-[#faf0f6] via-white to-[#f0e6f6] px-6 py-12 text-[#00112b]">
+      <section className="mx-auto max-w-3xl">
         <div className="text-center">
-          <h1 className="flex items-center justify-center gap-3 text-3xl font-black text-[#287c30] md:text-4xl">
-            <Sprout size={42} /> Welcome to Smart Agriculture
-          </h1>
-          <p className="mt-4 text-lg text-slate-700">Let's set up your first farm</p>
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-[#8e6abf] to-[#b39ddb] shadow-lg shadow-[#8e6abf]/30">
+            <Sprout className="text-white" size={44} />
+          </div>
+          <h1 className="mt-6 text-4xl font-black text-[#6b4f8a] md:text-5xl">Welcome to Smart Agriculture</h1>
+          <p className="mt-3 text-xl text-[#9a8aaa]">Let's set up your first farm</p>
         </div>
 
-        <div className="mx-auto mt-10 grid max-w-4xl grid-cols-4 items-start gap-3">
+        <div className="mx-auto mt-14 grid max-w-2xl grid-cols-4 items-start gap-4">
           {steps.map((item, index) => (
             <div key={item.label} className="text-center">
               <button
                 onClick={() => setStep(index)}
-                className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full text-lg font-black ${
-                  index <= step ? "bg-[#287c30] text-white" : "bg-slate-300 text-slate-700"
+                className={`mx-auto flex h-16 w-16 items-center justify-center rounded-2xl text-2xl font-black shadow-lg transition-all duration-200 ${
+                  index <= step
+                    ? "bg-gradient-to-br from-[#8e6abf] to-[#b39ddb] text-white shadow-[#8e6abf]/30 hover:scale-110"
+                    : "bg-[#ede7f6] text-[#9a8aaa] hover:bg-[#e0d4f0]"
                 }`}
               >
                 {index + 1}
               </button>
-              <p className="mt-3 text-sm font-semibold text-slate-700">{item.label}</p>
+              <p className="mt-3 text-sm font-bold text-[#6b5b7b]">{item.label}</p>
             </div>
           ))}
         </div>
 
-        <section className="mx-auto mt-10 max-w-4xl rounded-xl bg-white p-8 shadow-lg">
-          <div className="mb-6 flex items-center gap-4">
-            <span className="rounded-lg bg-green-100 p-4 text-[#287c30]">
-              <StepIcon size={38} />
+        <section className="mx-auto mt-10 rounded-3xl bg-white/80 p-10 shadow-2xl shadow-[#d1c4e9]/30 backdrop-blur-xl ring-1 ring-[#ede7f6]">
+          <div className="mb-8 flex items-center gap-5">
+            <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#ede7f6] to-[#f0e6f6] text-[#8e6abf] shadow-md">
+              <StepIcon size={40} />
             </span>
-            <h2 className="text-3xl font-black text-[#287c30]">{steps[step].label}</h2>
+            <h2 className="text-3xl font-black text-[#8e6abf]">{steps[step].label}</h2>
           </div>
 
           {step === 0 && (
             <div className="space-y-6">
               <label className="block">
-                <span className="mb-2 block font-black">Farmer Name *</span>
-                <input className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#287c30]" placeholder="John Doe" />
+                <span className="mb-2 block text-sm font-black uppercase tracking-wide text-[#8e6abf]">Farmer Name *</span>
+                <input className={inputClass} placeholder="John Doe" />
               </label>
               <label className="block">
-                <span className="mb-2 block font-black">Phone Number *</span>
-                <input className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#287c30]" placeholder="+1 (555) 123-4567" />
+                <span className="mb-2 block text-sm font-black uppercase tracking-wide text-[#8e6abf]">Phone Number *</span>
+                <input className={inputClass} placeholder="+1 (555) 123-4567" />
               </label>
               <label className="block">
-                <span className="mb-2 block font-black">Region / Country *</span>
-                <input className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#287c30]" placeholder="California, USA" />
+                <span className="mb-2 block text-sm font-black uppercase tracking-wide text-[#8e6abf]">Region / Country *</span>
+                <input className={inputClass} placeholder="California, USA" />
               </label>
             </div>
           )}
@@ -68,16 +74,16 @@ function Onboarding() {
           {step === 1 && (
             <div className="grid gap-6 md:grid-cols-2">
               <label className="block">
-                <span className="mb-2 block font-black">Farm Name *</span>
-                <input className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#287c30]" placeholder="Green Valley Farm" />
+                <span className="mb-2 block text-sm font-black uppercase tracking-wide text-[#8e6abf]">Farm Name *</span>
+                <input className={inputClass} placeholder="Green Valley Farm" />
               </label>
               <label className="block">
-                <span className="mb-2 block font-black">Farm Area *</span>
-                <input className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#287c30]" placeholder="18 acres" />
+                <span className="mb-2 block text-sm font-black uppercase tracking-wide text-[#8e6abf]">Farm Area *</span>
+                <input className={inputClass} placeholder="18 acres" />
               </label>
               <label className="block">
-                <span className="mb-2 block font-black">Main Crop *</span>
-                <select className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#287c30]">
+                <span className="mb-2 block text-sm font-black uppercase tracking-wide text-[#8e6abf]">Main Crop *</span>
+                <select className={selectClass}>
                   <option>Rice</option>
                   <option>Wheat</option>
                   <option>Corn</option>
@@ -85,8 +91,8 @@ function Onboarding() {
                 </select>
               </label>
               <label className="block">
-                <span className="mb-2 block font-black">Soil Type *</span>
-                <select className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#287c30]">
+                <span className="mb-2 block text-sm font-black uppercase tracking-wide text-[#8e6abf]">Soil Type *</span>
+                <select className={selectClass}>
                   <option>Loamy Soil</option>
                   <option>Clay Soil</option>
                   <option>Black Soil</option>
@@ -98,47 +104,50 @@ function Onboarding() {
           {step === 2 && (
             <div className="space-y-6">
               <label className="block">
-                <span className="mb-2 block font-black">Village / City *</span>
-                <input className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#287c30]" placeholder="Village or city name" />
+                <span className="mb-2 block text-sm font-black uppercase tracking-wide text-[#8e6abf]">Village / City *</span>
+                <input className={inputClass} placeholder="Village or city name" />
               </label>
               <label className="block">
-                <span className="mb-2 block font-black">Irrigation Method *</span>
-                <select className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#287c30]">
+                <span className="mb-2 block text-sm font-black uppercase tracking-wide text-[#8e6abf]">Irrigation Method *</span>
+                <select className={selectClass}>
                   <option>Drip Irrigation</option>
                   <option>Sprinkler</option>
                   <option>Canal Water</option>
                   <option>Manual Watering</option>
                 </select>
               </label>
-              <div className="rounded-lg border-2 border-dashed border-[#287c30] bg-green-50 p-8 text-center font-black text-[#287c30]">
-                Map location can be added here
+              <div className="rounded-2xl border-2 border-dashed border-[#d1c4e9] bg-gradient-to-br from-[#faf0f6] to-[#f0e6f6] p-12 text-center">
+                <MapPin className="mx-auto text-[#b39ddb]" size={52} />
+                <p className="mt-4 text-xl font-black text-[#8e6abf]">Map location can be added here</p>
               </div>
             </div>
           )}
 
           {step === 3 && (
-            <div className="text-center">
-              <Check className="mx-auto rounded-full bg-[#287c30] p-4 text-white" size={86} />
-              <h2 className="mt-6 text-3xl font-black">Your farm is ready</h2>
-              <p className="mx-auto mt-3 max-w-xl text-lg text-slate-700">
+            <div className="py-6 text-center">
+              <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-3xl bg-gradient-to-br from-[#8e6abf] to-[#b39ddb] shadow-xl shadow-[#8e6abf]/30">
+                <Check className="text-white" size={60} />
+              </div>
+              <h2 className="mt-8 text-4xl font-black text-[#6b4f8a]">Your farm is ready</h2>
+              <p className="mx-auto mt-4 max-w-xl text-xl text-[#9a8aaa]">
                 You can now monitor weather, soil, robots, alerts, and crop health from the dashboard.
               </p>
             </div>
           )}
         </section>
 
-        <div className="mx-auto mt-8 flex max-w-4xl justify-between">
+        <div className="mx-auto mt-8 flex max-w-3xl justify-between">
           <button
             onClick={() => (step === 0 ? navigate("/dashboard") : setStep(step - 1))}
-            className="inline-flex items-center gap-2 rounded-lg bg-slate-300 px-6 py-4 text-lg font-black text-slate-700"
+            className="inline-flex items-center gap-3 rounded-2xl bg-[#ede7f6] px-8 py-5 text-xl font-black text-[#6b5b7b] shadow-lg transition-all duration-200 hover:scale-[1.02] hover:bg-[#e0d4f0] hover:shadow-xl active:scale-[0.98]"
           >
-            <ChevronLeft size={22} /> Back
+            <ChevronLeft size={28} /> Back
           </button>
           <button
             onClick={() => (step === steps.length - 1 ? navigate("/dashboard") : setStep(step + 1))}
-            className="inline-flex items-center gap-2 rounded-lg bg-[#287c30] px-6 py-4 text-lg font-black text-white"
+            className="inline-flex items-center gap-3 rounded-2xl bg-gradient-to-r from-[#8e6abf] to-[#b39ddb] px-8 py-5 text-xl font-black text-white shadow-lg shadow-[#8e6abf]/30 transition-all duration-200 hover:scale-[1.02] hover:shadow-xl hover:shadow-[#8e6abf]/40 active:scale-[0.98]"
           >
-            {step === steps.length - 1 ? "Open Dashboard" : "Next"} <ChevronRight size={22} />
+            {step === steps.length - 1 ? "Open Dashboard" : "Next"} <ChevronRight size={28} />
           </button>
         </div>
       </section>
