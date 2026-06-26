@@ -28,10 +28,10 @@ function Robots() {
       <section className="mx-auto max-w-7xl space-y-8">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h1 className="text-3xl font-black text-[#287c30] md:text-4xl">Robot Management</h1>
+            <h1 className="text-3xl font-black text-[#132D4A] md:text-4xl">Robot Management</h1>
             <p className="mt-2 text-lg text-slate-700">Monitor and manage your agricultural robots</p>
           </div>
-          <button className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#287c30] px-6 py-4 text-lg font-black text-white">
+          <button className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#132D4A] px-6 py-4 text-lg font-black text-white">
             <Plus size={24} /> Add Robot
           </button>
         </div>
@@ -49,7 +49,7 @@ function Robots() {
                   <p className="text-lg text-slate-700">{label}</p>
                   <p className="mt-3 text-4xl font-black">{value}</p>
                 </div>
-                <Icon className="text-[#287c30]" size={30} />
+                <Icon className="text-[#132D4A]" size={30} />
               </div>
             </article>
           ))}
@@ -58,7 +58,7 @@ function Robots() {
         <section className="overflow-hidden rounded-xl bg-white shadow-lg">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[980px] text-left">
-              <thead className="border-b bg-[#fbfdf8]">
+              <thead className="border-b bg-[#F0F6FC]">
                 <tr>
                   {["Robot ID", "Robot Name", "Battery", "Assigned Farm", "Status", "Location", "Actions"].map((head) => (
                     <th key={head} className="px-6 py-5 font-black">{head}</th>
@@ -71,7 +71,7 @@ function Robots() {
                     <td className="px-6 py-5 font-semibold">{robot.id}</td>
                     <td className="px-6 py-5">
                       <div className="flex items-center gap-4">
-                        <span className="rounded-lg bg-[#287c30] p-3 text-white">
+                        <span className="rounded-lg bg-[#132D4A] p-3 text-white">
                           <Bot size={28} />
                         </span>
                         <div>
@@ -97,7 +97,7 @@ function Robots() {
                     <td className="px-6 py-5">{robot.location}</td>
                     <td className="px-6 py-5">
                       <div className="flex items-center gap-4">
-                        <Eye className="text-[#287c30]" size={22} />
+                        <Eye className="text-[#132D4A]" size={22} />
                         {robot.farm === "Not assigned" ? <LinkIcon className="text-blue-600" size={22} /> : <XCircle className="text-red-500" size={22} />}
                       </div>
                     </td>

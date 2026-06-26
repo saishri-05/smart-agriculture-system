@@ -23,7 +23,7 @@ function RobotAssignment() {
     <AppShell>
       <section className="mx-auto max-w-7xl space-y-8">
         <div>
-          <h1 className="text-3xl font-black text-[#287c30] md:text-4xl">Robot Assignment</h1>
+          <h1 className="text-3xl font-black text-[#132D4A] md:text-4xl">Robot Assignment</h1>
           <p className="mt-2 text-lg text-slate-700">Assign robots to farms by selecting a robot and farm</p>
         </div>
 
@@ -60,7 +60,7 @@ function RobotAssignment() {
                 <article key={robot.id} className="rounded-xl border bg-white p-5 shadow-sm">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-center gap-4">
-                      <span className="rounded-lg bg-[#287c30] p-4 text-white">
+                      <span className="rounded-lg bg-[#132D4A] p-4 text-white">
                         <Bot size={34} />
                       </span>
                       <div>
@@ -88,7 +88,7 @@ function RobotAssignment() {
               {farms.map((farm) => (
                 <article key={farm.name} className="rounded-xl border bg-white p-5 shadow-sm">
                   <div className="flex gap-4">
-                    <span className="rounded-lg bg-[#2e7d32]/80 p-4 text-white">
+                    <span className="rounded-lg bg-[#0F2440]/80 p-4 text-white">
                       <MapPin size={34} />
                     </span>
                     <div>
@@ -100,8 +100,8 @@ function RobotAssignment() {
                   {farm.robots.length ? (
                     <div className="mt-3 space-y-2">
                       {farm.robots.map((robot) => (
-                        <div key={robot} className="flex items-center justify-between rounded-lg bg-[#f7faf4] px-4 py-3 font-black">
-                          <span className="flex items-center gap-2"><Bot size={18} className="text-[#287c30]" /> {robot}</span>
+                        <div key={robot} className="flex items-center justify-between rounded-lg bg-[#E8F0F8] px-4 py-3 font-black">
+                          <span className="flex items-center gap-2"><Bot size={18} className="text-[#132D4A]" /> {robot}</span>
                           <X className="text-red-500" size={20} />
                         </div>
                       ))}

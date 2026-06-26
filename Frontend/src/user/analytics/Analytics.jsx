@@ -31,7 +31,7 @@ const sensorData = [
 
 const performance = [
   { title: "Growth Status", value: "Healthy", note: "85% optimal", icon: CheckCircle2, color: "bg-green-500 text-white" },
-  { title: "Harvest In", value: "12 Days", note: "Oct 25, 2026", icon: CalendarDays, color: "bg-[#237529] text-white", dark: true },
+  { title: "Harvest In", value: "12 Days", note: "Oct 25, 2026", icon: CalendarDays, color: "bg-[#1E4468] text-white", dark: true },
   { title: "Yield", value: "2.3 Tons", note: "↗ +15%", icon: TrendingUp, color: "bg-orange-500 text-white" },
   { title: "Net Profit", value: "₹17K", note: "Revenue: ₹45K", icon: DollarSign, color: "bg-green-600 text-white" },
 ];
@@ -40,7 +40,7 @@ const charts = [
   { title: "Temperature", value: "28°C", status: "Normal", dataKey: "temperature", color: "#ff5b1a", icon: Thermometer, iconBg: "bg-orange-500" },
   { title: "Soil Moisture", value: "56%", status: "Low", dataKey: "moisture", color: "#2f7df6", icon: Droplets, iconBg: "bg-blue-500" },
   { title: "Humidity", value: "72%", status: "Normal", dataKey: "humidity", color: "#06b6d4", icon: Droplets, iconBg: "bg-cyan-500" },
-  { title: "NPK Level", value: "45 ppm", status: "Optimal", dataKey: "npk", color: "#2e7d32", icon: Leaf, iconBg: "bg-green-700" },
+  { title: "NPK Level", value: "45 ppm", status: "Optimal", dataKey: "npk", color: "#0F2440", icon: Leaf, iconBg: "bg-[#0F2440]" },
 ];
 
 function Analytics() {
@@ -49,14 +49,14 @@ function Analytics() {
       <section className="mx-auto max-w-7xl space-y-8">
         <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
           <div>
-            <h1 className="text-3xl font-black text-[#287c30] md:text-4xl">Analytics - Green Valley Farm (Rice)</h1>
+            <h1 className="text-3xl font-black text-[#132D4A] md:text-4xl">Analytics - Green Valley Farm (Rice)</h1>
             <p className="mt-2 text-lg text-slate-700">Real-time sensor data and performance metrics</p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {["Select Farm", "Select Crop"].map((label, index) => (
               <label key={label}>
                 <span className="mb-2 block font-semibold">{label}</span>
-                <select className="w-full rounded-lg border-2 border-[#287c30] bg-white px-5 py-4 text-lg font-bold outline-none">
+                <select className="w-full rounded-lg border-2 border-[#132D4A] bg-white px-5 py-4 text-lg font-bold outline-none">
                   <option>{index === 0 ? "Green Valley Farm" : "Rice"}</option>
                 </select>
               </label>
@@ -68,7 +68,7 @@ function Analytics() {
           <h2 className="mb-6 text-2xl font-black">Crop Performance</h2>
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
             {performance.map((item) => (
-              <article key={item.title} className={`rounded-xl p-6 shadow-lg ${item.dark ? "bg-[#237529] text-white" : "bg-white"}`}>
+              <article key={item.title} className={`rounded-xl p-6 shadow-lg ${item.dark ? "bg-[#1E4468] text-white" : "bg-white"}`}>
                 <div className="mb-5 flex items-center gap-4">
                   <span className={`rounded-lg p-3 ${item.color}`}>
                     <item.icon size={30} />
@@ -76,7 +76,7 @@ function Analytics() {
                   <h3 className="font-black">{item.title}</h3>
                 </div>
                 <p className={`text-4xl font-black ${item.value === "Healthy" ? "text-green-600" : ""}`}>{item.value}</p>
-                <p className={`mt-2 text-sm ${item.dark ? "text-green-100" : "text-slate-600"}`}>{item.note}</p>
+                <p className={`mt-2 text-sm ${item.dark ? "text-blue-200" : "text-slate-600"}`}>{item.note}</p>
               </article>
             ))}
           </div>
@@ -87,7 +87,7 @@ function Analytics() {
             <h2 className="text-2xl font-black">Sensor Analytics</h2>
             <label className="w-full max-w-48">
               <span className="mb-2 block font-semibold">Graph Type</span>
-              <select className="w-full rounded-lg border-2 border-[#287c30] bg-white px-5 py-4 text-lg font-bold outline-none">
+              <select className="w-full rounded-lg border-2 border-[#132D4A] bg-white px-5 py-4 text-lg font-bold outline-none">
                 <option>Line Chart</option>
               </select>
             </label>
@@ -132,7 +132,7 @@ function Analytics() {
 
         <section className="rounded-xl bg-white p-6 shadow-lg">
           <h2 className="flex items-center gap-3 text-2xl font-black">
-            <Sprout className="text-[#287c30]" size={34} /> Farmer Summary
+            <Sprout className="text-[#132D4A]" size={34} /> Farmer Summary
           </h2>
           <p className="mt-3 text-lg text-slate-700">
             Rice crop is healthy. Water is slightly low, so irrigate Sector A for 20 minutes today.

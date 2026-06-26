@@ -13,20 +13,20 @@ function Farms() {
       <section className="mx-auto max-w-7xl space-y-8">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h1 className="text-3xl font-black text-[#287c30] md:text-4xl">Farms</h1>
+            <h1 className="text-3xl font-black text-[#132D4A] md:text-4xl">Farms</h1>
             <p className="mt-2 text-lg text-slate-700">Simple view of your fields, crops, water, and soil health</p>
           </div>
-          <button className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#287c30] px-6 py-4 text-lg font-black text-white">
+          <button className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#132D4A] px-6 py-4 text-lg font-black text-white">
             <Plus size={24} /> Add Farm
           </button>
         </div>
 
         <div className="flex flex-col gap-4 rounded-xl bg-white p-5 shadow-lg md:flex-row">
           <label className="flex flex-1 items-center gap-3 rounded-lg border px-4 py-3">
-            <Search className="text-[#287c30]" size={24} />
+            <Search className="text-[#132D4A]" size={24} />
             <input className="w-full text-lg outline-none" placeholder="Search farm or crop" />
           </label>
-          <select className="rounded-lg border-2 border-[#287c30] bg-white px-5 py-3 text-lg font-bold outline-none">
+          <select className="rounded-lg border-2 border-[#132D4A] bg-white px-5 py-3 text-lg font-bold outline-none">
             <option>All Farms</option>
             <option>Active</option>
             <option>Monitoring</option>
@@ -47,14 +47,14 @@ function Farms() {
                 </span>
               </div>
 
-              <div className="mt-4 flex items-center gap-2 text-lg font-bold text-[#287c30]">
+              <div className="mt-4 flex items-center gap-2 text-lg font-bold text-[#132D4A]">
                 <Leaf size={20} /> {farm.crop}
               </div>
 
               <div className="mt-6 space-y-5">
                 <div>
                   <div className="mb-2 flex justify-between font-black"><span className="flex items-center gap-2"><FlaskConical size={18} /> Fertilizer Level</span><span>{farm.fertilizer}%</span></div>
-                  <div className="h-3 rounded-full bg-slate-200"><div className="h-3 rounded-full bg-[#287c30]" style={{ width: `${farm.fertilizer}%` }} /></div>
+                  <div className="h-3 rounded-full bg-slate-200"><div className="h-3 rounded-full bg-[#132D4A]" style={{ width: `${farm.fertilizer}%` }} /></div>
                 </div>
                 <div>
                   <div className="mb-2 flex justify-between font-black"><span className="flex items-center gap-2"><Droplets size={18} /> Water Level</span><span>{farm.water}%</span></div>
@@ -63,7 +63,7 @@ function Farms() {
               </div>
 
               <div className="mt-6 grid grid-cols-3 gap-3">
-                <button className="rounded-lg bg-green-100 p-3 text-[#287c30]"><Eye className="mx-auto" /></button>
+                <button className="rounded-lg bg-[#D0E0F0] p-3 text-[#132D4A]"><Eye className="mx-auto" /></button>
                 <button className="rounded-lg bg-blue-100 p-3 text-blue-700"><Pencil className="mx-auto" /></button>
                 <button className="rounded-lg bg-red-100 p-3 text-red-600"><Trash2 className="mx-auto" /></button>
               </div>

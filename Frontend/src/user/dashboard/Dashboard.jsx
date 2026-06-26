@@ -6,8 +6,8 @@ import { Bell, Bot, CheckCircle2, Clock, Droplets, FlaskConical, Leaf, MapPin, S
 import AppShell from "../components/AppShell";
 
 const sectors = [
-  { id: 1, name: "Sector A", status: "completed", area: "5.2 acres", crop: "Rice", color: "bg-green-500", mapColor: "#2e7d32", coords: [[28.6239, 77.2090], [28.6339, 77.2090], [28.6339, 77.2190], [28.6239, 77.2190]] },
-  { id: 2, name: "Sector B", status: "completed", area: "4.8 acres", crop: "Wheat", color: "bg-green-500", mapColor: "#2e7d32", coords: [[28.6239, 77.2190], [28.6339, 77.2190], [28.6339, 77.2290], [28.6239, 77.2290]] },
+  { id: 1, name: "Sector A", status: "completed", area: "5.2 acres", crop: "Rice", color: "bg-green-500", mapColor: "#0F2440", coords: [[28.6239, 77.2090], [28.6339, 77.2090], [28.6339, 77.2190], [28.6239, 77.2190]] },
+  { id: 2, name: "Sector B", status: "completed", area: "4.8 acres", crop: "Wheat", color: "bg-green-500", mapColor: "#0F2440", coords: [[28.6239, 77.2190], [28.6339, 77.2190], [28.6339, 77.2290], [28.6239, 77.2290]] },
   { id: 3, name: "Sector C", status: "in-progress", area: "3.5 acres", crop: "Corn", color: "bg-amber-500", mapColor: "#f59e0b", coords: [[28.6139, 77.2090], [28.6239, 77.2090], [28.6239, 77.2190], [28.6139, 77.2190]] },
   { id: 4, name: "Sector D", status: "pending", area: "6.0 acres", crop: "Tomato", color: "bg-slate-400", mapColor: "#94a3b8", coords: [[28.6139, 77.2190], [28.6239, 77.2190], [28.6239, 77.2290], [28.6139, 77.2290]] },
 ];
@@ -76,12 +76,12 @@ function Dashboard() {
       <section className="mx-auto max-w-7xl space-y-8">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
           <div>
-            <h1 className="text-3xl font-black text-[#287c30] md:text-4xl">Farm Dashboard</h1>
+            <h1 className="text-3xl font-black text-[#132D4A] md:text-4xl">Farm Dashboard</h1>
             <p className="mt-2 text-lg text-slate-700">Overview of your farm sectors and activity</p>
           </div>
           <label className="w-full max-w-xs">
             <span className="mb-2 block font-semibold">Select Farm</span>
-            <select className="w-full rounded-lg border-2 border-[#287c30] bg-white px-5 py-4 text-lg font-bold outline-none">
+            <select className="w-full rounded-lg border-2 border-[#132D4A] bg-white px-5 py-4 text-lg font-bold outline-none">
               <option>Green Valley Farm</option>
             </select>
           </label>
@@ -90,14 +90,14 @@ function Dashboard() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <article className="rounded-xl bg-white p-6 shadow-lg">
             <div className="mb-4 flex items-center gap-3">
-              <span className="rounded-lg bg-green-100 p-3 text-green-700"><MapPin size={28} /></span>
+              <span className="rounded-lg bg-[#D0E0F0] p-3 text-[#132D4A]"><MapPin size={28} /></span>
               <p className="text-lg font-semibold text-slate-700">Total Sectors</p>
             </div>
             <p className="text-5xl font-black">{sectors.length}</p>
           </article>
           <article className="rounded-xl bg-white p-6 shadow-lg">
             <div className="mb-4 flex items-center gap-3">
-              <span className="rounded-lg bg-green-100 p-3 text-green-700"><CheckCircle2 size={28} /></span>
+              <span className="rounded-lg bg-[#D0E0F0] p-3 text-[#132D4A]"><CheckCircle2 size={28} /></span>
               <p className="text-lg font-semibold text-slate-700">Completed</p>
             </div>
             <p className="text-5xl font-black text-green-600">{completed}</p>
@@ -120,7 +120,7 @@ function Dashboard() {
 
         <section className="rounded-xl bg-white p-6 shadow-lg">
           <div className="mb-6 flex items-center gap-4">
-            <span className="rounded-lg bg-[#2e7d32] p-3 text-white"><Bot size={32} /></span>
+            <span className="rounded-lg bg-[#0F2440] p-3 text-white"><Bot size={32} /></span>
             <div>
               <h2 className="text-2xl font-black">Robot Status</h2>
               <p className="text-slate-600">Fleet Overview</p>
@@ -147,7 +147,7 @@ function Dashboard() {
 
         <section className="rounded-xl bg-white p-6 shadow-lg">
           <div className="mb-6 flex items-center gap-4">
-            <span className="rounded-lg bg-[#2e7d32] p-3 text-white"><Leaf size={32} /></span>
+            <span className="rounded-lg bg-[#0F2440] p-3 text-white"><Leaf size={32} /></span>
             <div>
               <h2 className="text-2xl font-black">Soil &amp; Water Levels</h2>
               <p className="text-slate-600">Real-time sensor readings across your farm</p>
@@ -199,7 +199,7 @@ function Dashboard() {
           <section className="rounded-xl bg-white p-6 shadow-lg">
             <h2 className="mb-1 text-2xl font-black">Farm Sectors Map</h2>
             <p className="mb-5 text-slate-600">Click on a sector for details</p>
-            <div className="h-[420px] overflow-hidden rounded-xl border-2 border-[#287c30]">
+            <div className="h-[420px] overflow-hidden rounded-xl border-2 border-[#132D4A]">
               <MapContainer center={[28.6239, 77.2190]} zoom={14} className="h-full w-full">
                 <TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -215,8 +215,8 @@ function Dashboard() {
             <p className="mb-5 text-slate-600">Latest updates across your farm</p>
             <div className="space-y-4">
               {recentActivity.map((item, i) => (
-                <div key={i} className="flex items-start gap-4 rounded-lg bg-[#f6f9f0] p-4">
-                  <span className="mt-1 rounded-lg bg-[#287c30] p-2 text-white">
+                <div key={i} className="flex items-start gap-4 rounded-lg bg-[#E8F0F8] p-4">
+                  <span className="mt-1 rounded-lg bg-[#132D4A] p-2 text-white">
                     <item.icon size={18} />
                   </span>
                   <div className="flex-1">
@@ -233,7 +233,7 @@ function Dashboard() {
           <h2 className="mb-5 text-2xl font-black">Sector Overview</h2>
           <div className="space-y-3">
             {sectors.map((s) => (
-              <div key={s.id} className="flex items-center justify-between rounded-lg border border-slate-200 bg-[#fafcfa] px-5 py-4">
+              <div key={s.id} className="flex items-center justify-between rounded-lg border border-slate-200 bg-[#F0F6FC] px-5 py-4">
                 <div className="flex items-center gap-4">
                   {statusIcon(s)}
                   <div>

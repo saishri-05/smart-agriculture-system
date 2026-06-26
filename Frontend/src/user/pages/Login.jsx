@@ -1,19 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Leaf, LogIn } from "lucide-react";
 
-const inputClass = "w-full rounded-lg border border-slate-300 bg-white px-5 py-4 text-lg outline-none focus:border-[#287c30]";
+const inputClass = "w-full rounded-lg border border-slate-300 bg-white px-5 py-4 text-lg outline-none focus:border-[#132D4A]";
 
 function Login() {
   const navigate = useNavigate();
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#f6f9f0] px-4">
+    <main className="flex min-h-screen items-center justify-center bg-[#E8F0F8] px-4">
       <section className="w-full max-w-md rounded-xl bg-white p-10 shadow-lg">
         <div className="text-center">
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-xl bg-[#2a7a2a] shadow-md">
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-xl bg-[#1A3A5C] shadow-md">
             <LogIn className="text-white" size={40} />
           </div>
-          <h1 className="mt-6 text-4xl font-black text-[#1f5e1f]">Welcome Back</h1>
+          <h1 className="mt-6 text-4xl font-black text-[#0B1D3A]">Welcome Back</h1>
           <p className="mt-2 text-lg text-slate-600">Sign in to your Smart Agriculture dashboard</p>
         </div>
 
@@ -29,22 +29,22 @@ function Login() {
 
           <div className="flex items-center justify-between">
             <label className="flex cursor-pointer items-center gap-3">
-              <input type="checkbox" className="h-5 w-5 accent-[#2a7a2a]" />
+              <input type="checkbox" className="h-5 w-5 accent-[#1A3A5C]" />
               <span className="text-slate-600">Remember me</span>
             </label>
-            <a href="#" className="font-bold text-slate-500 transition hover:text-[#2a7a2a]">Forgot password?</a>
+            <a href="#" className="font-bold text-slate-500 transition hover:text-[#1A3A5C]">Forgot password?</a>
           </div>
 
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-3 rounded-lg bg-[#2a7a2a] px-10 py-4 text-xl font-black text-white shadow-md transition hover:bg-[#1f5e1f]"
+            className="flex w-full items-center justify-center gap-3 rounded-lg bg-[#1A3A5C] px-10 py-4 text-xl font-black text-white shadow-md transition hover:bg-[#0B1D3A]"
           >
             <Leaf size={24} /> Sign In
           </button>
         </form>
 
         <p className="mt-8 text-center">
-          <Link to="/" className="font-semibold text-slate-600 transition hover:text-[#2a7a2a]">← Back to Home</Link>
+          <Link to="/" className="font-semibold text-slate-600 transition hover:text-[#1A3A5C]">← Back to Home</Link>
         </p>
       </section>
     </main>

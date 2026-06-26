@@ -52,7 +52,7 @@ function DrawControl({ boundary, setBoundary, drawMode }) {
       points.forEach((p, i) => {
         L.circleMarker(p, {
           radius: 6,
-          color: "#2a7a2a",
+          color: "#1A3A5C",
           fillColor: "#fff",
           fillOpacity: 1,
           weight: 3,
@@ -62,11 +62,11 @@ function DrawControl({ boundary, setBoundary, drawMode }) {
       });
 
       if (points.length >= 2) {
-        L.polyline(points, { color: "#2a7a2a", weight: 2, dashArray: "6 4" }).addTo(group);
+        L.polyline(points, { color: "#1A3A5C", weight: 2, dashArray: "6 4" }).addTo(group);
       }
 
       if (points.length >= 3) {
-        L.polygon(points, { color: "#2a7a2a", weight: 3, fillOpacity: 0.2 }).addTo(group);
+        L.polygon(points, { color: "#1A3A5C", weight: 3, fillOpacity: 0.2 }).addTo(group);
         map.fitBounds(group.getBounds().pad(0.2));
       }
     }
@@ -153,21 +153,21 @@ function Onboarding() {
         <label className="block">
           <span className="mb-2 block font-black">Farmer Name *</span>
           <input value={form.farmerName} onChange={(e) => update("farmerName", e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#287c30]"
+            className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#132D4A]"
             placeholder="John Doe" />
           {errors.farmerName && <p className="mt-1 text-sm font-bold text-red-500">{errors.farmerName}</p>}
         </label>
         <label className="block">
           <span className="mb-2 block font-black">Phone Number *</span>
           <input value={form.phone} onChange={(e) => update("phone", e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#287c30]"
+            className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#132D4A]"
             placeholder="+1 (555) 123-4567" />
           {errors.phone && <p className="mt-1 text-sm font-bold text-red-500">{errors.phone}</p>}
         </label>
         <label className="block">
           <span className="mb-2 block font-black">Region / Country *</span>
           <input value={form.region} onChange={(e) => update("region", e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#287c30]"
+            className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#132D4A]"
             placeholder="California, USA" />
           {errors.region && <p className="mt-1 text-sm font-bold text-red-500">{errors.region}</p>}
         </label>
@@ -181,21 +181,21 @@ function Onboarding() {
         <label className="block">
           <span className="mb-2 block font-black">Farm Name *</span>
           <input value={form.farmName} onChange={(e) => update("farmName", e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#287c30]"
+            className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#132D4A]"
             placeholder="Green Valley Farm" />
           {errors.farmName && <p className="mt-1 text-sm font-bold text-red-500">{errors.farmName}</p>}
         </label>
         <label className="block">
           <span className="mb-2 block font-black">Farm Area *</span>
           <input value={form.farmArea} onChange={(e) => update("farmArea", e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#287c30]"
+            className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#132D4A]"
             placeholder="18 acres" />
           {errors.farmArea && <p className="mt-1 text-sm font-bold text-red-500">{errors.farmArea}</p>}
         </label>
         <label className="block">
           <span className="mb-2 block font-black">Main Crop *</span>
           <select value={form.crop} onChange={(e) => update("crop", e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#287c30]">
+            className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#132D4A]">
             <option value="">Select crop</option>
             <option>Rice</option>
             <option>Wheat</option>
@@ -207,7 +207,7 @@ function Onboarding() {
         <label className="block">
           <span className="mb-2 block font-black">Soil Type *</span>
           <select value={form.soil} onChange={(e) => update("soil", e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#287c30]">
+            className="w-full rounded-lg border border-slate-300 px-5 py-4 text-lg outline-none focus:border-[#132D4A]">
             <option value="">Select soil type</option>
             <option>Loamy Soil</option>
             <option>Clay Soil</option>
@@ -231,13 +231,13 @@ function Onboarding() {
             <div className="flex-1 min-w-[180px]">
               <span className="mb-2 block text-sm font-black uppercase tracking-wide text-slate-700">Latitude</span>
               <input type="number" step="any" value={latInput} onChange={(e) => setLatInput(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-lg outline-none focus:border-[#287c30]"
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-lg outline-none focus:border-[#132D4A]"
                 placeholder="28.6139" />
             </div>
             <div className="flex-1 min-w-[180px]">
               <span className="mb-2 block text-sm font-black uppercase tracking-wide text-slate-700">Longitude</span>
               <input type="number" step="any" value={lngInput} onChange={(e) => setLngInput(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-lg outline-none focus:border-[#287c30]"
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-lg outline-none focus:border-[#132D4A]"
                 placeholder="77.2090" />
             </div>
             <div className="flex items-end">
@@ -250,14 +250,14 @@ function Onboarding() {
                   setLatInput("");
                   setLngInput("");
                 }}
-                className="rounded-lg bg-[#287c30] px-6 py-3 text-lg font-black text-white hover:bg-[#1f5e1f]">
+                className="rounded-lg bg-[#132D4A] px-6 py-3 text-lg font-black text-white hover:bg-[#0B1D3A]">
                 Add Point
               </button>
             </div>
           </div>
         )}
 
-        <div className="relative h-[400px] overflow-hidden rounded-xl border-2 border-[#287c30] shadow-md">
+        <div className="relative h-[400px] overflow-hidden rounded-xl border-2 border-[#132D4A] shadow-md">
           <MapContainer center={[20, 78]} zoom={5} className="h-full w-full">
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -273,9 +273,9 @@ function Onboarding() {
         </div>
 
         {boundary && boundary.length > 0 && (
-          <div className="rounded-lg border border-slate-200 bg-[#f6f9f0] p-4">
+          <div className="rounded-lg border border-slate-200 bg-[#E8F0F8] p-4">
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="font-black text-[#287c30]">Farm Boundary Coordinates</h3>
+              <h3 className="font-black text-[#132D4A]">Farm Boundary Coordinates</h3>
               <button type="button" onClick={() => setBoundary(null)}
                 className="inline-flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-sm font-black text-white">
                 <Trash2 size={16} /> Clear All
@@ -285,7 +285,7 @@ function Onboarding() {
               {boundary.map((coord, i) => (
                 <div key={i} className="flex items-center justify-between rounded-lg bg-white px-4 py-3 shadow-sm">
                   <div>
-                    <span className="font-black text-[#287c30]">Point {i + 1}:</span>
+                    <span className="font-black text-[#132D4A]">Point {i + 1}:</span>
                     <span className="ml-2 text-slate-700">{coord[0]}, {coord[1]}</span>
                   </div>
                   <button type="button"
@@ -311,7 +311,7 @@ function Onboarding() {
   function renderStep3() {
     return (
       <div className="text-center">
-        <Check className="mx-auto rounded-full bg-[#287c30] p-4 text-white" size={86} />
+        <Check className="mx-auto rounded-full bg-[#132D4A] p-4 text-white" size={86} />
         <h2 className="mt-6 text-3xl font-black">Your farm is ready</h2>
         <div className="mx-auto mt-6 max-w-md space-y-3 text-left">
           {[
@@ -324,9 +324,9 @@ function Onboarding() {
             ["Soil", form.soil],
             ["Boundary Points", boundary ? boundary.length : 0],
           ].map(([label, value]) => (
-            <div key={label} className="flex justify-between rounded-lg bg-[#f6f9f0] px-5 py-3">
+            <div key={label} className="flex justify-between rounded-lg bg-[#E8F0F8] px-5 py-3">
               <span className="font-bold text-slate-600">{label}</span>
-              <span className="font-black text-[#287c30]">{value}</span>
+              <span className="font-black text-[#132D4A]">{value}</span>
             </div>
           ))}
         </div>
@@ -338,10 +338,10 @@ function Onboarding() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f7faf4] px-4 py-10 text-[#00112b]">
+    <main className="min-h-screen bg-[#E8F0F8] px-4 py-10 text-[#00112b]">
       <section className="mx-auto max-w-5xl">
         <div className="text-center">
-          <h1 className="flex items-center justify-center gap-3 text-3xl font-black text-[#287c30] md:text-4xl">
+          <h1 className="flex items-center justify-center gap-3 text-3xl font-black text-[#132D4A] md:text-4xl">
             <Sprout size={42} /> Welcome to Smart Agriculture
           </h1>
           <p className="mt-4 text-lg text-slate-700">Let's set up your first farm</p>
@@ -352,7 +352,7 @@ function Onboarding() {
             <div key={item.label} className="text-center">
               <button type="button"
                 onClick={() => setStep(index)}
-                className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full text-lg font-black ${index <= step ? "bg-[#287c30] text-white" : "bg-slate-300 text-slate-700"}`}>
+                className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full text-lg font-black ${index <= step ? "bg-[#132D4A] text-white" : "bg-slate-300 text-slate-700"}`}>
                 {index + 1}
               </button>
               <p className="mt-3 text-sm font-semibold text-slate-700">{item.label}</p>
@@ -362,10 +362,10 @@ function Onboarding() {
 
         <section className="mx-auto mt-10 max-w-4xl rounded-xl bg-white p-8 shadow-lg">
           <div className="mb-6 flex items-center gap-4">
-            <span className="rounded-lg bg-green-100 p-4 text-[#287c30]">
+            <span className="rounded-lg bg-[#D0E0F0] p-4 text-[#132D4A]">
               <StepIcon size={38} />
             </span>
-            <h2 className="text-3xl font-black text-[#287c30]">{steps[step].label}</h2>
+            <h2 className="text-3xl font-black text-[#132D4A]">{steps[step].label}</h2>
           </div>
 
           {step === 0 && renderStep0()}
@@ -381,7 +381,7 @@ function Onboarding() {
           </button>
           <button type="button" onClick={goNext}
             disabled={!canNext()}
-            className={`${btn} ${canNext() ? "bg-[#287c30] text-white hover:bg-[#1f5e1f]" : "bg-slate-400 text-white"}`}>
+            className={`${btn} ${canNext() ? "bg-[#132D4A] text-white hover:bg-[#0B1D3A]" : "bg-slate-400 text-white"}`}>
             {step === steps.length - 1 ? "Open Dashboard" : "Next"} <ChevronRight size={22} />
           </button>
         </div>

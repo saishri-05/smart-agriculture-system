@@ -19,7 +19,7 @@ function Alerts() {
     <AppShell>
       <section className="mx-auto max-w-6xl space-y-8">
         <div>
-          <h1 className="text-3xl font-black text-[#287c30] md:text-4xl">Alerts</h1>
+          <h1 className="text-3xl font-black text-[#132D4A] md:text-4xl">Alerts</h1>
           <p className="mt-2 text-lg text-slate-700">Important farm problems in simple language</p>
         </div>
 
