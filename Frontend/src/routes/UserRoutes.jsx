@@ -1,7 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Home from "../user/home/Home";
 import Login from "../user/pages/Login";
-import Register from "../user/pages/Register";
 import Onboarding from "../user/onboarding/Onboarding";
 import Dashboard from "../user/dashboard/Dashboard";
 import Farms from "../user/farms/Farms";
@@ -11,6 +10,7 @@ import Analytics from "../user/analytics/Analytics";
 import AIRecommendations from "../user/analytics/AIRecommendations";
 import HistoricalData from "../user/analytics/HistoricalData";
 import Alerts from "../user/alerts/Alerts";
+import UserProfileSettings from "../user/settings/UserProfileSettings";
 
 function UserRoutes() {
   return (
@@ -18,7 +18,6 @@ function UserRoutes() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/farms" element={<Farms />} />
@@ -28,7 +27,7 @@ function UserRoutes() {
         <Route path="/ai-recommendations" element={<AIRecommendations />} />
         <Route path="/historical-data" element={<HistoricalData />} />
         <Route path="/alerts" element={<Alerts />} />
-        <Route path="/settings" element={<Dashboard />} />
+        <Route path="/settings" element={<UserProfileSettings />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </BrowserRouter>

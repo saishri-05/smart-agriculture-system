@@ -10,29 +10,29 @@ const robots = [
 ];
 
 const statusStyle = {
-  active: "bg-gradient-to-r from-[#f0e6f6] to-[#faf0f6] text-[#7b55a8]",
-  charging: "bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700",
-  idle: "bg-gradient-to-r from-slate-100 to-slate-50 text-slate-700",
-  maintenance: "bg-gradient-to-r from-orange-100 to-orange-50 text-orange-700",
+  active: "bg-green-100 text-green-700",
+  charging: "bg-blue-100 text-blue-700",
+  idle: "bg-slate-100 text-slate-700",
+  maintenance: "bg-orange-100 text-orange-700",
 };
 
-function batteryColor(v) {
-  if (v <= 25) return "from-red-400 to-red-300";
-  if (v <= 50) return "from-yellow-400 to-yellow-300";
-  return "from-[#8e6abf] to-[#b39ddb]";
+function batteryColor(value) {
+  if (value <= 25) return "bg-red-500";
+  if (value <= 50) return "bg-yellow-500";
+  return "bg-green-500";
 }
 
 function Robots() {
   return (
     <AppShell>
-      <section className="mx-auto max-w-7xl space-y-10">
-        <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
+      <section className="mx-auto max-w-7xl space-y-8">
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h1 className="text-4xl font-black text-[#6b4f8a] md:text-5xl">Robot Management</h1>
-            <p className="mt-2 text-xl text-[#9a8aaa]">Monitor and manage your agricultural robots</p>
+            <h1 className="text-3xl font-black text-[#287c30] md:text-4xl">Robot Management</h1>
+            <p className="mt-2 text-lg text-slate-700">Monitor and manage your agricultural robots</p>
           </div>
-          <button className="inline-flex items-center gap-3 rounded-2xl bg-gradient-to-r from-[#8e6abf] to-[#b39ddb] px-10 py-5 text-xl font-black text-white shadow-lg shadow-[#8e6abf]/30 transition-all duration-200 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]">
-            <Plus size={28} /> Add Robot
+          <button className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#287c30] px-6 py-4 text-lg font-black text-white">
+            <Plus size={24} /> Add Robot
           </button>
         </div>
 
@@ -43,66 +43,62 @@ function Robots() {
             ["Idle", "1", Battery],
             ["Assigned to Farms", "3", MapPin],
           ].map(([label, value, Icon]) => (
-            <article key={label} className="group rounded-3xl bg-white p-8 shadow-xl shadow-[#d1c4e9]/20 ring-1 ring-[#ede7f6] transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl">
+            <article key={label} className="rounded-xl bg-white p-6 shadow-lg">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-lg text-[#9a8aaa]">{label}</p>
-                  <p className="mt-3 text-5xl font-black text-[#6b4f8a]">{value}</p>
+                  <p className="text-lg text-slate-700">{label}</p>
+                  <p className="mt-3 text-4xl font-black">{value}</p>
                 </div>
-                <Icon className="text-[#b39ddb]" size={36} />
+                <Icon className="text-[#287c30]" size={30} />
               </div>
             </article>
           ))}
         </div>
 
-        <section className="overflow-hidden rounded-3xl bg-white shadow-xl shadow-[#d1c4e9]/20 ring-1 ring-[#ede7f6]">
+        <section className="overflow-hidden rounded-xl bg-white shadow-lg">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[980px] text-left">
-              <thead className="border-b border-[#ede7f6] bg-gradient-to-r from-[#f5f0fa] to-[#faf0f6]">
+              <thead className="border-b bg-[#fbfdf8]">
                 <tr>
-                  {["Robot ID", "Robot Name", "Battery", "Assigned Farm", "Status", "Location", "Actions"].map((h) => (
-                    <th key={h} className="px-8 py-6 text-sm font-black uppercase tracking-wide text-[#6b5b7b]">{h}</th>
+                  {["Robot ID", "Robot Name", "Battery", "Assigned Farm", "Status", "Location", "Actions"].map((head) => (
+                    <th key={head} className="px-6 py-5 font-black">{head}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {robots.map((robot) => (
-                  <tr key={robot.id} className="border-b border-[#ede7f6] transition-all hover:bg-[#faf0f6] last:border-0">
-                    <td className="px-8 py-6 font-bold text-[#6b4f8a]">{robot.id}</td>
-                    <td className="px-8 py-6">
+                  <tr key={robot.id} className="border-b last:border-0">
+                    <td className="px-6 py-5 font-semibold">{robot.id}</td>
+                    <td className="px-6 py-5">
                       <div className="flex items-center gap-4">
-                        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#8e6abf] to-[#b39ddb] text-white shadow-md">
-                          <Bot size={30} />
+                        <span className="rounded-lg bg-[#287c30] p-3 text-white">
+                          <Bot size={28} />
                         </span>
                         <div>
-                          <p className="text-xl font-black text-[#6b4f8a]">{robot.name}</p>
-                          <p className="text-[#9a8aaa]">{robot.lastSeen}</p>
+                          <p className="text-lg font-black">{robot.name}</p>
+                          <p className="text-slate-600">{robot.lastSeen}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-8 py-6">
+                    <td className="px-6 py-5">
                       <div className="flex items-center gap-3">
-                        <div className="h-3 w-28 rounded-full bg-[#ede7f6]">
-                          <div className={`h-3 rounded-full bg-gradient-to-r ${batteryColor(robot.battery)}`} style={{ width: `${robot.battery}%` }} />
+                        <div className="h-2 w-24 rounded-full bg-slate-200">
+                          <div className={`h-2 rounded-full ${batteryColor(robot.battery)}`} style={{ width: `${robot.battery}%` }} />
                         </div>
-                        <span className="text-lg font-black text-[#6b4f8a]">{robot.battery}%</span>
+                        <span className="font-black">{robot.battery}%</span>
                       </div>
                     </td>
-                    <td className="px-8 py-6 font-semibold">
-                      <span className={robot.farm === "Not assigned" ? "text-[#b39ddb]" : "text-[#6b5b7b]"}>{robot.farm}</span>
+                    <td className="px-6 py-5">
+                      <span className={robot.farm === "Not assigned" ? "text-slate-500" : ""}>{robot.farm}</span>
                     </td>
-                    <td className="px-8 py-6">
-                      <span className={`rounded-full px-5 py-2 text-sm font-black shadow-sm ${statusStyle[robot.status]}`}>{robot.status}</span>
+                    <td className="px-6 py-5">
+                      <span className={`rounded-full px-4 py-1 text-sm font-black ${statusStyle[robot.status]}`}>{robot.status}</span>
                     </td>
-                    <td className="px-8 py-6 text-[#6b5b7b]">{robot.location}</td>
-                    <td className="px-8 py-6">
+                    <td className="px-6 py-5">{robot.location}</td>
+                    <td className="px-6 py-5">
                       <div className="flex items-center gap-4">
-                        <button className="rounded-xl bg-gradient-to-br from-[#f0e6f6] to-[#faf0f6] p-3 text-[#8e6abf] shadow-md transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-90"><Eye size={24} /></button>
-                        {robot.farm === "Not assigned" ? (
-                          <button className="rounded-xl bg-gradient-to-br from-blue-50 to-blue-50/50 p-3 text-blue-600 shadow-md transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-90"><LinkIcon size={24} /></button>
-                        ) : (
-                          <button className="rounded-xl bg-gradient-to-br from-red-50 to-red-50/50 p-3 text-red-500 shadow-md transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-90"><XCircle size={24} /></button>
-                        )}
+                        <Eye className="text-[#287c30]" size={22} />
+                        {robot.farm === "Not assigned" ? <LinkIcon className="text-blue-600" size={22} /> : <XCircle className="text-red-500" size={22} />}
                       </div>
                     </td>
                   </tr>
@@ -112,21 +108,21 @@ function Robots() {
           </div>
         </section>
 
-        <section className="rounded-3xl bg-white p-8 shadow-xl shadow-[#d1c4e9]/20 ring-1 ring-[#ede7f6]">
-          <h2 className="text-3xl font-black text-[#6b4f8a]">Robot Health Overview</h2>
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
+        <section className="rounded-xl bg-white p-6 shadow-lg">
+          <h2 className="text-2xl font-black">Robot Health Overview</h2>
+          <div className="mt-5 grid gap-4 md:grid-cols-3">
             {robots.slice(0, 3).map((robot) => (
-              <article key={robot.id} className="rounded-2xl border-2 border-[#ede7f6] bg-gradient-to-br from-[#faf0f6] to-[#f5f0fa] p-6 shadow-md transition-all duration-200 hover:scale-[1.02] hover:shadow-lg">
+              <article key={robot.id} className="rounded-lg border p-5">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-2xl font-black text-[#6b4f8a]">{robot.name}</h3>
-                  <span className={`rounded-full px-4 py-2 text-sm font-black shadow-sm ${statusStyle[robot.status]}`}>{robot.status}</span>
+                  <h3 className="text-lg font-black">{robot.name}</h3>
+                  <span className={`rounded-full px-3 py-1 text-sm font-black ${statusStyle[robot.status]}`}>{robot.status}</span>
                 </div>
-                <div className="mt-6 flex justify-between text-lg font-bold text-[#6b5b7b]">
+                <div className="mt-5 flex justify-between font-semibold">
                   <span>Battery</span>
                   <span>{robot.battery}%</span>
                 </div>
-                <div className="mt-3 h-4 rounded-full bg-[#ede7f6]">
-                  <div className={`h-4 rounded-full bg-gradient-to-r ${batteryColor(robot.battery)}`} style={{ width: `${robot.battery}%` }} />
+                <div className="mt-2 h-2 rounded-full bg-slate-200">
+                  <div className={`h-2 rounded-full ${batteryColor(robot.battery)}`} style={{ width: `${robot.battery}%` }} />
                 </div>
               </article>
             ))}
