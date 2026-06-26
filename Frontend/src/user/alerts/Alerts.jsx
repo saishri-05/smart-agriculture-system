@@ -9,9 +9,9 @@ const alerts = [
 ];
 
 const styles = {
-  Critical: { icon: ShieldAlert, color: "border-red-500 bg-red-50 text-red-800", badge: "bg-red-500 text-white" },
-  Warning: { icon: AlertTriangle, color: "border-orange-500 bg-orange-50 text-orange-800", badge: "bg-orange-500 text-white" },
-  Info: { icon: Info, color: "border-blue-500 bg-blue-50 text-blue-800", badge: "bg-blue-500 text-white" },
+  Critical: { icon: ShieldAlert, color: "border-[#EF4444] bg-[rgba(239,68,68,0.06)] text-[#EF4444]", badge: "bg-[#EF4444] text-white" },
+  Warning: { icon: AlertTriangle, color: "border-[#F59E0B] bg-[rgba(245,158,11,0.06)] text-[#F59E0B]", badge: "bg-[#F59E0B] text-white" },
+  Info: { icon: Info, color: "border-[#0D9488] bg-[rgba(13,148,136,0.06)] text-[#0D9488]", badge: "bg-[#0D9488] text-white" },
 };
 
 function Alerts() {
@@ -19,14 +19,14 @@ function Alerts() {
     <AppShell>
       <section className="mx-auto max-w-6xl space-y-8">
         <div>
-          <h1 className="text-3xl font-black text-[#132D4A] md:text-4xl">Alerts</h1>
-          <p className="mt-2 text-lg text-slate-700">Important farm problems in simple language</p>
+          <h1 className="text-2xl font-bold text-[#111827]">Alerts</h1>
+          <p className="mt-1 text-sm font-[400] text-[#6B7280]">Important farm problems in simple language</p>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-3">
-          <div className="rounded-xl bg-red-50 p-6 shadow-lg"><ShieldAlert className="text-red-600" size={44} /><p className="mt-4 text-4xl font-black">2</p><p className="font-bold text-red-700">Critical</p></div>
-          <div className="rounded-xl bg-orange-50 p-6 shadow-lg"><AlertTriangle className="text-orange-600" size={44} /><p className="mt-4 text-4xl font-black">1</p><p className="font-bold text-orange-700">Warning</p></div>
-          <div className="rounded-xl bg-blue-50 p-6 shadow-lg"><Bell className="text-blue-600" size={44} /><p className="mt-4 text-4xl font-black">1</p><p className="font-bold text-blue-700">Info</p></div>
+          <div className="rounded-xl bg-[rgba(239,68,68,0.06)] p-6 shadow-lg"><ShieldAlert className="text-[#EF4444]" size={44} /><p className="mt-4 text-3xl font-bold text-black">2</p><p className="font-bold text-[#EF4444]">Critical</p></div>
+          <div className="rounded-xl bg-[rgba(245,158,11,0.06)] p-6 shadow-lg"><AlertTriangle className="text-[#F59E0B]" size={44} /><p className="mt-4 text-3xl font-bold text-black">1</p><p className="font-bold text-[#F59E0B]">Warning</p></div>
+          <div className="rounded-xl bg-[rgba(13,148,136,0.06)] p-6 shadow-lg"><Bell className="text-[#0D9488]" size={44} /><p className="mt-4 text-3xl font-bold text-black">1</p><p className="font-bold text-[#0D9488]">Info</p></div>
         </div>
 
         <div className="space-y-4">
@@ -39,7 +39,7 @@ function Alerts() {
                   <div className="flex gap-4">
                     <Icon size={44} />
                     <div>
-                      <h2 className="text-2xl font-black">{alert.message}</h2>
+                      <h2 className="text-xl font-bold text-[#111827]">{alert.message}</h2>
                       <p className="mt-2 font-bold">{alert.field} • {alert.time}</p>
                     </div>
                   </div>

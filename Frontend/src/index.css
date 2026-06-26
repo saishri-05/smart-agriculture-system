@@ -11,13 +11,54 @@
   --color-navy-200: #5A8AA8;
   --color-navy-100: #7A9CB8;
   --color-navy-50: #B0C4DE;
+
+  --color-glass-bg: rgba(255, 255, 255, 0.45);
+  --color-glass-border: rgba(255, 255, 255, 0.5);
+  --color-glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+
+  --color-success: #10B981;
+  --color-success-badge: rgba(16, 185, 129, 0.12);
+  --color-warning: #F59E0B;
+  --color-warning-badge: rgba(245, 158, 11, 0.12);
+  --color-danger: #EF4444;
+  --color-danger-badge: rgba(239, 68, 68, 0.12);
+  --color-info: #0D9488;
+
+  --font-primary: "Inter", "SF Pro Display", system-ui, -apple-system, sans-serif;
 }
 
 * {
-  font-family: "Nunito", system-ui, -apple-system, sans-serif;
+  font-family: var(--font-primary);
 }
 
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: radial-gradient(at top left, #EAEFFA 0%, #F3E8FA 40%, #FAEDF2 80%, #FFFFFF 100%);
+  min-height: 100vh;
+  background-attachment: fixed;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+}
+
+.glass-sidebar {
+  background: rgba(15, 36, 64, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-navbar {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
 }

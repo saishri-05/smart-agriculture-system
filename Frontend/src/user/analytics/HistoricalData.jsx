@@ -37,11 +37,11 @@ const temperatureHistory = [
 function FilterSelect({ label, icon: Icon, value, options }) {
   return (
     <label className="block">
-      <span className="mb-2 flex items-center gap-2 text-sm font-bold text-[#00112b]">
+      <span className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.05em] text-[#6B7280]">
         {Icon ? <Icon size={18} className="text-slate-700" /> : null}
         {label}
       </span>
-      <select className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 text-base font-semibold outline-none transition focus:border-[#0F2440] focus:ring-2 focus:ring-[#D0E0F0]">
+      <select className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 text-base font-semibold outline-none transition focus:border-[#10B981]/50 focus:ring-2 focus:ring-[rgba(16,185,129,0.15)]">
         <option>{value}</option>
         {options.map((option) => (
           <option key={option}>{option}</option>
@@ -56,13 +56,13 @@ function HistoricalData() {
     <AppShell>
       <section className="mx-auto max-w-7xl space-y-9">
         <div>
-          <h1 className="text-3xl font-black text-[#234F78] md:text-4xl">Historical Data</h1>
-          <p className="mt-2 text-lg text-slate-700">Analyze trends and patterns over time</p>
+          <h1 className="text-2xl font-bold text-[#111827]">Historical Data</h1>
+          <p className="mt-1 text-sm font-[400] text-[#6B7280]">Analyze trends and patterns over time</p>
         </div>
 
-        <section className="rounded-xl bg-white p-7 shadow-lg">
-          <h2 className="mb-5 flex items-center gap-3 text-2xl font-black">
-            <Filter className="text-[#0F2440]" size={28} />
+        <section className="glass-card p-6">
+          <h2 className="mb-5 flex items-center gap-3 text-xl font-bold text-[#111827]">
+            <Filter className="text-[#10B981]" size={28} />
             Filters
           </h2>
           <div className="grid gap-4 lg:grid-cols-[1fr_1fr_1fr_auto] lg:items-end">
@@ -74,15 +74,15 @@ function HistoricalData() {
             />
             <FilterSelect label="Crop Type" value="All Crops" options={["Wheat", "Rice", "Corn"]} />
             <FilterSelect label="Field" value="All Fields" options={["Sector A", "Sector B", "Sector C"]} />
-            <button className="flex h-11 min-w-64 items-center justify-center gap-3 rounded-lg bg-[#0F2440] px-6 font-black text-white transition hover:bg-[#1E4468]">
+            <button className="flex h-11 min-w-64 items-center justify-center gap-3 rounded-xl bg-[#10B981] px-6 font-black text-white transition hover:bg-[#059669]">
               <Download size={20} />
               Export Data
             </button>
           </div>
         </section>
 
-        <section className="rounded-xl bg-white p-7 shadow-lg">
-          <h2 className="mb-6 text-xl font-black">Soil Moisture History</h2>
+        <section className="glass-card p-6">
+          <h2 className="mb-6 text-xl font-bold text-[#111827]">Soil Moisture History</h2>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={moistureHistory} margin={{ top: 5, right: 8, left: 0, bottom: 8 }}>
@@ -103,14 +103,14 @@ function HistoricalData() {
               </AreaChart>
             </ResponsiveContainer>
           </div>
-          <div className="mt-2 flex items-center justify-center gap-2 text-lg font-semibold text-[#132D4A]">
-            <span className="h-2 w-2 rounded-full border-2 border-[#132D4A]" />
+          <div className="mt-2 flex items-center justify-center gap-2 text-sm font-semibold text-[#6B7280]">
+            <span className="h-2 w-2 rounded-full border border-white/50" />
             Soil Moisture (%)
           </div>
         </section>
 
-        <section className="rounded-xl bg-white p-7 shadow-lg">
-          <h2 className="mb-6 text-xl font-black">Temperature Trends</h2>
+        <section className="glass-card p-6">
+          <h2 className="mb-6 text-xl font-bold text-[#111827]">Temperature Trends</h2>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={temperatureHistory} margin={{ top: 5, right: 8, left: 0, bottom: 8 }}>

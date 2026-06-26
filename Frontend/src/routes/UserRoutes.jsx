@@ -10,7 +10,8 @@ import Analytics from "../user/analytics/Analytics";
 import AIRecommendations from "../user/analytics/AIRecommendations";
 import HistoricalData from "../user/analytics/HistoricalData";
 import Alerts from "../user/alerts/Alerts";
-import UserProfileSettings from "../user/settings/UserProfileSettings";
+import SensorsDetails from "../user/sensors/SensorsDetails";
+import SettingsPage from "../user/settings/SettingsPage";
 
 function UserRoutes() {
   return (
@@ -27,7 +28,8 @@ function UserRoutes() {
         <Route path="/ai-recommendations" element={<AIRecommendations />} />
         <Route path="/historical-data" element={<HistoricalData />} />
         <Route path="/alerts" element={<Alerts />} />
-        <Route path="/settings" element={<UserProfileSettings />} />
+        <Route path="/sensors-details" element={<SensorsDetails />} />
+        <Route path="/settings" element={<SettingsPage />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </BrowserRouter>

@@ -30,10 +30,10 @@ const sensorData = [
 ];
 
 const performance = [
-  { title: "Growth Status", value: "Healthy", note: "85% optimal", icon: CheckCircle2, color: "bg-green-500 text-white" },
-  { title: "Harvest In", value: "12 Days", note: "Oct 25, 2026", icon: CalendarDays, color: "bg-[#1E4468] text-white", dark: true },
-  { title: "Yield", value: "2.3 Tons", note: "↗ +15%", icon: TrendingUp, color: "bg-orange-500 text-white" },
-  { title: "Net Profit", value: "₹17K", note: "Revenue: ₹45K", icon: DollarSign, color: "bg-green-600 text-white" },
+  { title: "Growth Status", value: "Healthy", note: "85% optimal", icon: CheckCircle2, color: "bg-[#10B981] text-white" },
+  { title: "Harvest In", value: "12 Days", note: "Oct 25, 2026", icon: CalendarDays, color: "bg-[#10B981] text-white", dark: true },
+  { title: "Yield", value: "2.3 Tons", note: "↗ +15%", icon: TrendingUp, color: "bg-[#F59E0B] text-white" },
+  { title: "Net Profit", value: "₹17K", note: "Revenue: ₹45K", icon: DollarSign, color: "bg-[#10B981] text-white" },
 ];
 
 const charts = [
@@ -49,14 +49,14 @@ function Analytics() {
       <section className="mx-auto max-w-7xl space-y-8">
         <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
           <div>
-            <h1 className="text-3xl font-black text-[#132D4A] md:text-4xl">Analytics - Green Valley Farm (Rice)</h1>
-            <p className="mt-2 text-lg text-slate-700">Real-time sensor data and performance metrics</p>
+            <h1 className="text-2xl font-bold text-[#111827]">Analytics - Green Valley Farm (Rice)</h1>
+            <p className="mt-1 text-sm font-[400] text-[#6B7280]">Real-time sensor data and performance metrics</p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {["Select Farm", "Select Crop"].map((label, index) => (
               <label key={label}>
                 <span className="mb-2 block font-semibold">{label}</span>
-                <select className="w-full rounded-lg border-2 border-[#132D4A] bg-white px-5 py-4 text-lg font-bold outline-none">
+                <select className="w-full rounded-lg border border-white/50 bg-white/30 px-5 py-4 text-lg font-bold outline-none">
                   <option>{index === 0 ? "Green Valley Farm" : "Rice"}</option>
                 </select>
               </label>
@@ -65,18 +65,18 @@ function Analytics() {
         </div>
 
         <section>
-          <h2 className="mb-6 text-2xl font-black">Crop Performance</h2>
+          <h2 className="mb-6 text-xl font-bold text-[#111827]">Crop Performance</h2>
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
             {performance.map((item) => (
-              <article key={item.title} className={`rounded-xl p-6 shadow-lg ${item.dark ? "bg-[#1E4468] text-white" : "bg-white"}`}>
+              <article key={item.title} className={`glass-card p-6 ${item.dark ? "bg-[rgba(16,185,129,0.12)] text-[#111827]" : ""}`}>
                 <div className="mb-5 flex items-center gap-4">
                   <span className={`rounded-lg p-3 ${item.color}`}>
                     <item.icon size={30} />
                   </span>
                   <h3 className="font-black">{item.title}</h3>
                 </div>
-                <p className={`text-4xl font-black ${item.value === "Healthy" ? "text-green-600" : ""}`}>{item.value}</p>
-                <p className={`mt-2 text-sm ${item.dark ? "text-blue-200" : "text-slate-600"}`}>{item.note}</p>
+                <p className={`text-3xl font-bold text-black ${item.value === "Healthy" ? "text-[#10B981]" : ""}`}>{item.value}</p>
+                <p className={`mt-2 text-sm ${item.dark ? "text-[#6B7280]" : "text-slate-600"}`}>{item.note}</p>
               </article>
             ))}
           </div>
@@ -84,10 +84,10 @@ function Analytics() {
 
         <section>
           <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-            <h2 className="text-2xl font-black">Sensor Analytics</h2>
+            <h2 className="text-xl font-bold text-[#111827]">Sensor Analytics</h2>
             <label className="w-full max-w-48">
               <span className="mb-2 block font-semibold">Graph Type</span>
-              <select className="w-full rounded-lg border-2 border-[#132D4A] bg-white px-5 py-4 text-lg font-bold outline-none">
+              <select className="w-full rounded-lg border border-white/50 bg-white/30 px-5 py-4 text-lg font-bold outline-none">
                 <option>Line Chart</option>
               </select>
             </label>
@@ -95,20 +95,20 @@ function Analytics() {
 
           <div className="grid gap-6 lg:grid-cols-2">
             {charts.map((chart) => (
-              <article key={chart.title} className="rounded-xl bg-white p-6 shadow-lg">
+              <article key={chart.title} className="glass-card p-6">
                 <div className="mb-5 flex items-start justify-between">
                   <div className="flex items-center gap-4">
                     <span className={`rounded-lg p-4 text-white ${chart.iconBg}`}>
                       <chart.icon size={34} />
                     </span>
                     <div>
-                      <h3 className="text-xl font-black">{chart.title}</h3>
-                      <p className="mt-1 text-3xl font-black">{chart.value} <span className="text-lg text-green-500">↑</span></p>
+                      <h3 className="text-xl font-bold text-[#111827]">{chart.title}</h3>
+                      <p className="mt-1 text-3xl font-bold text-black">{chart.value} <span className="text-lg text-[#10B981]">↑</span></p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-slate-500">Status</p>
-                    <p className={`font-black ${chart.status === "Low" ? "text-orange-500" : "text-green-600"}`}>{chart.status}</p>
+                    <p className={`font-black ${chart.status === "Low" ? "text-orange-500" : "text-[#10B981]"}`}>{chart.status}</p>
                   </div>
                 </div>
                 <div className="h-56">
@@ -130,11 +130,11 @@ function Analytics() {
           </div>
         </section>
 
-        <section className="rounded-xl bg-white p-6 shadow-lg">
-          <h2 className="flex items-center gap-3 text-2xl font-black">
-            <Sprout className="text-[#132D4A]" size={34} /> Farmer Summary
+        <section className="glass-card p-6">
+          <h2 className="flex items-center gap-3 text-xl font-bold text-[#111827]">
+            <Sprout className="text-[#10B981]" size={34} /> Farmer Summary
           </h2>
-          <p className="mt-3 text-lg text-slate-700">
+          <p className="mt-1 text-sm font-[400] text-[#6B7280]">
             Rice crop is healthy. Water is slightly low, so irrigate Sector A for 20 minutes today.
           </p>
         </section>
