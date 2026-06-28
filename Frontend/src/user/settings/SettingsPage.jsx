@@ -1,20 +1,26 @@
 import { useState } from "react";
 import {
   Bell,
+  Camera,
   Database,
   Globe,
   Key,
+  Mail,
+  MapPin,
   Moon,
+  Phone,
   RefreshCw,
   Save,
   Shield,
   Sun,
   Trash2,
+  User,
   Users,
 } from "lucide-react";
 import AppShell from "../components/AppShell";
 
 const tabs = [
+  { id: "profile", label: "Profile", icon: User },
   { id: "notifications", label: "Notifications", icon: Bell },
   { id: "data", label: "Data Management", icon: Database },
   { id: "security", label: "Security", icon: Shield },
@@ -35,11 +41,79 @@ const inputClass =
   "w-full rounded-xl border border-white/50 bg-white/30 px-4 py-3 text-sm font-semibold text-[#111827] outline-none transition focus:border-[#10B981]/50 focus:ring-2 focus:ring-[rgba(16,185,129,0.15)]";
 
 function SettingsPage() {
-  const [activeTab, setActiveTab] = useState("notifications");
+  const [activeTab, setActiveTab] = useState("profile");
+  const [profile, setProfile] = useState({
+    name: "John Doe",
+    email: "john.doe@example.com",
+    phone: "+1 (555) 123-4567",
+    region: "California, USA",
+    role: "Farm Owner",
+  });
   const [darkMode, setDarkMode] = useState(false);
+
+  function updateProfile(field, value) {
+    setProfile((prev) => ({ ...prev, [field]: value }));
+  }
 
   const TabContent = () => {
     switch (activeTab) {
+      case "profile":
+        return (
+          <div className="space-y-8">
+            <Section title="Personal Information">
+              <div className="flex flex-col items-center gap-6 sm:flex-row">
+                <div className="relative">
+                  <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#1A3A5C] text-3xl font-bold text-white">
+                    {profile.name.split(" ").map((n) => n[0]).join("")}
+                  </div>
+                  <button className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md border border-white/50 hover:bg-slate-50">
+                    <Camera size={14} className="text-slate-600" />
+                  </button>
+                </div>
+                <div>
+                  <p className="text-xl font-bold" style={{ color: "#111827" }}>{profile.name}</p>
+                  <p className="text-sm" style={{ color: "#6B7280" }}>{profile.role}</p>
+                </div>
+              </div>
+            </Section>
+            <Section title="Account Details">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <span className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.05em]" style={{ color: "#6B7280" }}>
+                    <User size={14} /> Full Name
+                  </span>
+                  <input className={inputClass} value={profile.name}
+                    onChange={(e) => updateProfile("name", e.target.value)}
+                    placeholder="Your name" />
+                </div>
+                <div>
+                  <span className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.05em]" style={{ color: "#6B7280" }}>
+                    <Mail size={14} /> Email Address
+                  </span>
+                  <input className={inputClass} value={profile.email}
+                    onChange={(e) => updateProfile("email", e.target.value)}
+                    placeholder="email@example.com" type="email" />
+                </div>
+                <div>
+                  <span className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.05em]" style={{ color: "#6B7280" }}>
+                    <Phone size={14} /> Phone Number
+                  </span>
+                  <input className={inputClass} value={profile.phone}
+                    onChange={(e) => updateProfile("phone", e.target.value)}
+                    placeholder="+1 (555) 000-0000" />
+                </div>
+                <div>
+                  <span className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.05em]" style={{ color: "#6B7280" }}>
+                    <MapPin size={14} /> Region
+                  </span>
+                  <input className={inputClass} value={profile.region}
+                    onChange={(e) => updateProfile("region", e.target.value)}
+                    placeholder="Region / Country" />
+                </div>
+              </div>
+            </Section>
+          </div>
+        );
       case "notifications":
         return (
           <div className="space-y-8">
