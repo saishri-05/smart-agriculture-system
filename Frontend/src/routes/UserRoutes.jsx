@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Home from "../user/home/Home";
 import Login from "../user/pages/Login";
@@ -14,6 +15,12 @@ import SensorsDetails from "../user/sensors/SensorsDetails";
 import SettingsPage from "../user/settings/SettingsPage";
 
 function UserRoutes() {
+  useEffect(() => {
+    if (localStorage.getItem("darkMode") === "true") {
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>

@@ -1,10 +1,12 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
+  AlertTriangle,
   BarChart3,
   Bell,
   Bot,
   Brain,
   ChartColumn,
+  CheckCircle2,
   Cpu,
   LayoutDashboard,
   Link as LinkIcon,
@@ -31,26 +33,72 @@ const navItems = [
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 
+const searchData = [
+  { label: "Sector A", type: "Farm Sector", route: "/farms", icon: Sprout, desc: "Rice — 5.2 acres" },
+  { label: "Sector B", type: "Farm Sector", route: "/farms", icon: Sprout, desc: "Wheat — 4.8 acres" },
+  { label: "Sector C", type: "Farm Sector", route: "/farms", icon: Sprout, desc: "Corn — 3.5 acres" },
+  { label: "Sector D", type: "Farm Sector", route: "/farms", icon: Sprout, desc: "Tomato — 6.0 acres" },
+  { label: "Green Valley Farm", type: "Farm", route: "/farms", icon: Sprout, desc: "Main farm" },
+  { label: "Robot #1", type: "Robot", route: "/robots", icon: Bot, desc: "Harvester — Active" },
+  { label: "Robot #2", type: "Robot", route: "/robots", icon: Bot, desc: "Weeder — Active" },
+  { label: "Robot #3", type: "Robot", route: "/robots", icon: Bot, desc: "Sprayer — Charging" },
+  { label: "Robot #4", type: "Robot", route: "/robots", icon: Bot, desc: "Soil Analyzer — Low Battery" },
+  { label: "Robot #5", type: "Robot", route: "/robots", icon: Bot, desc: "Irrigator — Idle" },
+  { label: "Low Soil Moisture", type: "Alert", route: "/alerts", icon: AlertTriangle, desc: "Sector C — 34%" },
+  { label: "pH Abnormal", type: "Alert", route: "/alerts", icon: AlertTriangle, desc: "Sector D — 8.9 pH" },
+  { label: "Sensor Offline", type: "Alert", route: "/alerts", icon: AlertTriangle, desc: "Temperature sensor #7" },
+  { label: "Pest Detected", type: "Alert", route: "/alerts", icon: AlertTriangle, desc: "Sector A — northeast corner" },
+  { label: "Battery Low", type: "Alert", route: "/alerts", icon: AlertTriangle, desc: "Robot #4 at 15%" },
+  { label: "Nitrogen (N)", type: "Sensor", route: "/sensors-details", icon: Cpu, desc: "48 mg/kg — Good" },
+  { label: "Phosphorus (P)", type: "Sensor", route: "/sensors-details", icon: Cpu, desc: "32 mg/kg — Low" },
+  { label: "Potassium (K)", type: "Sensor", route: "/sensors-details", icon: Cpu, desc: "185 mg/kg — Good" },
+  { label: "Soil Moisture", type: "Sensor", route: "/sensors-details", icon: Cpu, desc: "68% across sectors" },
+  { label: "Robot Assignment", type: "Page", route: "/robot-assignment", icon: LinkIcon, desc: "Assign robots to farms" },
+  { label: "AI Recommendations", type: "Page", route: "/ai-recommendations", icon: Brain, desc: "Smart farming insights" },
+  { label: "Analytics", type: "Page", route: "/analytics", icon: BarChart3, desc: "Charts and reports" },
+  { label: "Historical Data", type: "Page", route: "/historical-data", icon: ChartColumn, desc: "Activity logs" },
+];
+
 function AppShell({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
   const profileRef = useRef(null);
+  const searchRef = useRef(null);
 
   useEffect(() => {
     function handleClickOutside(e) {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
         setProfileOpen(false);
       }
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setSearchOpen(false);
+      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const searchResults = searchQuery.trim()
+    ? searchData.filter(
+        (item) =>
+          item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.type.toLowerCase().includes(searchQuery.toLowerCase())
+      ).slice(0, 8)
+    : [];
+
+  function handleSearchSelect(item) {
+    setSearchQuery("");
+    setSearchOpen(false);
+    navigate(item.route);
+  }
+
   return (
     <div className="min-h-screen text-[#111827]">
-      {/* Top Navigation Bar */}
       <header className="glass-navbar sticky top-0 z-40 flex items-center justify-between px-4 py-3 md:px-6">
         <div className="flex items-center gap-3">
           <button
@@ -66,13 +114,32 @@ function AppShell({ children }) {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="hidden md:block">
+          <div className="hidden md:block" ref={searchRef}>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8E8E93]" size={18} />
               <input
+                value={searchQuery}
+                onChange={(e) => { setSearchQuery(e.target.value); setSearchOpen(true); }}
+                onFocus={() => searchQuery.trim() && setSearchOpen(true)}
                 className="w-56 rounded-xl border border-white/50 bg-white/30 py-2 pl-10 pr-4 text-sm font-[400] text-[#111827] outline-none transition placeholder:text-[#8E8E93] focus:border-[#10B981]/30 focus:bg-white/60 lg:w-64"
                 placeholder="Search farms, robots, alerts..."
               />
+              {searchOpen && searchResults.length > 0 && (
+                <div className="absolute left-0 right-0 top-full mt-2 overflow-hidden rounded-xl border border-white/50 bg-white shadow-lg backdrop-blur-xl">
+                  {searchResults.map((item, i) => (
+                    <button key={i} onClick={() => handleSearchSelect(item)}
+                      className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-[rgba(16,185,129,0.06)]">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+                        <item.icon size={16} />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold text-[#111827]">{item.label}</p>
+                        <p className="truncate text-xs text-[#6B7280]">{item.desc} · {item.type}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           <Link

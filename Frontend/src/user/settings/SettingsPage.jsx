@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Bell,
   Camera,
@@ -42,6 +42,7 @@ const inputClass =
 
 function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("darkMode") === "true");
   const [profile, setProfile] = useState({
     name: "John Doe",
     email: "john.doe@example.com",
@@ -49,7 +50,15 @@ function SettingsPage() {
     region: "California, USA",
     role: "Farm Owner",
   });
-  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
 
   function updateProfile(field, value) {
     setProfile((prev) => ({ ...prev, [field]: value }));

@@ -197,19 +197,12 @@ function Onboarding() {
     if (step === 2) {
       if (!boundary || boundary.length < 3) errs.boundary = "Please define at least 3 boundary points";
     }
-    if (Object.keys(errs).length > 0) {
-      setErrors(errs);
-      return;
-    }
+    setErrors(errs);
     setStep((s) => s + 1);
   }
 
   function goBack() {
-    if (step === 0) {
-      navigate("/dashboard");
-    } else {
-      setStep((s) => s - 1);
-    }
+    navigate("/dashboard");
   }
 
   function handleTemplateSelect(val) {
@@ -488,7 +481,7 @@ function Onboarding() {
         <div className="mx-auto mt-8 flex max-w-4xl justify-between">
           <button type="button" onClick={goBack}
             className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/40 px-6 py-4 text-lg font-black backdrop-blur-sm hover:bg-white/60" style={{ color: "#00112b" }}>
-            <ChevronLeft size={22} /> {step === 0 ? "Skip" : "Back"}
+            <ChevronLeft size={22} /> Skip
           </button>
           <button type="button" onClick={goNext}
             className={"inline-flex items-center gap-2 rounded-xl px-6 py-4 text-lg font-black " + (isValid(step) ? "bg-[#1A3A5C] text-white hover:bg-[#0F2440]" : "border border-white/20 bg-white/20 text-slate-400")}>
