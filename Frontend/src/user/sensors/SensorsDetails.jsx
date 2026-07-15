@@ -1,203 +1,484 @@
-import { AlertTriangle, Camera, CheckCircle2, FlaskConical, Leaf, TestTube } from "lucide-react";
-import AppShell from "../components/AppShell";
+import { useState, useMemo } from 'react';
+import { useRobots } from '../../context/RobotContext';
+import {
+  mockSensorReadings, mockHistoryData, lastSynced,
+} from '../../data/mockSensorData';
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
+  ResponsiveContainer, PieChart, Pie, Cell, Legend,
+} from 'recharts';
+import {
+  Thermometer, Droplets, Waves, Radar, MapPin, Cpu,
+  ArrowLeft, Wifi, WifiOff, RefreshCw,
+} from 'lucide-react';
 
-const npkSectors = [
-  {
-    sector: "Sector A", N: { value: 48, level: "Good", color: "bg-green-500" },
-    P: { value: 32, level: "Good", color: "bg-green-500" },
-    K: { value: 185, level: "Good", color: "bg-green-500" },
-  },
-  {
-    sector: "Sector B", N: { value: 22, level: "Low", color: "bg-red-500" },
-    P: { value: 18, level: "Low", color: "bg-red-500" },
-    K: { value: 92, level: "Good", color: "bg-green-500" },
-  },
-  {
-    sector: "Sector C", N: { value: 62, level: "Good", color: "bg-green-500" },
-    P: { value: 45, level: "Good", color: "bg-green-500" },
-    K: { value: 210, level: "Too High", color: "bg-amber-500" },
-  },
-  {
-    sector: "Sector D", N: { value: 55, level: "Good", color: "bg-green-500" },
-    P: { value: 28, level: "Good", color: "bg-green-500" },
-    K: { value: 145, level: "Good", color: "bg-green-500" },
-  },
-];
-
-const levelColor = (level) => {
-  if (level === "Low") return "text-red-500";
-  if (level === "Too High") return "text-amber-500";
-  return "text-green-600";
-};
-
-const barBg = (level) => {
-  if (level === "Low") return "bg-red-400";
-  if (level === "Too High") return "bg-amber-400";
-  return "bg-green-400";
-};
-
-function Bar({ level }) {
-  const width = level === "Low" ? "30%" : level === "Too High" ? "85%" : "65%";
+function GlowCard({ className, style: outerStyle, onClick, children }) {
+  const [isHovered, setIsHovered] = useState(false);
   return (
-    <div className="h-3 w-full rounded-full bg-slate-200">
-      <div className={`h-3 rounded-full ${barBg(level)}`} style={{ width }} />
+    <div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}
+      className={className}
+      style={{
+        ...outerStyle,
+        cursor: onClick ? 'pointer' : undefined,
+        transition: 'all 0.25s ease',
+        transform: isHovered ? 'translateY(-3px)' : 'translateY(0)',
+        boxShadow: isHovered ? '0 8px 24px rgba(26,46,26,0.15)' : '0 2px 12px rgba(46,125,50,0.08)',
+      }}
+    >
+      {children}
     </div>
   );
 }
 
-function SensorsDetails() {
+const tempColor = (t) => {
+  if (t < 15) return '#3B82F6';
+  if (t <= 30) return '#10B981';
+  return '#EF4444';
+};
+
+const humidityColor = (h) => {
+  if (h >= 40 && h <= 70) return '#10B981';
+  if (h > 70 && h <= 85) return '#F59E0B';
+  return '#EF4444';
+};
+
+const soilColor = (s) => {
+  if (s < 20) return '#EF4444';
+  if (s <= 60) return '#10B981';
+  return '#3B82F6';
+};
+
+const soilLabel = (s) => {
+  if (s < 20) return 'Too Dry';
+  if (s <= 60) return 'Optimal';
+  return 'Too Wet';
+};
+
+const ultrasonicStatus = (u) => {
+  if (u < 30) return { label: 'Obstacle Detected', color: '#EF4444', icon: '⚠' };
+  if (u <= 200) return { label: 'Clear Path', color: '#10B981', icon: '✓' };
+  return { label: 'No Reading', color: '#9CA3AF', icon: '—' };
+};
+
+function SemiGauge({ value, max, unit, label, color, size = 160 }) {
+  const ratio = Math.min(value / max, 1);
+  const bgColor = '#E5E7EB';
+  const cx = size / 2, cy = size / 2 + 6, r = size / 2 - 24;
+  const circumference = Math.PI * r;
+  const offset = circumference * (1 - ratio);
   return (
-    <AppShell>
-      <div className="mx-auto max-w-6xl space-y-8">
-        {/* Header */}
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Sensors Details</h1>
-          <p className="mt-1 text-sm text-gray-500">A simple look at your farm sensors and soil health</p>
-        </div>
-
-        {/* 1. Sensor Connection Checklist */}
-        <section>
-          <h2 className="mb-5 flex items-center gap-2 text-xl font-bold text-gray-900">
-            <CheckCircle2 size={24} className="text-green-600" /> Sensor Connection Checklist
-          </h2>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-green-600">
-                  <FlaskConical size={26} />
-                </span>
-                <div>
-                  <p className="text-lg font-bold text-gray-900">NPK Soil Probes</p>
-                  <p className="text-sm text-gray-500">8 Working Perfectly</p>
-                </div>
-              </div>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-green-100 px-4 py-1.5 text-sm font-semibold text-green-700">
-                <CheckCircle2 size={16} /> 0 Offline
-              </span>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
-                  <Camera size={26} />
-                </span>
-                <div>
-                  <p className="text-lg font-bold text-gray-900">Field Camera</p>
-                  <p className="text-sm text-gray-500">1 Needs Attention</p>
-                </div>
-              </div>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-4 py-1.5 text-sm font-semibold text-amber-700">
-                <AlertTriangle size={16} /> Lens may be dirty
-              </span>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-green-600">
-                  <TestTube size={26} />
-                </span>
-                <div>
-                  <p className="text-lg font-bold text-gray-900">Fertilizer Tester</p>
-                  <p className="text-sm text-gray-500">Ready to Use</p>
-                </div>
-              </div>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-green-100 px-4 py-1.5 text-sm font-semibold text-green-700">
-                <CheckCircle2 size={16} /> All Systems OK
-              </span>
-            </div>
-          </div>
-        </section>
-
-        {/* 2. AI Field Camera Feed */}
-        <section>
-          <h2 className="mb-5 flex items-center gap-2 text-xl font-bold text-gray-900">
-            <Camera size={24} className="text-green-600" /> AI Field Camera Feed
-          </h2>
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-              <div className="relative mb-4 flex aspect-video items-center justify-center overflow-hidden rounded-xl bg-slate-100">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="h-3/4 w-5/6 rounded-xl bg-slate-200" />
-                </div>
-                <div className="absolute left-[18%] top-[22%] h-16 w-20 rounded-lg border-[3px] border-red-500 bg-red-100/30" />
-                <span className="absolute bottom-3 left-3 rounded-lg bg-black/70 px-3 py-1.5 text-sm font-semibold text-white">
-                  ⚠️ Large Stone Detected in Path
-                </span>
-              </div>
-              <p className="text-base font-bold text-gray-900">Camera #2 — Sector B (North Path)</p>
-              <p className="mt-1 text-sm text-gray-500">A large stone is blocking the access path near the north gate.</p>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-              <div className="relative mb-4 flex aspect-video items-center justify-center overflow-hidden rounded-xl bg-slate-100">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="h-3/4 w-5/6 rounded-xl bg-slate-200" />
-                </div>
-                <div className="absolute left-[55%] top-[45%] h-24 w-28 rounded-[30px] border-[3px] border-red-500 bg-red-100/30" />
-                <span className="absolute bottom-3 left-3 rounded-lg bg-black/70 px-3 py-1.5 text-sm font-semibold text-white">
-                  ⚠️ Deep Washout Hole Detected
-                </span>
-              </div>
-              <p className="text-base font-bold text-gray-900">Camera #4 — Sector B (Drainage Ditch)</p>
-              <p className="mt-1 text-sm text-gray-500">Heavy rain has created a deep washout near the drainage ditch.</p>
-            </div>
-          </div>
-          <div className="mt-5 rounded-2xl border-l-4 border-amber-500 bg-amber-50 px-6 py-5">
-            <div className="flex items-start gap-3">
-              <AlertTriangle size={22} className="mt-0.5 shrink-0 text-amber-600" />
-              <p className="text-base font-semibold text-gray-800">
-                Warning: Obstacles detected in Sector B. Clear the stones and avoid the washout
-                hole before driving heavy machinery or tractors through this path.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* 3. Soil Nutrition Breakdown */}
-        <section>
-          <h2 className="mb-5 flex items-center gap-2 text-xl font-bold text-gray-900">
-            <Leaf size={24} className="text-green-600" /> Soil Nutrition Breakdown
-          </h2>
-          <div className="grid gap-5 lg:grid-cols-2">
-            {npkSectors.map((s) => (
-              <div key={s.sector} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                <h3 className="mb-5 text-lg font-bold text-gray-900">{s.sector}</h3>
-                <div className="space-y-5">
-                  <div>
-                    <div className="mb-2 flex items-center justify-between text-sm">
-                      <span className="font-semibold text-gray-600">Nitrogen (N)</span>
-                      <span className={`font-bold ${levelColor(s.N.level)}`}>{s.N.level}</span>
-                    </div>
-                    <Bar level={s.N.level} />
-                  </div>
-                  <div>
-                    <div className="mb-2 flex items-center justify-between text-sm">
-                      <span className="font-semibold text-gray-600">Phosphorus (P)</span>
-                      <span className={`font-bold ${levelColor(s.P.level)}`}>{s.P.level}</span>
-                    </div>
-                    <Bar level={s.P.level} />
-                  </div>
-                  <div>
-                    <div className="mb-2 flex items-center justify-between text-sm">
-                      <span className="font-semibold text-gray-600">Potassium (K)</span>
-                      <span className={`font-bold ${levelColor(s.K.level)}`}>{s.K.level}</span>
-                    </div>
-                    <Bar level={s.K.level} />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-5 rounded-2xl border-l-4 border-green-500 bg-green-50 px-6 py-5">
-            <div className="flex items-start gap-3">
-              <Leaf size={22} className="mt-0.5 shrink-0 text-green-600" />
-              <p className="text-base font-semibold text-gray-800">
-                🌱 Fertilizer Tip: Soil Nitrogen is Low in Sector B. Add a light application of
-                nitrogen-rich fertilizer during your next watering cycle.
-              </p>
-            </div>
-          </div>
-        </section>
-      </div>
-    </AppShell>
+    <div className="flex flex-col items-center">
+      <svg width={size} height={size / 2 + 20} viewBox={`0 0 ${size} ${size / 2 + 20}`}>
+        <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`} fill="none" stroke={bgColor} strokeWidth="12" strokeLinecap="round" />
+        <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`} fill="none" stroke={color} strokeWidth="12" strokeLinecap="round"
+          strokeDasharray={circumference} strokeDashoffset={offset} style={{ transition: 'stroke-dashoffset 0.6s ease' }} />
+        <text x={cx} y={cy - 2} textAnchor="middle" fontSize="20" fontWeight="800" fill="#111827">{value}{unit}</text>
+      </svg>
+      <span className="text-[10px] font-medium text-text-secondary -mt-1">{label}</span>
+    </div>
   );
 }
 
-export default SensorsDetails;
+function SoilGauge({ value, size = 180 }) {
+  const ratio = Math.min(value / 100, 1);
+  const color = soilColor(value);
+  const bgColor = '#E5E7EB';
+  const cx = size / 2, cy = size / 2, r = size / 2 - 20;
+  const circumference = 2 * Math.PI * r;
+  const offset = circumference * (1 - ratio);
+  const optStart = (20 / 100) * circumference;
+  const optEnd = (60 / 100) * circumference;
+  return (
+    <div className="flex flex-col items-center">
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke={bgColor} strokeWidth="14" />
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(16,185,129,0.15)" strokeWidth="14"
+          strokeDasharray={`${optEnd - optStart} ${circumference}`} strokeDashoffset={-optStart} strokeLinecap="round"
+          transform={`rotate(-90 ${cx} ${cy})`} />
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke={color} strokeWidth="14" strokeLinecap="round"
+          strokeDasharray={circumference} strokeDashoffset={offset} transform={`rotate(-90 ${cx} ${cy})`}
+          style={{ transition: 'stroke-dashoffset 0.6s ease' }} />
+        <text x={cx} y={cy - 4} textAnchor="middle" fontSize="28" fontWeight="800" fill="#111827">{value}%</text>
+        <text x={cx} y={cy + 16} textAnchor="middle" fontSize="10" fontWeight="600" fill="#5A7A5A">{soilLabel(value)}</text>
+      </svg>
+    </div>
+  );
+}
+
+function CustomTooltip({ active, payload, label }) {
+  if (!active || !payload || !payload.length) return null;
+  return (
+    <div style={{ background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(8px)', border: '1px solid rgba(76,175,80,0.12)', borderRadius: 8, padding: '8px 12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', fontSize: 12 }}>
+      <div style={{ fontWeight: 600, color: '#111827', marginBottom: 2 }}>{label}</div>
+      {payload.map((p) => (
+        <div key={p.name} style={{ color: p.color, fontWeight: 500 }}>{p.name}: {p.value}{p.name === 'Temperature' ? '°C' : '%'}</div>
+      ))}
+    </div>
+  );
+}
+
+function DistanceIndicator({ distance }) {
+  const rings = [
+    { max: 30, color: '#EF4444', label: 'Obstacle' },
+    { max: 100, color: '#F59E0B', label: 'Caution' },
+    { max: 200, color: '#10B981', label: 'Clear' },
+    { max: Infinity, color: '#9CA3AF', label: 'Far' },
+  ];
+  const activeRing = rings.find((r) => distance <= r.max) || rings[rings.length - 1];
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <div className="relative" style={{ width: 140, height: 140 }}>
+        {[120, 90, 60, 30].map((r, i) => (
+          <div key={i}
+            style={{
+              position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+              width: r, height: r, borderRadius: '50%',
+              border: `1.5px solid ${distance <= (4 - i) * 50 + 30 ? activeRing.color : 'rgba(0,0,0,0.06)'}`,
+              transition: 'border-color 0.3s ease',
+            }}
+          />
+        ))}
+        <div style={{
+          position: 'absolute', top: '50%', left: '50%',
+          transform: 'translate(-50%, -50%)',
+          textAlign: 'center',
+        }}>
+          <div style={{ fontSize: 22, fontWeight: 800, color: activeRing.color }}>{distance}</div>
+          <div style={{ fontSize: 10, color: '#5A7A5A', fontWeight: 500 }}>cm</div>
+        </div>
+      </div>
+      <span className="text-[11px] font-semibold px-3 py-1 rounded-full"
+        style={{ background: `${activeRing.color}15`, color: activeRing.color }}>
+        {activeRing.icon || ''} {activeRing.label}
+      </span>
+    </div>
+  );
+}
+
+const sensorStatusOk = (readings) => readings !== undefined && readings !== null;
+
+export default function SensorsDetails() {
+  const { robots } = useRobots();
+  const [selectedRobot, setSelectedRobot] = useState(null);
+  const [lastSyncStr] = useState(() => {
+    const d = lastSynced;
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  });
+
+  const readingFor = (robotId) => mockSensorReadings[robotId];
+
+  const fleetStats = useMemo(() => {
+    const online = robots.filter((r) => r.status !== 'Offline').length;
+    const temps = robots
+      .filter((r) => r.status !== 'Offline')
+      .map((r) => readingFor(r.id)?.dht11?.temperature)
+      .filter(Boolean);
+    const avgTemp = temps.length > 0
+      ? Math.round((temps.reduce((s, v) => s + v, 0) / temps.length) * 10) / 10
+      : 0;
+    const moistures = robots
+      .filter((r) => r.status !== 'Offline')
+      .map((r) => readingFor(r.id)?.soilMoisture)
+      .filter(Boolean);
+    const avgMoisture = moistures.length > 0
+      ? Math.round((moistures.reduce((s, v) => s + v, 0) / moistures.length) * 10) / 10
+      : 0;
+    const obstacles = robots.filter((r) => {
+      const u = readingFor(r.id)?.ultrasonic;
+      return u !== undefined && u < 30;
+    }).length;
+    return { online: `${online}/${robots.length}`, avgTemp, avgMoisture, obstacles, total: robots.length };
+  }, [robots]);
+
+  if (!robots || robots.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-sm text-text-secondary">No robot data available.</div>
+      </div>
+    );
+  }
+
+  if (selectedRobot) {
+    const r = selectedRobot;
+    const rId = r.id;
+    const readings = readingFor(rId);
+    const historyData = mockHistoryData[rId] || [];
+    const isOnline = r.status !== 'Offline';
+
+    return (
+      <>
+        <div className="flex items-center gap-3 mb-6">
+          <button onClick={() => setSelectedRobot(null)}
+            style={{ background: 'rgba(76,175,80,0.1)', border: 'none', borderRadius: '10px', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s ease', color: '#2e7d2e' }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(76,175,80,0.2)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(76,175,80,0.1)'; }}>
+            <ArrowLeft size={18} />
+          </button>
+          <div>
+            <div className="text-2xl font-bold text-primary">{r.name}</div>
+            <div className="text-sm text-text-secondary mt-0.5">{r.id} · {r.farm} · {r.model}</div>
+          </div>
+          <div className="ml-auto flex items-center gap-3">
+            <span className="px-3 py-1.5 rounded-full text-[11px] font-semibold flex items-center gap-1.5"
+              style={{ background: isOnline ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)', color: isOnline ? '#10B981' : '#EF4444' }}>
+              <span className="w-2 h-2 rounded-full" style={{ background: isOnline ? '#10B981' : '#EF4444' }} />
+              {r.status}
+            </span>
+            <span className="px-3 py-1.5 rounded-full text-[11px] font-semibold flex items-center gap-1.5"
+              style={{ background: 'rgba(76,175,80,0.1)', color: '#2e7d2e' }}>
+              <Cpu size={14} /> Battery {r.battery}%
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <GlowCard className="glass-card rounded-2xl p-5" style={{ contentVisibility: 'auto' }}>
+            <div className="text-sm font-semibold text-primary mb-4 flex items-center gap-2">
+              <Thermometer size={16} color="#2e7d2e" /> DHT11 — Temperature & Humidity
+            </div>
+            {isOnline && readings ? (
+              <div className="flex items-center justify-around">
+                <SemiGauge value={readings.dht11.temperature} max={50} unit="°C" label="Temperature" color={tempColor(readings.dht11.temperature)} />
+                <SemiGauge value={readings.dht11.humidity} max={100} unit="%" label="Humidity" color={humidityColor(readings.dht11.humidity)} />
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-[100px]">
+                <span className="text-xs font-semibold px-3 py-1.5 rounded-full" style={{ background: 'rgba(156,163,175,0.12)', color: '#9CA3AF' }}>Sensor Offline</span>
+              </div>
+            )}
+          </GlowCard>
+
+          <GlowCard className="glass-card rounded-2xl p-5" style={{ contentVisibility: 'auto' }}>
+            <div className="text-sm font-semibold text-primary mb-4 flex items-center gap-2">
+              <Droplets size={16} color="#2e7d2e" /> Soil Moisture
+            </div>
+            {isOnline && readings ? (
+              <div className="flex justify-center">
+                <SoilGauge value={readings.soilMoisture} />
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-[180px]">
+                <span className="text-xs font-semibold px-3 py-1.5 rounded-full" style={{ background: 'rgba(156,163,175,0.12)', color: '#9CA3AF' }}>Sensor Offline</span>
+              </div>
+            )}
+          </GlowCard>
+
+          <GlowCard className="glass-card rounded-2xl p-5" style={{ contentVisibility: 'auto' }}>
+            <div className="text-sm font-semibold text-primary mb-4 flex items-center gap-2">
+              <Radar size={16} color="#2e7d2e" /> Ultrasonic
+            </div>
+            {isOnline && readings ? (
+              <div className="flex justify-center">
+                <DistanceIndicator distance={readings.ultrasonic} />
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-[180px]">
+                <span className="text-xs font-semibold px-3 py-1.5 rounded-full" style={{ background: 'rgba(156,163,175,0.12)', color: '#9CA3AF' }}>Sensor Offline</span>
+              </div>
+            )}
+          </GlowCard>
+
+          <GlowCard className="glass-card rounded-2xl p-5" style={{ contentVisibility: 'auto' }}>
+            <div className="text-sm font-semibold text-primary mb-4 flex items-center gap-2">
+              <MapPin size={16} color="#2e7d2e" /> WiFi Location
+            </div>
+            {isOnline && readings ? (
+              <div className="flex flex-col items-center gap-3">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-semibold"
+                  style={{ background: 'rgba(16,185,129,0.1)', color: '#10B981' }}>
+                  <Wifi size={12} /> Tracking Active
+                </div>
+                <div className="p-4 rounded-xl w-full text-center"
+                  style={{ background: 'rgba(0,0,0,0.03)', border: '1px dashed rgba(0,0,0,0.08)' }}>
+                  <MapPin size={24} color="#2e7d2e" className="mx-auto mb-2" />
+                  <div className="text-sm font-semibold text-primary">
+                    {readings.wifiLocation.lat.toFixed(4)}, {readings.wifiLocation.lng.toFixed(4)}
+                  </div>
+                  <div className="text-[10px] text-text-secondary mt-1">{readings.wifiLocation.label}</div>
+                </div>
+                <div className="text-[9px] text-text-secondary">// TODO: Replace with real interactive map (Leaflet.js or Google Maps)</div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-[180px]">
+                <span className="text-xs font-semibold px-3 py-1.5 rounded-full" style={{ background: 'rgba(156,163,175,0.12)', color: '#9CA3AF' }}>Sensor Offline</span>
+              </div>
+            )}
+          </GlowCard>
+        </div>
+
+        <GlowCard className="glass-card rounded-2xl p-5" style={{ contentVisibility: 'auto' }}>
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-sm font-semibold text-primary">Sensor Reading History</div>
+            <div className="text-[9px] text-text-secondary">// TODO: Replace with real time-series data from sensor API</div>
+          </div>
+          {historyData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={220}>
+              <LineChart data={historyData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" vertical={false} />
+                <XAxis dataKey="time" tick={{ fontSize: 11, fill: 'var(--color-text-secondary)', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                <YAxis yAxisId="temp" domain={[10, 40]} tick={{ fontSize: 11, fill: 'var(--color-text-secondary)', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                <YAxis yAxisId="moisture" domain={[0, 100]} orientation="right" tick={{ fontSize: 11, fill: 'var(--color-text-secondary)', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                <Tooltip content={<CustomTooltip />} />
+                <Legend
+                  formatter={(val) => <span style={{ color: 'var(--color-text-secondary)', fontSize: 12, fontWeight: 500 }}>{val}</span>}
+                />
+                <Line yAxisId="temp" type="monotone" dataKey="temperature" stroke="#EF4444" strokeWidth={2.5} dot={false} name="Temperature" activeDot={{ r: 4, fill: '#EF4444', stroke: '#fff', strokeWidth: 2 }} />
+                <Line yAxisId="moisture" type="monotone" dataKey="soilMoisture" stroke="#10B981" strokeWidth={2.5} dot={false} name="Soil Moisture" activeDot={{ r: 4, fill: '#10B981', stroke: '#fff', strokeWidth: 2 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="flex items-center justify-center h-[220px] text-sm text-text-secondary">No history data available</div>
+          )}
+        </GlowCard>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(76,175,80,0.12)' }}>
+          <Cpu size={22} color="#2e7d2e" />
+        </div>
+        <div>
+          <div className="text-2xl font-bold text-primary">Robot Sensor Details</div>
+          <div className="text-sm text-text-secondary mt-1">Live sensor readings from every robot in the fleet</div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
+        <GlowCard className="glass-card rounded-2xl p-4" style={{ contentVisibility: 'auto' }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[10px] font-semibold text-text-secondary mb-1">Sensors Online</div>
+              <div className="text-xl font-extrabold text-primary">{fleetStats.online}</div>
+            </div>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(76,175,80,0.12)' }}>
+              <Wifi size={16} color="#10B981" />
+            </div>
+          </div>
+        </GlowCard>
+        <GlowCard className="glass-card rounded-2xl p-4" style={{ contentVisibility: 'auto' }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[10px] font-semibold text-text-secondary mb-1">Avg Temperature</div>
+              <div className="text-xl font-extrabold text-primary">{fleetStats.avgTemp}°C</div>
+            </div>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(76,175,80,0.12)' }}>
+              <Thermometer size={16} color="#2e7d2e" />
+            </div>
+          </div>
+        </GlowCard>
+        <GlowCard className="glass-card rounded-2xl p-4" style={{ contentVisibility: 'auto' }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[10px] font-semibold text-text-secondary mb-1">Avg Soil Moisture</div>
+              <div className="text-xl font-extrabold text-primary">{fleetStats.avgMoisture}%</div>
+            </div>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(76,175,80,0.12)' }}>
+              <Droplets size={16} color="#2e7d2e" />
+            </div>
+          </div>
+        </GlowCard>
+        <GlowCard className="glass-card rounded-2xl p-4" style={{ contentVisibility: 'auto' }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[10px] font-semibold text-text-secondary mb-1">Obstacles Detected</div>
+              <div className="text-xl font-extrabold text-primary">{fleetStats.obstacles}</div>
+            </div>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(239,68,68,0.12)' }}>
+              <Radar size={16} color="#EF4444" />
+            </div>
+          </div>
+        </GlowCard>
+        <GlowCard className="glass-card rounded-2xl p-4" style={{ contentVisibility: 'auto' }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[10px] font-semibold text-text-secondary mb-1">Last Synced</div>
+              <div className="text-xl font-extrabold text-primary">{lastSyncStr}</div>
+            </div>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(76,175,80,0.12)' }}>
+              <RefreshCw size={16} color="#2e7d2e" />
+            </div>
+          </div>
+        </GlowCard>
+      </div>
+
+      <div className="text-sm font-semibold text-primary mb-4">Robot Sensor Grid</div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {robots.map((r) => {
+          const rId = r.id;
+          const readings = readingFor(rId);
+          const isOnline = r.status !== 'Offline';
+          const us = readings ? ultrasonicStatus(readings.ultrasonic) : null;
+
+          return (
+            <GlowCard key={r.id} onClick={() => setSelectedRobot(r)}
+              className="glass-card rounded-2xl p-5" style={{ contentVisibility: 'auto', cursor: 'pointer' }}>
+              <div className="flex items-center justify-between mb-3">
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold text-primary truncate">{r.name}</div>
+                  <div className="text-[10px] text-text-secondary truncate mt-0.5">{r.id} · {r.farm}</div>
+                </div>
+                <span className="w-2.5 h-2.5 rounded-full shrink-0 ml-2"
+                  style={{ background: r.status === 'Active' ? '#10B981' : r.status === 'Idle' ? '#F59E0B' : '#EF4444' }} />
+              </div>
+
+              {!isOnline ? (
+                <div className="flex items-center justify-center h-[120px]">
+                  <div className="flex flex-col items-center gap-1.5">
+                    <WifiOff size={20} color="#9CA3AF" />
+                    <span className="text-[11px] font-semibold px-3 py-1 rounded-full" style={{ background: 'rgba(156,163,175,0.12)', color: '#9CA3AF' }}>Sensor Offline</span>
+                  </div>
+                </div>
+              ) : readings ? (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-semibold text-text-secondary uppercase tracking-wider">DHT11</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] font-bold" style={{ color: tempColor(readings.dht11.temperature) }}>
+                        <Thermometer size={12} className="inline mr-0.5" style={{ verticalAlign: 'middle' }} />{readings.dht11.temperature}°C
+                      </span>
+                      <span className="text-[11px] font-bold" style={{ color: humidityColor(readings.dht11.humidity) }}>
+                        <Droplets size={12} className="inline mr-0.5" style={{ verticalAlign: 'middle' }} />{readings.dht11.humidity}%
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[9px] font-semibold text-text-secondary uppercase tracking-wider">Soil Moisture</span>
+                      <span className="text-[10px] font-bold" style={{ color: soilColor(readings.soilMoisture) }}>{readings.soilMoisture}%</span>
+                    </div>
+                    <div className="h-1.5 rounded-full" style={{ background: 'rgba(0,0,0,0.06)' }}>
+                      <div className="h-full rounded-full transition-all" style={{ width: `${readings.soilMoisture}%`, background: soilColor(readings.soilMoisture) }} />
+                    </div>
+                    <div className="text-[9px] font-medium mt-0.5" style={{ color: soilColor(readings.soilMoisture) }}>{soilLabel(readings.soilMoisture)}</div>
+                  </div>
+                  <div className="flex items-center justify-between pt-1 border-t" style={{ borderColor: 'rgba(0,0,0,0.05)' }}>
+                    <div className="flex items-center gap-1.5">
+                      <Radar size={12} color="#5A7A5A" />
+                      <span className="text-[9px] font-semibold text-text-secondary uppercase tracking-wider">Ultrasonic</span>
+                    </div>
+                    <span className="text-[10px] font-semibold" style={{ color: us?.color }}>{us?.icon} {readings.ultrasonic}cm</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 pt-1">
+                    <MapPin size={11} color="#5A7A5A" />
+                    <span className="text-[9px] text-text-secondary">({readings.wifiLocation.lat.toFixed(2)}, {readings.wifiLocation.lng.toFixed(2)})</span>
+                    <span className="text-[8px] font-semibold ml-auto" style={{ color: '#10B981' }}>📍 Active</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-[120px]">
+                  <span className="text-[11px] text-text-secondary">No sensor data</span>
+                </div>
+              )}
+            </GlowCard>
+          );
+        })}
+      </div>
+    </>
+  );
+}

@@ -64,6 +64,9 @@ body {
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
 }
 
+.text-primary { color: #111827; }
+.text-text-secondary { color: #6B7280; }
+
 .dark body {
   background: radial-gradient(at top left, #0f1729 0%, #1a1f35 40%, #0d1117 80%, #000000 100%);
 }
