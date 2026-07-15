@@ -1,122 +1,231 @@
-import { Bot, Check, Link as LinkIcon, MapPin, X } from "lucide-react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { Bot, Check, ChevronDown, Clock, MapPin, Search, X } from "lucide-react";
 import AppShell from "../components/AppShell";
 
 const availableRobots = [
-  { name: "AgriBot Gamma", id: "ROB-003", battery: 20 },
-  { name: "AgriBot Delta", id: "ROB-004", battery: 100 },
+  { name: "AgriBot Gamma", id: "ROB-003", battery: 20, status: "charging", location: "Base Station", lastSeen: "1 hour ago" },
+  { name: "AgriBot Delta", id: "ROB-004", battery: 100, status: "idle", location: "Base Station", lastSeen: "2 hours ago" },
 ];
 
 const farms = [
-  { name: "Green Valley Farm", crop: "Wheat", robots: ["AgriBot Alpha"] },
-  { name: "Sunny Acres", crop: "Corn", robots: ["AgriBot Beta"] },
+  { name: "Green Valley Farm", crop: "Wheat", robots: ["ROB-001"] },
+  { name: "Sunny Acres", crop: "Corn", robots: ["ROB-002"] },
   { name: "Riverside Farm", crop: "Rice", robots: [] },
 ];
 
-function batteryColor(value) {
-  if (value <= 25) return "bg-red-500";
-  if (value <= 50) return "bg-yellow-500";
-  return "bg-[#10B981]";
+const statusLabel = { idle: "Ready", active: "Busy", charging: "Charging", maintenance: "Maintenance" };
+const statusColor = { idle: "badge-success", active: "badge-info", charging: "badge-warning", maintenance: "badge-danger" };
+
+function batteryColor(v) {
+  if (v <= 25) return "bg-red-500";
+  if (v <= 50) return "bg-yellow-500";
+  return "bg-[#2E7D32]";
+}
+
+function Toast({ message, type, onClose }) {
+  useEffect(() => { const t = setTimeout(onClose, 3000); return () => clearTimeout(t); }, [onClose]);
+  return (
+    <div className={"fixed top-6 right-6 z-[60] flex items-center gap-3 rounded-xl px-5 py-3.5 shadow-2xl text-sm font-bold transition-all " + (type === "success" ? "bg-[#2E7D32] text-white" : "bg-red-600 text-white")}>
+      {type === "success" ? <Check size={18} /> : <X size={18} />}
+      {message}
+    </div>
+  );
+}
+
+function SelectFarm({ farms, selectedFarm, setSelectedFarm }) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const ref = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(e) { if (ref.current && !ref.current.contains(e.target)) setOpen(false); }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const filtered = farms.filter(f => f.name.toLowerCase().includes(query.toLowerCase()) || f.crop.toLowerCase().includes(query.toLowerCase()));
+
+  return (
+    <div className="relative" ref={ref}>
+      <label className="mb-2 block text-sm font-semibold text-[#5A7A5A] uppercase tracking-wide">Select Farm</label>
+      <button onClick={() => setOpen(!open)}
+        className="flex w-full items-center justify-between rounded-xl border-2 border-[#DDE8DD] bg-white px-5 py-4 text-left text-lg font-bold text-[#111827] hover:border-[#2E7D32] transition">
+        <span className={selectedFarm ? "" : "text-[#9CA3AF] font-normal"}>
+          {selectedFarm ? selectedFarm.name : "Choose a farm..."}
+        </span>
+        <ChevronDown size={22} className={"text-[#5A7A5A] transition " + (open ? "rotate-180" : "")} />
+      </button>
+      {open && (
+        <div className="absolute left-0 right-0 top-full mt-1.5 z-10 rounded-xl border border-[#DDE8DD] bg-white shadow-xl overflow-hidden">
+          <div className="flex items-center gap-3 border-b border-[#DDE8DD] px-4 py-3">
+            <Search size={18} className="text-[#9CA3AF] shrink-0" />
+            <input className="w-full text-base outline-none bg-transparent" placeholder="Search farms..." autoFocus
+              value={query} onChange={e => setQuery(e.target.value)} />
+          </div>
+          <div className="max-h-56 overflow-y-auto">
+            {filtered.map(f => (
+              <button key={f.name} onClick={() => { setSelectedFarm(f); setOpen(false); setQuery(""); }}
+                className={"flex w-full items-center justify-between px-5 py-3.5 text-left transition hover:bg-[#F3F7F3] " + (selectedFarm?.name === f.name ? "bg-[rgba(46,125,50,0.08)]" : "")}>
+                <div>
+                  <p className="font-bold text-[#111827]">{f.name}</p>
+                  {f.crop && <p className="text-sm text-[#5A7A5A]">{f.crop}</p>}
+                </div>
+                {selectedFarm?.name === f.name && <Check size={18} className="text-[#2E7D32]" />}
+              </button>
+            ))}
+            {filtered.length === 0 && <p className="px-5 py-8 text-center text-sm text-[#5A7A5A]">No farms found</p>}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function RobotCard({ robot, onAssign, onRemove, showAssign, showRemove }) {
+  return (
+    <div className="rounded-xl border border-[#DDE8DD] bg-white p-5 shadow-sm transition hover:shadow-md">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="rounded-xl bg-[rgba(46,125,50,0.1)] p-3 text-[#2E7D32] shrink-0">
+            <Bot size={26} />
+          </span>
+          <div className="min-w-0">
+            <p className="text-lg font-black text-[#111827]">{robot.id}</p>
+            {robot.name && <p className="text-sm text-[#5A7A5A] truncate">{robot.name}</p>}
+          </div>
+        </div>
+        <span className={"badge shrink-0 " + (statusColor[robot.status] || "badge-neutral")}>
+          {statusLabel[robot.status] || robot.status}
+        </span>
+      </div>
+
+      <div className="mt-4 flex items-center gap-3">
+        <div className="flex-1">
+          <div className="flex justify-between text-sm font-semibold mb-1">
+            <span className="text-[#5A7A5A]">Battery</span>
+            <span>{robot.battery}%</span>
+          </div>
+          <div className="h-2.5 rounded-full bg-[#F3F7F3]">
+            <div className={"h-2.5 rounded-full " + batteryColor(robot.battery)} style={{ width: robot.battery + "%" }} />
+          </div>
+        </div>
+      </div>
+
+      {(robot.location || robot.lastSeen) && (
+        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-[#5A7A5A]">
+          {robot.location && <span className="flex items-center gap-1"><MapPin size={12} /> {robot.location}</span>}
+          {robot.lastSeen && <span className="flex items-center gap-1"><Clock size={12} /> {robot.lastSeen}</span>}
+        </div>
+      )}
+
+      <div className="mt-4">
+        {showAssign && (
+          <button onClick={() => onAssign(robot)}
+            className="w-full rounded-xl bg-[#2E7D32] py-3 font-bold text-white hover:bg-[#256D28] transition flex items-center justify-center gap-2">
+            <Check size={18} /> Assign Robot
+          </button>
+        )}
+        {showRemove && (
+          <button onClick={() => onRemove(robot)}
+            className="w-full rounded-xl border-2 border-red-200 py-3 font-bold text-red-600 hover:bg-red-50 transition flex items-center justify-center gap-2">
+            <X size={18} /> Remove Assignment
+          </button>
+        )}
+      </div>
+    </div>
+  );
 }
 
 function RobotAssignment() {
+  const [selectedFarm, setSelectedFarm] = useState(null);
+  const [assigned, setAssigned] = useState(() => {
+    const store = localStorage.getItem("robotAssignments");
+    return store ? JSON.parse(store) : Object.fromEntries(farms.map(f => [f.name, [...f.robots]]));
+  });
+  const [toast, setToast] = useState(null);
+
+  useEffect(() => { localStorage.setItem("robotAssignments", JSON.stringify(assigned)); }, [assigned]);
+
+  const allRobots = availableRobots.concat(
+    farms.flatMap(f => {
+      const full = [{ name: "AgriBot Alpha", id: "ROB-001", battery: 85, status: "active", location: "Sector A", lastSeen: "5 mins ago" },
+                    { name: "AgriBot Beta", id: "ROB-002", battery: 45, status: "active", location: "Sector C", lastSeen: "12 mins ago" }];
+      return f.robots.map(id => full.find(r => r.id === id)).filter(Boolean);
+    })
+  );
+
+  const assignedIds = selectedFarm ? (assigned[selectedFarm.name] || []) : [];
+  const available = allRobots.filter(r => !assignedIds.includes(r.id));
+
+  const handleAssign = useCallback((robot) => {
+    setAssigned(prev => ({ ...prev, [selectedFarm.name]: [...(prev[selectedFarm.name] || []), robot.id] }));
+    setToast({ message: "Robot assigned successfully.", type: "success" });
+  }, [selectedFarm]);
+
+  const handleRemove = useCallback((robot) => {
+    setAssigned(prev => ({ ...prev, [selectedFarm.name]: (prev[selectedFarm.name] || []).filter(id => id !== robot.id) }));
+    setToast({ message: "Robot removed successfully.", type: "success" });
+  }, [selectedFarm]);
+
   return (
     <AppShell>
-      <section className="mx-auto max-w-7xl space-y-8">
+      <section className="mx-auto max-w-4xl space-y-6 md:space-y-8">
         <div>
-          <h1 className="text-2xl font-bold text-[#111827]">Robot Assignment</h1>
-          <p className="mt-1 text-sm font-[400] text-[#6B7280]">Assign robots to farms by selecting a robot and farm</p>
+          <h1 className="text-xl md:text-2xl font-bold text-[#111827]">Robot Assignment</h1>
+          <p className="mt-1 text-sm text-[#5A7A5A]">Select a farm, then assign or remove robots</p>
         </div>
 
-        <section className="glass-card p-6">
-          <h2 className="mb-5 text-xl font-bold text-[#111827]">Manual Assignment</h2>
-          <div className="grid gap-4 lg:grid-cols-3">
-            <label>
-              <span className="mb-2 block font-semibold">Select Robot</span>
-              <select className="w-full rounded-lg border border-slate-300 bg-white px-5 py-4 text-lg outline-none">
-                <option>Choose a robot</option>
-                <option>AgriBot Gamma</option>
-                <option>AgriBot Delta</option>
-              </select>
-            </label>
-            <label>
-              <span className="mb-2 block font-semibold">Select Farm</span>
-              <select className="w-full rounded-lg border border-slate-300 bg-white px-5 py-4 text-lg outline-none">
-                <option>Choose a farm</option>
-                <option>Green Valley Farm</option>
-                <option>Riverside Farm</option>
-              </select>
-            </label>
-            <button className="mt-8 inline-flex items-center justify-center gap-2 rounded-xl bg-[#10B981] px-5 py-3 text-sm font-semibold text-white">
-              <Check size={22} /> Assign Robot
-            </button>
+        <SelectFarm farms={farms} selectedFarm={selectedFarm} setSelectedFarm={setSelectedFarm} />
+
+        {selectedFarm && (
+          <>
+            <section>
+              <h2 className="mb-4 text-lg font-bold text-[#111827]">Available Robots</h2>
+              {available.length > 0 ? (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {available.map(robot => (
+                    <RobotCard key={robot.id} robot={robot} onAssign={handleAssign} showAssign />
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-xl border-2 border-dashed border-[#DDE8DD] bg-white p-10 text-center">
+                  <Bot size={40} className="mx-auto mb-3 text-[#5A7A5A] opacity-40" />
+                  <p className="font-semibold text-[#5A7A5A]">All robots are assigned to this farm or none are available</p>
+                </div>
+              )}
+            </section>
+
+            <section>
+              <h2 className="mb-4 text-lg font-bold text-[#111827]">Assigned Robots</h2>
+              {assignedIds.length > 0 ? (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {assignedIds.map(id => {
+                    const robot = allRobots.find(r => r.id === id);
+                    if (!robot) return null;
+                    return (
+                      <RobotCard key={robot.id} robot={robot} onRemove={handleRemove} showRemove />
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="rounded-xl border-2 border-dashed border-[#DDE8DD] bg-white p-10 text-center">
+                  <MapPin size={40} className="mx-auto mb-3 text-[#5A7A5A] opacity-40" />
+                  <p className="font-semibold text-[#5A7A5A]">No robots assigned to this farm yet</p>
+                </div>
+              )}
+            </section>
+          </>
+        )}
+
+        {!selectedFarm && (
+          <div className="rounded-xl border-2 border-dashed border-[#DDE8DD] bg-white p-16 text-center">
+            <MapPin size={48} className="mx-auto mb-4 text-[#5A7A5A] opacity-40" />
+            <p className="text-lg font-semibold text-[#5A7A5A]">Select a farm above to manage its robot assignments</p>
           </div>
-        </section>
-
-        <div className="grid gap-8 lg:grid-cols-2">
-          <section>
-            <h2 className="mb-4 text-xl font-bold text-[#111827]">Available Robots</h2>
-            <div className="space-y-4">
-              {availableRobots.map((robot) => (
-                <article key={robot.id} className="rounded-xl border bg-white p-5 shadow-sm">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <span className="rounded-xl bg-[rgba(16,185,129,0.12)] p-4 text-[#10B981]">
-                        <Bot size={34} />
-                      </span>
-                      <div>
-                        <h3 className="text-xl font-black">{robot.name}</h3>
-                        <p className="text-slate-600">{robot.id}</p>
-                      </div>
-                    </div>
-                    <span className="rounded-full bg-[rgba(16,185,129,0.12)] px-3 py-1 text-sm font-black text-[#10B981]">available</span>
-                  </div>
-                  <div className="mt-5 flex justify-between font-semibold">
-                    <span>Battery</span>
-                    <span>{robot.battery}%</span>
-                  </div>
-                  <div className="mt-2 h-2 rounded-full bg-white/30">
-                    <div className={`h-2 rounded-full ${batteryColor(robot.battery)}`} style={{ width: `${robot.battery}%` }} />
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <section>
-            <h2 className="mb-4 text-xl font-bold text-[#111827]">Farms</h2>
-            <div className="space-y-4">
-              {farms.map((farm) => (
-                <article key={farm.name} className="rounded-xl border bg-white p-5 shadow-sm">
-                  <div className="flex gap-4">
-                    <span className="rounded-xl bg-[rgba(16,185,129,0.12)] p-4 text-[#10B981]">
-                      <MapPin size={34} />
-                    </span>
-                    <div>
-                      <h3 className="text-2xl font-black">{farm.name}</h3>
-                      <p className="text-slate-600">{farm.crop}</p>
-                    </div>
-                  </div>
-                  <p className="mt-5 font-semibold">Assigned Robots ({farm.robots.length})</p>
-                  {farm.robots.length ? (
-                    <div className="mt-3 space-y-2">
-                      {farm.robots.map((robot) => (
-                        <div key={robot} className="flex items-center justify-between rounded-xl bg-[rgba(16,185,129,0.06)] px-4 py-3 font-black">
-                          <span className="flex items-center gap-2"><Bot size={18} className="text-[#10B981]" /> {robot}</span>
-                          <X className="text-red-500" size={20} />
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="mt-3 rounded-lg border border-dashed border-white/30 bg-white/20 p-6 text-center text-slate-500">
-                      <LinkIcon className="mx-auto mb-2" /> Drop robot here to assign
-                    </div>
-                  )}
-                </article>
-              ))}
-            </div>
-          </section>
-        </div>
+        )}
       </section>
+
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </AppShell>
   );
 }

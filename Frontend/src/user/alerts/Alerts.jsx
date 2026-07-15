@@ -20,13 +20,13 @@ function Alerts() {
       <section className="mx-auto max-w-6xl space-y-8">
         <div>
           <h1 className="text-2xl font-bold text-[#111827]">Alerts</h1>
-          <p className="mt-1 text-sm font-[400] text-[#6B7280]">Important farm problems in simple language</p>
+          <p className="mt-1 text-sm font-[400] text-[#5A7A5A]">Important farm problems in simple language</p>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-3">
-          <div className="rounded-xl bg-[rgba(239,68,68,0.06)] p-6 shadow-lg"><ShieldAlert className="text-[#EF4444]" size={44} /><p className="mt-4 text-3xl font-bold text-black">2</p><p className="font-bold text-[#EF4444]">Critical</p></div>
-          <div className="rounded-xl bg-[rgba(245,158,11,0.06)] p-6 shadow-lg"><AlertTriangle className="text-[#F59E0B]" size={44} /><p className="mt-4 text-3xl font-bold text-black">1</p><p className="font-bold text-[#F59E0B]">Warning</p></div>
-          <div className="rounded-xl bg-[rgba(13,148,136,0.06)] p-6 shadow-lg"><Bell className="text-[#0D9488]" size={44} /><p className="mt-4 text-3xl font-bold text-black">1</p><p className="font-bold text-[#0D9488]">Info</p></div>
+          <div className="card"><ShieldAlert className="text-[#EF4444]" size={44} /><p className="mt-4 text-3xl font-bold text-black">2</p><p className="font-bold text-[#EF4444]">Critical</p></div>
+          <div className="card"><AlertTriangle className="text-[#F59E0B]" size={44} /><p className="mt-4 text-3xl font-bold text-black">1</p><p className="font-bold text-[#F59E0B]">Warning</p></div>
+          <div className="card"><Bell className="text-[#0D9488]" size={44} /><p className="mt-4 text-3xl font-bold text-black">1</p><p className="font-bold text-[#0D9488]">Info</p></div>
         </div>
 
         <div className="space-y-4">
@@ -43,7 +43,7 @@ function Alerts() {
                       <p className="mt-2 font-bold">{alert.field} • {alert.time}</p>
                     </div>
                   </div>
-                  <span className={`rounded-full px-4 py-2 font-black ${style.badge}`}>{alert.status}</span>
+                  <span className={`badge ${alert.status === "Open" ? "badge-danger" : alert.status === "Checking" ? "badge-warning" : "badge-info"} text-sm px-4 py-2`}>{alert.status}</span>
                 </div>
               </article>
             );

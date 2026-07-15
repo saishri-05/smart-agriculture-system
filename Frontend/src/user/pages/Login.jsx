@@ -18,15 +18,16 @@ function Login() {
 
   return (
     <div className="flex min-h-screen">
-      <div className="hidden lg:flex lg:w-[45%] bg-gradient-to-br from-[#0F2440] via-[#1A3A5C] to-[#234F78] flex-col justify-between p-14 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-[45%] bg-gradient-to-br from-[#083B1B] via-[#1B5E20] to-[#2E7D32] flex-col justify-between p-14 relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.06]">
           <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-white" />
-          <div className="absolute -bottom-20 -left-20 w-[30rem] h-[30rem] rounded-full bg-[#10B981]" />
+          <div className="absolute -bottom-20 -left-20 w-[30rem] h-[30rem] rounded-full bg-[#4CAF50]" />
         </div>
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
 
         <div className="relative">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#10B981] shadow-lg">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#2E7D32] shadow-lg">
               <Leaf size={24} className="text-white" />
             </div>
             <span className="text-xl font-bold text-white/90">Smart Agriculture</span>
@@ -38,7 +39,7 @@ function Login() {
             <h1 className="text-4xl font-black leading-tight text-white">
               Smart Agriculture
               <br />
-              <span className="text-[#10B981]">Platform</span>
+              <span className="text-[#2E7D32]">Platform</span>
             </h1>
             <p className="mt-4 text-lg text-white/60 max-w-md leading-relaxed">
               Monitor your crops, optimize irrigation, manage robots, and maximize
@@ -49,7 +50,7 @@ function Login() {
           <div className="space-y-4">
             {features.map((f) => (
               <div key={f} className="flex items-center gap-3">
-                <CheckCircle size={18} className="text-[#10B981] shrink-0" />
+                <CheckCircle size={18} className="text-[#2E7D32] shrink-0" />
                 <span className="text-white/70">{f}</span>
               </div>
             ))}
@@ -64,7 +65,7 @@ function Login() {
       <div className="flex-1 flex items-center justify-center p-8 bg-gradient-to-br from-slate-50 to-white">
         <div className="w-full max-w-lg">
           <div className="lg:hidden flex items-center gap-3 mb-10">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#10B981]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#2E7D32]">
               <Leaf size={20} className="text-white" />
             </div>
             <span className="text-lg font-bold text-[#111827]">Smart Agriculture</span>
@@ -84,7 +85,7 @@ function Login() {
               </label>
               <input
                 type="email"
-                className="w-full rounded-xl border border-slate-300 bg-white px-5 py-4 text-base outline-none transition focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20"
+                className="input"
                 placeholder="john@farm.com"
               />
             </div>
@@ -95,7 +96,7 @@ function Login() {
               </label>
               <input
                 type="password"
-                className="w-full rounded-xl border border-slate-300 bg-white px-5 py-4 text-base outline-none transition focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20"
+                className="input"
                 placeholder="Enter your password"
               />
             </div>
@@ -104,13 +105,13 @@ function Login() {
               <label className="flex items-center gap-3 cursor-pointer">
                 <input
                   type="checkbox"
-                  className="h-5 w-5 rounded border-slate-300 text-[#10B981] focus:ring-[#10B981]"
+                  className="h-5 w-5 rounded border-slate-300 text-[#2E7D32] focus:ring-[#2E7D32]"
                 />
                 <span className="text-sm text-slate-600">Remember me</span>
               </label>
               <a
                 href="#"
-                className="text-sm font-semibold text-[#10B981] hover:text-[#059669] transition"
+                className="text-sm font-semibold text-[#2E7D32] hover:text-[#256D28] transition"
               >
                 Forgot password?
               </a>
@@ -118,7 +119,7 @@ function Login() {
 
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-3 rounded-xl bg-[#10B981] px-8 py-4 text-base font-bold text-white shadow-lg shadow-[#10B981]/20 transition hover:bg-[#059669] hover:shadow-xl cursor-pointer"
+              className="btn btn-primary w-full"
             >
               <LogIn size={22} />
               Sign In

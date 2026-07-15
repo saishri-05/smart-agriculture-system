@@ -85,31 +85,31 @@ function HistoricalData() {
     <AppShell>
       <section className="mx-auto max-w-7xl space-y-8">
         <div>
-          <h1 className="text-2xl font-bold" style={{ color: "#111827" }}>Log Data</h1>
-          <p className="mt-1 text-sm" style={{ color: "#6B7280" }}>Activity and event log for your farm</p>
+          <h1 className="text-2xl font-bold text-[#111827]">Log Data</h1>
+          <p className="mt-1 text-sm text-[#5A7A5A]">Activity and event log for your farm</p>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-4">
           {[
-            { label: "Total", value: logs.length, color: "text-[#0F2440]", border: "border-l-[#0F2440]" },
+            { label: "Total", value: logs.length, color: "text-[#111827]", border: "border-l-[#111827]" },
             { label: "Info", value: count("info"), color: "text-blue-700", border: "border-l-blue-500" },
             { label: "Warnings", value: count("warning"), color: "text-amber-700", border: "border-l-amber-500" },
             { label: "Errors", value: count("error"), color: "text-red-700", border: "border-l-red-500" },
           ].map((s) => (
-            <div key={s.label} className={"glass-card border-l-4 p-5 " + s.border}>
-              <p className="text-sm font-semibold" style={{ color: "#6B7280" }}>{s.label}</p>
+            <div key={s.label} className={"card border-l-4 " + s.border}>
+              <p className="text-sm font-semibold text-[#5A7A5A]">{s.label}</p>
               <p className={"mt-2 text-3xl font-black " + s.color}>{s.value}</p>
             </div>
           ))}
         </div>
 
-        <section className="glass-card p-6">
+        <section className="card">
           <div className="flex flex-wrap items-end gap-4">
             <div className="min-w-[160px] flex-1">
-              <span className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "#6B7280" }}>
+              <span className="label">
                 <CalendarDays size={14} /> Date
               </span>
-              <select className="w-full rounded-xl border border-white/30 bg-white/20 px-4 py-3 text-sm font-semibold outline-none backdrop-blur-sm" defaultValue="7days">
+              <select className="input" defaultValue="7days">
                 <option value="24h">Last 24 Hours</option>
                 <option value="7days">Last 7 Days</option>
                 <option value="30days">Last 30 Days</option>
@@ -117,8 +117,8 @@ function HistoricalData() {
               </select>
             </div>
             <div className="min-w-[160px] flex-1">
-              <span className="mb-2 block text-xs font-semibold uppercase tracking-wide" style={{ color: "#6B7280" }}>Show</span>
-              <select className="w-full rounded-xl border border-white/30 bg-white/20 px-4 py-3 text-sm font-semibold outline-none backdrop-blur-sm" value={filterSeverity} onChange={(e) => setFilterSeverity(e.target.value)}>
+              <span className="label">Show</span>
+              <select className="input" value={filterSeverity} onChange={(e) => setFilterSeverity(e.target.value)}>
                 <option value="all">All Events</option>
                 <option value="info">Info Only</option>
                 <option value="warning">Warnings Only</option>
@@ -126,11 +126,11 @@ function HistoricalData() {
               </select>
             </div>
             <div className="flex gap-2">
-              <button className="inline-flex items-center gap-2 rounded-xl bg-[#1A3A5C] px-5 py-3 text-sm font-bold text-white hover:bg-[#0F2440]">
+              <button className="btn btn-primary">
                 <Download size={16} /> Export
               </button>
               <button onClick={clearLogs}
-                className="inline-flex items-center gap-2 rounded-xl border border-red-300 bg-red-50 px-5 py-3 text-sm font-bold text-red-600 hover:bg-red-100">
+                className="btn btn-danger">
                 <Trash2 size={16} /> Clear
               </button>
             </div>
@@ -139,17 +139,17 @@ function HistoricalData() {
 
         <section className="space-y-6">
           {Object.keys(grouped).length === 0 ? (
-            <div className="glass-card p-12 text-center">
-              <CheckCircle2 size={48} className="mx-auto text-[#10B981]" />
-              <p className="mt-4 text-lg font-bold" style={{ color: "#111827" }}>All clear</p>
-              <p className="mt-1 text-sm" style={{ color: "#6B7280" }}>No log entries match your filter.</p>
+            <div className="card p-12 text-center">
+              <CheckCircle2 size={48} className="mx-auto text-[#2E7D32]" />
+              <p className="mt-4 text-lg font-bold text-[#111827]">All clear</p>
+              <p className="mt-1 text-sm text-[#5A7A5A]">No log entries match your filter.</p>
             </div>
           ) : (
             Object.entries(grouped).map(([date, entries]) => (
               <div key={date}>
                 <div className="mb-3 flex items-center gap-3">
-                  <span className="rounded-lg bg-[#1A3A5C] px-4 py-1.5 text-sm font-bold text-white">{formatDate(date)}</span>
-                  <span className="text-xs font-semibold" style={{ color: "#6B7280" }}>{entries.length} event{entries.length !== 1 ? "s" : ""}</span>
+                  <span className="rounded-lg bg-[#2E7D32] px-4 py-1.5 text-sm font-bold text-white">{formatDate(date)}</span>
+                  <span className="text-xs font-semibold text-[#5A7A5A]">{entries.length} event{entries.length !== 1 ? "s" : ""}</span>
                 </div>
                 <div className="space-y-2">
                   {entries.map((log) => {
@@ -159,23 +159,23 @@ function HistoricalData() {
                     const TypeIcon = typ.icon;
                     const timeOnly = log.time.split(" ").slice(1).join(" ");
                     return (
-                      <div key={log.id} className={"glass-card border-l-4 p-4 " + sev.border}>
+                      <div key={log.id} className={"card border-l-4 " + sev.border}>
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                           <div className="flex items-start gap-3 min-w-0">
                             <span className={"mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg " + typ.cls}>
                               <TypeIcon size={16} />
                             </span>
                             <div className="min-w-0">
-                              <p className="text-sm font-bold truncate" style={{ color: "#00112b" }}>{log.detail}</p>
+                              <p className="text-sm font-bold truncate text-[#111827]">{log.detail}</p>
                               <div className="mt-0.5 flex flex-wrap items-center gap-2 text-xs">
-                                <span style={{ color: "#6B7280" }}>{log.area}</span>
+                                <span className="text-[#5A7A5A]">{log.area}</span>
                                 <span className={"rounded px-2 py-0.5 font-semibold " + typ.cls}>{typ.label}</span>
                               </div>
                             </div>
                           </div>
                           <div className="flex shrink-0 items-center gap-3 sm:flex-col sm:items-end sm:gap-1">
-                            <span className="text-xs font-bold" style={{ color: "#6B7280" }}>{timeOnly}</span>
-                            <span className={"inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold " + sev.badge}>
+                            <span className="text-xs font-bold text-[#5A7A5A]">{timeOnly}</span>
+                            <span className={"badge " + (log.severity === "info" ? "badge-info" : log.severity === "warning" ? "badge-warning" : "badge-danger")}>
                               <SevIcon size={12} /> {sev.label}
                             </span>
                           </div>
@@ -189,7 +189,7 @@ function HistoricalData() {
           )}
         </section>
 
-        <div className="flex items-center justify-between text-sm" style={{ color: "#6B7280" }}>
+        <div className="flex items-center justify-between text-sm text-[#5A7A5A]">
           <span>{filtered.length} of {logs.length} entries</span>
           <span className="inline-flex items-center gap-1"><RefreshCw size={14} /> Live</span>
         </div>

@@ -30,10 +30,10 @@ const sensorData = [
 ];
 
 const performance = [
-  { title: "Growth Status", value: "Healthy", note: "85% optimal", icon: CheckCircle2, color: "bg-[#10B981] text-white" },
-  { title: "Harvest In", value: "12 Days", note: "Oct 25, 2026", icon: CalendarDays, color: "bg-[#10B981] text-white", dark: true },
+  { title: "Growth Status", value: "Healthy", note: "85% optimal", icon: CheckCircle2, color: "bg-[#2E7D32] text-white" },
+  { title: "Harvest In", value: "12 Days", note: "Oct 25, 2026", icon: CalendarDays, color: "bg-[#2E7D32] text-white", dark: true },
   { title: "Yield", value: "2.3 Tons", note: "↗ +15%", icon: TrendingUp, color: "bg-[#F59E0B] text-white" },
-  { title: "Net Profit", value: "₹17K", note: "Revenue: ₹45K", icon: DollarSign, color: "bg-[#10B981] text-white" },
+  { title: "Net Profit", value: "₹17K", note: "Revenue: ₹45K", icon: DollarSign, color: "bg-[#2E7D32] text-white" },
 ];
 
 const charts = [
@@ -50,13 +50,13 @@ function Analytics() {
         <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
           <div>
             <h1 className="text-2xl font-bold text-[#111827]">Analytics - Green Valley Farm (Rice)</h1>
-            <p className="mt-1 text-sm font-[400] text-[#6B7280]">Real-time sensor data and performance metrics</p>
+            <p className="mt-1 text-sm font-[400] text-[#5A7A5A]">Real-time sensor data and performance metrics</p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {["Select Farm", "Select Crop"].map((label, index) => (
               <label key={label}>
-                <span className="mb-2 block font-semibold">{label}</span>
-                <select className="w-full rounded-lg border border-white/50 bg-white/30 px-5 py-4 text-lg font-bold outline-none">
+                <span className="label">{label}</span>
+                <select className="input">
                   <option>{index === 0 ? "Green Valley Farm" : "Rice"}</option>
                 </select>
               </label>
@@ -68,15 +68,15 @@ function Analytics() {
           <h2 className="mb-6 text-xl font-bold text-[#111827]">Crop Performance</h2>
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
             {performance.map((item) => (
-              <article key={item.title} className={`glass-card p-6 ${item.dark ? "bg-[rgba(16,185,129,0.12)] text-[#111827]" : ""}`}>
+              <article key={item.title} className={`card ${item.dark ? "bg-[rgba(46,125,50,0.12)]" : ""}`}>
                 <div className="mb-5 flex items-center gap-4">
                   <span className={`rounded-lg p-3 ${item.color}`}>
                     <item.icon size={30} />
                   </span>
                   <h3 className="font-black">{item.title}</h3>
                 </div>
-                <p className={`text-3xl font-bold text-black ${item.value === "Healthy" ? "text-[#10B981]" : ""}`}>{item.value}</p>
-                <p className={`mt-2 text-sm ${item.dark ? "text-[#6B7280]" : "text-slate-600"}`}>{item.note}</p>
+                <p className={`text-3xl font-bold text-black ${item.value === "Healthy" ? "text-[#2E7D32]" : ""}`}>{item.value}</p>
+                <p className={`mt-2 text-sm ${item.dark ? "text-[#5A7A5A]" : "text-slate-600"}`}>{item.note}</p>
               </article>
             ))}
           </div>
@@ -86,8 +86,8 @@ function Analytics() {
           <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <h2 className="text-xl font-bold text-[#111827]">Sensor Analytics</h2>
             <label className="w-full max-w-48">
-              <span className="mb-2 block font-semibold">Graph Type</span>
-              <select className="w-full rounded-lg border border-white/50 bg-white/30 px-5 py-4 text-lg font-bold outline-none">
+              <span className="label">Graph Type</span>
+              <select className="input">
                 <option>Line Chart</option>
               </select>
             </label>
@@ -95,7 +95,7 @@ function Analytics() {
 
           <div className="grid gap-6 lg:grid-cols-2">
             {charts.map((chart) => (
-              <article key={chart.title} className="glass-card p-6">
+              <article key={chart.title} className="card">
                 <div className="mb-5 flex items-start justify-between">
                   <div className="flex items-center gap-4">
                     <span className={`rounded-lg p-4 text-white ${chart.iconBg}`}>
@@ -103,12 +103,12 @@ function Analytics() {
                     </span>
                     <div>
                       <h3 className="text-xl font-bold text-[#111827]">{chart.title}</h3>
-                      <p className="mt-1 text-3xl font-bold text-black">{chart.value} <span className="text-lg text-[#10B981]">↑</span></p>
+                      <p className="mt-1 text-3xl font-bold text-black">{chart.value} <span className="text-lg text-[#2E7D32]">↑</span></p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-slate-500">Status</p>
-                    <p className={`font-black ${chart.status === "Low" ? "text-orange-500" : "text-[#10B981]"}`}>{chart.status}</p>
+                    <p className={`font-black ${chart.status === "Low" ? "text-orange-500" : "text-[#2E7D32]"}`}>{chart.status}</p>
                   </div>
                 </div>
                 <div className="h-56">
@@ -130,11 +130,11 @@ function Analytics() {
           </div>
         </section>
 
-        <section className="glass-card p-6">
+        <section className="card">
           <h2 className="flex items-center gap-3 text-xl font-bold text-[#111827]">
-            <Sprout className="text-[#10B981]" size={34} /> Farmer Summary
+            <Sprout className="text-[#2E7D32]" size={34} /> Farmer Summary
           </h2>
-          <p className="mt-1 text-sm font-[400] text-[#6B7280]">
+          <p className="mt-1 text-sm font-[400] text-[#5A7A5A]">
             Rice crop is healthy. Water is slightly low, so irrigate Sector A for 20 minutes today.
           </p>
         </section>

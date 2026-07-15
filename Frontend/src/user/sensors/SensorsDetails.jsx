@@ -11,7 +11,7 @@ import {
   Thermometer, Droplets, Waves, Radar, MapPin, Cpu,
   ArrowLeft, Wifi, WifiOff, RefreshCw,
 } from 'lucide-react';
-
+import AppShell from "../components/AppShell";
 function GlowCard({ className, style: outerStyle, onClick, children }) {
   const [isHovered, setIsHovered] = useState(false);
   return (
@@ -35,19 +35,19 @@ function GlowCard({ className, style: outerStyle, onClick, children }) {
 
 const tempColor = (t) => {
   if (t < 15) return '#3B82F6';
-  if (t <= 30) return '#10B981';
+  if (t <= 30) return '#2E7D32';
   return '#EF4444';
 };
 
 const humidityColor = (h) => {
-  if (h >= 40 && h <= 70) return '#10B981';
+  if (h >= 40 && h <= 70) return '#2E7D32';
   if (h > 70 && h <= 85) return '#F59E0B';
   return '#EF4444';
 };
 
 const soilColor = (s) => {
   if (s < 20) return '#EF4444';
-  if (s <= 60) return '#10B981';
+  if (s <= 60) return '#2E7D32';
   return '#3B82F6';
 };
 
@@ -59,7 +59,7 @@ const soilLabel = (s) => {
 
 const ultrasonicStatus = (u) => {
   if (u < 30) return { label: 'Obstacle Detected', color: '#EF4444', icon: '⚠' };
-  if (u <= 200) return { label: 'Clear Path', color: '#10B981', icon: '✓' };
+  if (u <= 200) return { label: 'Clear Path', color: '#2E7D32', icon: '✓' };
   return { label: 'No Reading', color: '#9CA3AF', icon: '—' };
 };
 
@@ -95,7 +95,7 @@ function SoilGauge({ value, size = 180 }) {
     <div className="flex flex-col items-center">
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
         <circle cx={cx} cy={cy} r={r} fill="none" stroke={bgColor} strokeWidth="14" />
-        <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(16,185,129,0.15)" strokeWidth="14"
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(46,125,50,0.15)" strokeWidth="14"
           strokeDasharray={`${optEnd - optStart} ${circumference}`} strokeDashoffset={-optStart} strokeLinecap="round"
           transform={`rotate(-90 ${cx} ${cy})`} />
         <circle cx={cx} cy={cy} r={r} fill="none" stroke={color} strokeWidth="14" strokeLinecap="round"
@@ -124,7 +124,7 @@ function DistanceIndicator({ distance }) {
   const rings = [
     { max: 30, color: '#EF4444', label: 'Obstacle' },
     { max: 100, color: '#F59E0B', label: 'Caution' },
-    { max: 200, color: '#10B981', label: 'Clear' },
+    { max: 200, color: '#2E7D32', label: 'Clear' },
     { max: Infinity, color: '#9CA3AF', label: 'Far' },
   ];
   const activeRing = rings.find((r) => distance <= r.max) || rings[rings.length - 1];
@@ -195,9 +195,11 @@ export default function SensorsDetails() {
 
   if (!robots || robots.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-sm text-text-secondary">No robot data available.</div>
-      </div>
+      <AppShell>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-sm text-text-secondary">No robot data available.</div>
+        </div>
+      </AppShell>
     );
   }
 
@@ -209,7 +211,7 @@ export default function SensorsDetails() {
     const isOnline = r.status !== 'Offline';
 
     return (
-      <>
+      <AppShell>
         <div className="flex items-center gap-3 mb-6">
           <button onClick={() => setSelectedRobot(null)}
             style={{ background: 'rgba(76,175,80,0.1)', border: 'none', borderRadius: '10px', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s ease', color: '#2e7d2e' }}
@@ -218,13 +220,13 @@ export default function SensorsDetails() {
             <ArrowLeft size={18} />
           </button>
           <div>
-            <div className="text-2xl font-bold text-primary">{r.name}</div>
-            <div className="text-sm text-text-secondary mt-0.5">{r.id} · {r.farm} · {r.model}</div>
+            <div className="text-2xl font-bold text-primary">{r.id}</div>
+            <div className="text-sm text-text-secondary mt-0.5">{r.farm} · {r.model}</div>
           </div>
           <div className="ml-auto flex items-center gap-3">
             <span className="px-3 py-1.5 rounded-full text-[11px] font-semibold flex items-center gap-1.5"
-              style={{ background: isOnline ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)', color: isOnline ? '#10B981' : '#EF4444' }}>
-              <span className="w-2 h-2 rounded-full" style={{ background: isOnline ? '#10B981' : '#EF4444' }} />
+              style={{ background: isOnline ? 'rgba(46,125,50,0.1)' : 'rgba(239,68,68,0.1)', color: isOnline ? '#2E7D32' : '#EF4444' }}>
+              <span className="w-2 h-2 rounded-full" style={{ background: isOnline ? '#2E7D32' : '#EF4444' }} />
               {r.status}
             </span>
             <span className="px-3 py-1.5 rounded-full text-[11px] font-semibold flex items-center gap-1.5"
@@ -288,7 +290,7 @@ export default function SensorsDetails() {
             {isOnline && readings ? (
               <div className="flex flex-col items-center gap-3">
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-semibold"
-                  style={{ background: 'rgba(16,185,129,0.1)', color: '#10B981' }}>
+                  style={{ background: 'rgba(46,125,50,0.1)', color: '#2E7D32' }}>
                   <Wifi size={12} /> Tracking Active
                 </div>
                 <div className="p-4 rounded-xl w-full text-center"
@@ -326,19 +328,19 @@ export default function SensorsDetails() {
                   formatter={(val) => <span style={{ color: 'var(--color-text-secondary)', fontSize: 12, fontWeight: 500 }}>{val}</span>}
                 />
                 <Line yAxisId="temp" type="monotone" dataKey="temperature" stroke="#EF4444" strokeWidth={2.5} dot={false} name="Temperature" activeDot={{ r: 4, fill: '#EF4444', stroke: '#fff', strokeWidth: 2 }} />
-                <Line yAxisId="moisture" type="monotone" dataKey="soilMoisture" stroke="#10B981" strokeWidth={2.5} dot={false} name="Soil Moisture" activeDot={{ r: 4, fill: '#10B981', stroke: '#fff', strokeWidth: 2 }} />
+                <Line yAxisId="moisture" type="monotone" dataKey="soilMoisture" stroke="#2E7D32" strokeWidth={2.5} dot={false} name="Soil Moisture" activeDot={{ r: 4, fill: '#2E7D32', stroke: '#fff', strokeWidth: 2 }} />
               </LineChart>
             </ResponsiveContainer>
           ) : (
             <div className="flex items-center justify-center h-[220px] text-sm text-text-secondary">No history data available</div>
           )}
         </GlowCard>
-      </>
+      </AppShell>
     );
   }
 
   return (
-    <>
+    <AppShell>
       <div className="flex items-center gap-3 mb-6">
         <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(76,175,80,0.12)' }}>
           <Cpu size={22} color="#2e7d2e" />
@@ -357,7 +359,7 @@ export default function SensorsDetails() {
               <div className="text-xl font-extrabold text-primary">{fleetStats.online}</div>
             </div>
             <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(76,175,80,0.12)' }}>
-              <Wifi size={16} color="#10B981" />
+              <Wifi size={16} color="#2E7D32" />
             </div>
           </div>
         </GlowCard>
@@ -408,8 +410,8 @@ export default function SensorsDetails() {
       </div>
 
       <div className="text-sm font-semibold text-primary mb-4">Robot Sensor Grid</div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {robots.map((r) => {
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {robots.filter(r => r.status !== 'Offline').map((r) => {
           const rId = r.id;
           const readings = readingFor(rId);
           const isOnline = r.status !== 'Offline';
@@ -420,11 +422,11 @@ export default function SensorsDetails() {
               className="glass-card rounded-2xl p-5" style={{ contentVisibility: 'auto', cursor: 'pointer' }}>
               <div className="flex items-center justify-between mb-3">
                 <div className="min-w-0">
-                  <div className="text-sm font-semibold text-primary truncate">{r.name}</div>
-                  <div className="text-[10px] text-text-secondary truncate mt-0.5">{r.id} · {r.farm}</div>
+                  <div className="text-sm font-semibold text-primary truncate">{r.id}</div>
+                  <div className="text-[10px] text-text-secondary truncate mt-0.5">{r.farm}</div>
                 </div>
                 <span className="w-2.5 h-2.5 rounded-full shrink-0 ml-2"
-                  style={{ background: r.status === 'Active' ? '#10B981' : r.status === 'Idle' ? '#F59E0B' : '#EF4444' }} />
+                  style={{ background: r.status === 'Active' ? '#2E7D32' : r.status === 'Idle' ? '#F59E0B' : '#EF4444' }} />
               </div>
 
               {!isOnline ? (
@@ -467,7 +469,7 @@ export default function SensorsDetails() {
                   <div className="flex items-center gap-1.5 pt-1">
                     <MapPin size={11} color="#5A7A5A" />
                     <span className="text-[9px] text-text-secondary">({readings.wifiLocation.lat.toFixed(2)}, {readings.wifiLocation.lng.toFixed(2)})</span>
-                    <span className="text-[8px] font-semibold ml-auto" style={{ color: '#10B981' }}>📍 Active</span>
+                    <span className="text-[8px] font-semibold ml-auto" style={{ color: '#2E7D32' }}>📍 Active</span>
                   </div>
                 </div>
               ) : (
@@ -479,6 +481,6 @@ export default function SensorsDetails() {
           );
         })}
       </div>
-    </>
+    </AppShell>
   );
 }
