@@ -1,53 +1,141 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Leaf, LogIn } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Leaf, LogIn, CheckCircle } from "lucide-react";
 
-const inputClass = "w-full rounded-lg border border-slate-300 bg-white px-5 py-4 text-lg outline-none focus:border-[#10B981]";
+const features = [
+  "Real-time soil & crop monitoring",
+  "AI-powered irrigation scheduling",
+  "Automated robot fleet management",
+  "Weather & pest early warnings",
+];
 
 function Login() {
   const navigate = useNavigate();
 
+  function handleSubmit(e) {
+    e.preventDefault();
+    navigate("/onboarding");
+  }
+
   return (
-    <main className="flex min-h-screen items-center justify-center px-4">
-      <section className="w-full max-w-md glass-card p-10">
-        <div className="text-center">
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-xl bg-[#10B981] shadow-md">
-            <LogIn className="text-white" size={40} />
-          </div>
-          <h1 className="mt-6 text-4xl font-black text-[#111827]">Welcome Back</h1>
-          <p className="mt-2 text-lg text-slate-600">Sign in to your Smart Agriculture dashboard</p>
+    <div className="flex min-h-screen">
+      <div className="hidden lg:flex lg:w-[45%] bg-gradient-to-br from-[#0F2440] via-[#1A3A5C] to-[#234F78] flex-col justify-between p-14 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.06]">
+          <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-white" />
+          <div className="absolute -bottom-20 -left-20 w-[30rem] h-[30rem] rounded-full bg-[#10B981]" />
         </div>
 
-        <form className="mt-10 space-y-5" onSubmit={(e) => { e.preventDefault(); navigate("/onboarding"); }}>
-          <label className="block">
-            <span className="mb-2 block text-sm font-black uppercase tracking-wide text-slate-700">Email</span>
-            <input type="email" className={inputClass} placeholder="john@farm.com" />
-          </label>
-          <label className="block">
-            <span className="mb-2 block text-sm font-black uppercase tracking-wide text-slate-700">Password</span>
-            <input type="password" className={inputClass} placeholder="••••••••" />
-          </label>
+        <div className="relative">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#10B981] shadow-lg">
+              <Leaf size={24} className="text-white" />
+            </div>
+            <span className="text-xl font-bold text-white/90">Smart Agriculture</span>
+          </div>
+        </div>
 
-          <div className="flex items-center justify-between">
-            <label className="flex cursor-pointer items-center gap-3">
-              <input type="checkbox" className="h-5 w-5 accent-[#10B981]" />
-              <span className="text-slate-600">Remember me</span>
-            </label>
-            <a href="#" className="font-bold text-slate-500 transition hover:text-[#10B981]">Forgot password?</a>
+        <div className="relative space-y-8">
+          <div>
+            <h1 className="text-4xl font-black leading-tight text-white">
+              Smart Agriculture
+              <br />
+              <span className="text-[#10B981]">Platform</span>
+            </h1>
+            <p className="mt-4 text-lg text-white/60 max-w-md leading-relaxed">
+              Monitor your crops, optimize irrigation, manage robots, and maximize
+              yields — all from one dashboard.
+            </p>
           </div>
 
-          <button
-            type="submit"
-            className="flex w-full items-center justify-center gap-3 rounded-lg bg-[#10B981] px-10 py-4 text-sm font-semibold text-white shadow-md transition hover:bg-[#059669]"
-          >
-            <Leaf size={24} /> Sign In
-          </button>
-        </form>
+          <div className="space-y-4">
+            {features.map((f) => (
+              <div key={f} className="flex items-center gap-3">
+                <CheckCircle size={18} className="text-[#10B981] shrink-0" />
+                <span className="text-white/70">{f}</span>
+              </div>
+            ))}
+          </div>
+        </div>
 
-        <p className="mt-8 text-center">
-          <Link to="/" className="font-semibold text-slate-600 transition hover:text-[#10B981]">← Back to Home</Link>
-        </p>
-      </section>
-    </main>
+        <div className="relative text-sm text-white/30">
+          &copy; 2026 Smart Agriculture. All rights reserved.
+        </div>
+      </div>
+
+      <div className="flex-1 flex items-center justify-center p-8 bg-gradient-to-br from-slate-50 to-white">
+        <div className="w-full max-w-lg">
+          <div className="lg:hidden flex items-center gap-3 mb-10">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#10B981]">
+              <Leaf size={20} className="text-white" />
+            </div>
+            <span className="text-lg font-bold text-[#111827]">Smart Agriculture</span>
+          </div>
+
+          <div className="mb-10">
+            <h2 className="text-3xl font-black text-[#111827]">Welcome back</h2>
+            <p className="mt-2 text-lg text-slate-500">
+              Sign in to your account
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-sm font-bold text-slate-700 mb-2">
+                Email address
+              </label>
+              <input
+                type="email"
+                className="w-full rounded-xl border border-slate-300 bg-white px-5 py-4 text-base outline-none transition focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20"
+                placeholder="john@farm.com"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold text-slate-700 mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                className="w-full rounded-xl border border-slate-300 bg-white px-5 py-4 text-base outline-none transition focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20"
+                placeholder="Enter your password"
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="h-5 w-5 rounded border-slate-300 text-[#10B981] focus:ring-[#10B981]"
+                />
+                <span className="text-sm text-slate-600">Remember me</span>
+              </label>
+              <a
+                href="#"
+                className="text-sm font-semibold text-[#10B981] hover:text-[#059669] transition"
+              >
+                Forgot password?
+              </a>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full flex items-center justify-center gap-3 rounded-xl bg-[#10B981] px-8 py-4 text-base font-bold text-white shadow-lg shadow-[#10B981]/20 transition hover:bg-[#059669] hover:shadow-xl cursor-pointer"
+            >
+              <LogIn size={22} />
+              Sign In
+            </button>
+          </form>
+
+          <p className="mt-8 text-center">
+            <a
+              href="/"
+              className="text-sm text-slate-400 hover:text-slate-600 transition"
+            >
+              &larr; Back to home
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }
 
