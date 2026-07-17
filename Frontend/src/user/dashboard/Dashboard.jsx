@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Bell, Bot, CheckCircle2, Clock, Droplets, FlaskConical, Leaf, MapPin, Sprout } from "lucide-react";
+import { Bell, Bot, CheckCircle2, Clock, Droplets, FlaskConical, Leaf, MapPin, Sprout, Thermometer } from "lucide-react";
 import AppShell from "../components/AppShell";
 
 const recentActivity = [
@@ -90,19 +90,15 @@ function Dashboard() {
     }
   }, []);
 
-  const completed = sectors.filter((s) => s.status === "completed").length;
-  const inProgress = sectors.filter((s) => s.status === "in-progress").length;
-  const pending = sectors.filter((s) => s.status === "pending").length;
-
   return (
     <AppShell>
       <section className="mx-auto max-w-7xl space-y-6 md:space-y-8">
         <div className="flex flex-col gap-2">
-          <h1 className="text-xl md:text-2xl font-bold text-[#111827]">Farm Dashboard</h1>
-          <p className="text-sm text-[#5A7A5A]">Overview of your farm sectors and activity</p>
+          <h1 className="text-xl md:text-2xl font-bold text-[#111827]">Dashboard</h1>
+          <p className="text-sm text-[#5A7A5A]">Overview of your farms, robots, and tasks</p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-3">
           <article className="glass-card p-4 md:p-6">
             <div className="mb-3 md:mb-4 flex items-center gap-3">
               <span className="rounded-xl bg-[rgba(46,125,50,0.12)] p-2.5 md:p-3 text-[#2E7D32]"><MapPin size={24} /></span>
@@ -112,24 +108,17 @@ function Dashboard() {
           </article>
           <article className="glass-card p-4 md:p-6">
             <div className="mb-3 md:mb-4 flex items-center gap-3">
+              <span className="rounded-xl bg-[rgba(46,125,50,0.12)] p-2.5 md:p-3 text-[#2E7D32]"><Bot size={24} /></span>
+              <p className="text-sm md:text-lg font-semibold text-slate-700">Total Robots</p>
+            </div>
+            <p className="text-3xl md:text-4xl font-bold text-black">5</p>
+          </article>
+          <article className="glass-card p-4 md:p-6">
+            <div className="mb-3 md:mb-4 flex items-center gap-3">
               <span className="rounded-xl bg-[rgba(46,125,50,0.12)] p-2.5 md:p-3 text-[#2E7D32]"><CheckCircle2 size={24} /></span>
-              <p className="text-sm md:text-lg font-semibold text-slate-700">Completed</p>
+              <p className="text-sm md:text-lg font-semibold text-slate-700">Total Tasks</p>
             </div>
-            <p className="text-3xl md:text-4xl font-bold text-[#2E7D32]">{completed}</p>
-          </article>
-          <article className="glass-card p-4 md:p-6">
-            <div className="mb-3 md:mb-4 flex items-center gap-3">
-              <span className="rounded-lg bg-amber-100 p-2.5 md:p-3 text-[#F59E0B]"><Clock size={24} /></span>
-              <p className="text-sm md:text-lg font-semibold text-slate-700">In Progress</p>
-            </div>
-            <p className="text-3xl md:text-4xl font-bold text-[#F59E0B]">{inProgress}</p>
-          </article>
-          <article className="glass-card p-4 md:p-6">
-            <div className="mb-3 md:mb-4 flex items-center gap-3">
-              <span className="rounded-lg bg-slate-100 p-2.5 md:p-3 text-slate-500"><Clock size={24} /></span>
-              <p className="text-sm md:text-lg font-semibold text-slate-700">Pending</p>
-            </div>
-            <p className="text-3xl md:text-4xl font-bold text-slate-400">{pending}</p>
+            <p className="text-3xl md:text-4xl font-bold text-black">23</p>
           </article>
         </div>
 
@@ -164,39 +153,25 @@ function Dashboard() {
           <div className="mb-4 md:mb-6 flex items-center gap-3 md:gap-4">
             <span className="rounded-xl bg-[rgba(46,125,50,0.15)] p-2.5 md:p-3 text-[#2E7D32]"><Leaf size={28} /></span>
             <div>
-              <h2 className="text-lg md:text-xl font-bold text-[#111827]">Soil &amp; Water Levels</h2>
-              <p className="text-sm text-[#5A7A5A]">Real-time sensor readings across your farm</p>
+              <h2 className="text-lg md:text-xl font-bold text-[#111827]">Daily Field Readings</h2>
+              <p className="text-sm text-[#5A7A5A]">Temperature, soil moisture, and fertilizer levels</p>
             </div>
           </div>
-          <div className="grid gap-3 grid-cols-2 sm:grid-cols-4">
-            <div className="rounded-lg bg-amber-50 p-4 md:p-5">
-              <p className="font-semibold text-amber-700">Nitrogen (N)</p>
-              <p className="mt-2 text-3xl md:text-4xl font-black">48</p>
-              <p className="text-xs md:text-sm text-[#5A7A5A]">mg/kg</p>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="flex items-center gap-3 md:gap-4 rounded-lg bg-orange-50 p-4 md:p-5">
+              <span className="rounded-lg bg-orange-500 p-2.5 md:p-3 text-white"><Thermometer size={22} /></span>
+              <div>
+                <p className="font-semibold text-orange-700">Temperature</p>
+                <p className="text-2xl md:text-3xl font-black">28&deg;C</p>
+                <p className="text-xs md:text-sm text-[#5A7A5A]">Daily average</p>
+              </div>
             </div>
-            <div className="rounded-lg bg-blue-50 p-4 md:p-5">
-              <p className="font-semibold text-blue-700">Phosphorus (P)</p>
-              <p className="mt-2 text-3xl md:text-4xl font-black">32</p>
-              <p className="text-xs md:text-sm text-[#5A7A5A]">mg/kg</p>
-            </div>
-            <div className="rounded-lg bg-purple-50 p-4 md:p-5">
-              <p className="font-semibold text-purple-700">Potassium (K)</p>
-              <p className="mt-2 text-3xl md:text-4xl font-black">185</p>
-              <p className="text-xs md:text-sm text-[#5A7A5A]">mg/kg</p>
-            </div>
-            <div className="rounded-lg bg-[rgba(46,125,50,0.12)] p-4 md:p-5">
-              <p className="font-semibold text-[#2E7D32]">Organic</p>
-              <p className="mt-2 text-3xl md:text-4xl font-black">2.4%</p>
-              <p className="text-xs md:text-sm text-[#5A7A5A]">Organic Matter</p>
-            </div>
-          </div>
-          <div className="mt-3 md:mt-4 grid gap-3 sm:grid-cols-2">
             <div className="flex items-center gap-3 md:gap-4 rounded-lg bg-cyan-50 p-4 md:p-5">
               <span className="rounded-lg bg-cyan-600 p-2.5 md:p-3 text-white"><Droplets size={22} /></span>
               <div>
-                <p className="font-semibold text-cyan-700">Water Level</p>
+                <p className="font-semibold text-cyan-700">Soil Moisture</p>
                 <p className="text-2xl md:text-3xl font-black">68%</p>
-                <p className="text-xs md:text-sm text-[#5A7A5A]">Soil moisture across sectors</p>
+                <p className="text-xs md:text-sm text-[#5A7A5A]">Across all sectors</p>
               </div>
             </div>
             <div className="flex items-center gap-3 md:gap-4 rounded-lg bg-emerald-50 p-4 md:p-5">

@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Check, ChevronLeft, ChevronRight, Crosshair, Eraser, MapPin, Maximize2, MousePointer2, Navigation, Pencil, Plus, Search, Sprout, Trash2, UserRound, Wheat } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Crosshair, Eraser, MapPin, Maximize2, MousePointer2, Navigation, Pencil, Plus, Sprout, Trash2, UserRound, Wheat } from "lucide-react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -267,75 +267,6 @@ function DrawInteraction({ farms, setFarms, activeFarmIndex, drawTool, setDrawTo
   }, [map, drawTool, activeFarmIndex]);
 
   return null;
-}
-
-function MapSearch() {
-  const map = useMap();
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
-  const [open, setOpen] = useState(false);
-  const timeoutRef = useRef(null);
-
-  const search = useCallback(async (q) => {
-    if (!q.trim()) { setResults([]); return; }
-    try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=5&countrycodes=in`
-      );
-      const data = await res.json();
-      setResults(data);
-      setOpen(true);
-    } catch (_) { setResults([]); }
-  }, []);
-
-  const handleChange = (val) => {
-    setQuery(val);
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => search(val), 400);
-  };
-
-  const handleSelect = (item) => {
-    map.setView([parseFloat(item.lat), parseFloat(item.lon)], 16);
-    L.marker([parseFloat(item.lat), parseFloat(item.lon)], {
-      icon: L.divIcon({
-        className: "",
-        html: "<div style=\"background:#2E7D32;color:#fff;font-weight:700;font-size:11px;padding:4px 10px;border-radius:8px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.2)\">" + item.display_name.split(",")[0] + "</div>",
-      }),
-    }).addTo(map);
-    setQuery(item.display_name.split(",")[0]);
-    setOpen(false);
-  };
-
-  useEffect(() => {
-    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); };
-  }, []);
-
-  return (
-    <div className="absolute top-3 left-3 z-[1000] w-72">
-      <div className="relative">
-        <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-        <input
-          value={query}
-          onChange={(e) => handleChange(e.target.value)}
-          onFocus={() => results.length > 0 && setOpen(true)}
-          onBlur={() => setTimeout(() => setOpen(false), 200)}
-          placeholder="Search landmark, village, city..."
-          className="w-full rounded-lg border border-slate-200 bg-white/95 py-2.5 pl-9 pr-3 text-sm shadow-md outline-none placeholder:text-slate-400 focus:border-[#2E7D32] focus:ring-2 focus:ring-[rgba(46,125,50,0.1)]"
-        />
-        {open && results.length > 0 && (
-          <div className="absolute top-full left-0 right-0 mt-1 max-h-60 overflow-auto rounded-lg border border-slate-200 bg-white shadow-xl">
-            {results.map((item, i) => (
-              <button key={i} onMouseDown={() => handleSelect(item)}
-                className="w-full px-3 py-2.5 text-left text-xs text-slate-700 hover:bg-[#2E7D32] hover:text-white transition first:rounded-t-lg last:rounded-b-lg border-b border-slate-100 last:border-0">
-                <span className="font-semibold">{item.display_name.split(",")[0]}</span>
-                <span className="block text-[10px] text-slate-400 mt-0.5">{item.display_name.split(",").slice(1).join(",").trim()}</span>
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
 }
 
 function FloatingToolbar({ drawTool, setDrawTool, farms, setFarms, activeFarmIndex, mapLayer, setMapLayer }) {
@@ -687,7 +618,6 @@ function Onboarding() {
             <FarmBoundaryLayer farms={farms} activeFarmIndex={activeFarmIndex} />
             <DrawInteraction farms={farms} setFarms={setFarms} activeFarmIndex={activeFarmIndex}
               drawTool={drawTool} setDrawTool={setDrawTool} />
-            <MapSearch />
             <FloatingToolbar drawTool={drawTool} setDrawTool={setDrawTool}
               farms={farms} setFarms={setFarms} activeFarmIndex={activeFarmIndex}
               mapLayer={mapLayer} setMapLayer={setMapLayer} />
@@ -698,7 +628,7 @@ function Onboarding() {
           {drawTool === "polygon" && "Click to add vertices, double-click to finish."}
 
           {drawTool === "edit" && "Drag the green handles to adjust boundary points."}
-          {!drawTool && "Search your farm location in the search box, then use the Draw Polygon tool to mark your boundary."}
+          {!drawTool && "Select a drawing tool above to define your farm boundary."}
         </p>
 
         <div className="card">
