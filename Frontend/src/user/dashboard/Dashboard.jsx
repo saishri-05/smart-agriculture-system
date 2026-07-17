@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Bell, Bot, CheckCircle2, Clock, Droplets, FlaskConical, Leaf, MapPin, Sprout, Thermometer } from "lucide-react";
+import { Bell, Bot, CheckCircle2, Clock, Droplets, Leaf, MapPin, Sprout, Thermometer } from "lucide-react";
 import AppShell from "../components/AppShell";
 
 const recentActivity = [
@@ -151,13 +151,40 @@ function Dashboard() {
 
         <section className="glass-card p-4 md:p-6">
           <div className="mb-4 md:mb-6 flex items-center gap-3 md:gap-4">
-            <span className="rounded-xl bg-[rgba(46,125,50,0.15)] p-2.5 md:p-3 text-[#2E7D32]"><Leaf size={28} /></span>
+            <span className="rounded-xl bg-[rgba(46,125,50,0.15)] p-2.5 md:p-3 text-[#2E7D32]"><CheckCircle2 size={28} /></span>
             <div>
-              <h2 className="text-lg md:text-xl font-bold text-[#111827]">Daily Field Readings</h2>
-              <p className="text-sm text-[#5A7A5A]">Temperature, soil moisture, and fertilizer levels</p>
+              <h2 className="text-lg md:text-xl font-bold text-[#111827]">Task Progress</h2>
+              <p className="text-sm text-[#5A7A5A]">Completion status of all tasks</p>
             </div>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-lg bg-[rgba(46,125,50,0.12)] p-4 md:p-5">
+              <p className="font-semibold text-[#2E7D32]">Completed</p>
+              <p className="mt-2 text-3xl md:text-4xl font-black">14</p>
+              <p className="text-xs md:text-sm text-[#5A7A5A]">Tasks finished</p>
+            </div>
+            <div className="rounded-lg bg-amber-50 p-4 md:p-5">
+              <p className="font-semibold text-amber-700">In Progress</p>
+              <p className="mt-2 text-3xl md:text-4xl font-black">6</p>
+              <p className="text-xs md:text-sm text-[#5A7A5A]">Currently active</p>
+            </div>
+            <div className="rounded-lg bg-slate-100 p-4 md:p-5">
+              <p className="font-semibold text-slate-600">Pending</p>
+              <p className="mt-2 text-3xl md:text-4xl font-black">3</p>
+              <p className="text-xs md:text-sm text-[#5A7A5A]">Not yet started</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-card p-4 md:p-6">
+          <div className="mb-4 md:mb-6 flex items-center gap-3 md:gap-4">
+            <span className="rounded-xl bg-[rgba(46,125,50,0.15)] p-2.5 md:p-3 text-[#2E7D32]"><Leaf size={28} /></span>
+            <div>
+              <h2 className="text-lg md:text-xl font-bold text-[#111827]">Daily Field Readings</h2>
+              <p className="text-sm text-[#5A7A5A]">Temperature and soil moisture levels</p>
+            </div>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
             <div className="flex items-center gap-3 md:gap-4 rounded-lg bg-orange-50 p-4 md:p-5">
               <span className="rounded-lg bg-orange-500 p-2.5 md:p-3 text-white"><Thermometer size={22} /></span>
               <div>
@@ -172,14 +199,6 @@ function Dashboard() {
                 <p className="font-semibold text-cyan-700">Soil Moisture</p>
                 <p className="text-2xl md:text-3xl font-black">68%</p>
                 <p className="text-xs md:text-sm text-[#5A7A5A]">Across all sectors</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 md:gap-4 rounded-lg bg-emerald-50 p-4 md:p-5">
-              <span className="rounded-lg bg-emerald-600 p-2.5 md:p-3 text-white"><FlaskConical size={22} /></span>
-              <div>
-                <p className="font-semibold text-emerald-700">Fertilizer Level</p>
-                <p className="text-2xl md:text-3xl font-black">42%</p>
-                <p className="text-xs md:text-sm text-[#5A7A5A]">Remaining reserves</p>
               </div>
             </div>
           </div>
