@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, ChevronLeft, ChevronRight, Crosshair, Eraser, MapPin, Maximize2, MousePointer2, Navigation, Pen, Pencil, Plus, Sprout, Trash2, UserRound, Wheat } from "lucide-react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
@@ -8,6 +8,7 @@ import PhoneInputModule from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 const PhoneInput = PhoneInputModule.default || PhoneInputModule;
 import Select from "react-select";
+import { useFreeDraw } from "../hooks/useFreeDraw";
 
 const steps = [
   { label: "Farmer Info", icon: UserRound },
@@ -118,28 +119,7 @@ function calcArea(boundary) {
   };
 }
 
-function simplifyPolygon(points, tolerance) {
-  if (points.length <= 2) return points;
-  let maxDist = 0, maxIdx = 0;
-  const first = points[0], last = points[points.length - 1];
-  for (let i = 1; i < points.length - 1; i++) {
-    const d = perpendicularDist(points[i], first, last);
-    if (d > maxDist) { maxDist = d; maxIdx = i; }
-  }
-  if (maxDist > tolerance) {
-    const left = simplifyPolygon(points.slice(0, maxIdx + 1), tolerance);
-    const right = simplifyPolygon(points.slice(maxIdx), tolerance);
-    return [...left.slice(0, -1), ...right];
-  }
-  return [first, last];
-}
 
-function perpendicularDist(p, a, b) {
-  const [x0, y0] = p, [x1, y1] = a, [x2, y2] = b;
-  const num = Math.abs((x2 - x1) * (y1 - y0) - (x1 - x0) * (y2 - y1));
-  const den = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-  return den === 0 ? 0 : num / den;
-}
 function FarmBoundaryLayer({ farms, activeFarmIndex }) {
   const map = useMap();
   const initialized = useRef(false);
@@ -246,53 +226,17 @@ function DrawInteraction({ farms, setFarms, activeFarmIndex, drawTool, setDrawTo
   }, [map, drawTool, activeFarmIndex, setFarms, setDrawTool]);
 
   useEffect(() => {
-    if (drawTool !== "freedraw") { layerRef.current.clearLayers(); return; }
+    layerRef.current.clearLayers();
+  }, [drawTool]);
 
-    map.doubleClickZoom.disable();
-    const layer = layerRef.current;
-    let drawing = false;
-    const pts = [];
-
-    const onMouseDown = (e) => {
-      if (e.originalEvent.button !== 0) return;
-      drawing = true;
-      pts.length = 0;
-      pts.push([e.latlng.lat, e.latlng.lng]);
-      layer.clearLayers();
-    };
-
-    const onMouseMove = (e) => {
-      if (!drawing) return;
-      pts.push([e.latlng.lat, e.latlng.lng]);
-      layer.clearLayers();
-      L.polyline(pts, { color: "#2E7D32", weight: 3, opacity: 0.7 }).addTo(layer);
-    };
-
-    const onMouseUp = () => {
-      if (!drawing) return;
-      drawing = false;
-      const simplified = simplifyPolygon(pts, 0.00005);
-      if (simplified.length >= 3) {
-        const boundary = simplified.map(p => [p[0].toFixed(6), p[1].toFixed(6)]);
-        setFarms(prev => prev.map((f, i) => i === activeFarmIndex ? { ...f, boundary } : f));
-      }
-      pts.length = 0;
-      layer.clearLayers();
-      map.doubleClickZoom.enable();
+  useFreeDraw({
+    map,
+    active: drawTool === "freedraw",
+    onComplete: (boundary) => {
+      setFarms(prev => prev.map((f, i) => i === activeFarmIndex ? { ...f, boundary } : f));
       setDrawTool(null);
-    };
-
-    map.on("mousedown", onMouseDown);
-    map.on("mousemove", onMouseMove);
-    map.on("mouseup", onMouseUp);
-    return () => {
-      map.off("mousedown", onMouseDown);
-      map.off("mousemove", onMouseMove);
-      map.off("mouseup", onMouseUp);
-      map.doubleClickZoom.enable();
-      layer.clearLayers();
-    };
-  }, [map, drawTool, activeFarmIndex, setFarms, setDrawTool]);
+    },
+  });
 
   useEffect(() => {
     if (drawTool !== "edit") { layerRef.current.clearLayers(); return; }

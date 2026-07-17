@@ -3,6 +3,7 @@ import { MapContainer, TileLayer } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {
+  CheckCircle2,
   Cpu,
   DollarSign,
   Droplets,
@@ -208,6 +209,34 @@ function AIRecommendations() {
             </div>
           </div>
         </div>
+
+        {/* Total Tasks Completed */}
+        <section className="card">
+          <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-5">
+              <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#2E7D32] text-white shadow-lg">
+                <CheckCircle2 size={34} />
+              </span>
+              <div>
+                <p className="text-sm font-bold uppercase tracking-wide text-slate-500">Total Tasks Completed</p>
+                <p className="mt-1 text-4xl font-black text-[#111827]">12</p>
+                <p className="mt-0.5 text-sm text-[#2E7D32]">↗ +3 from last week</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-6">
+              {[
+                { label: "Irrigation", value: "5" },
+                { label: "Fertilization", value: "4" },
+                { label: "Inspection", value: "3" },
+              ].map((t) => (
+                <div key={t.label} className="text-center">
+                  <p className="text-2xl font-black text-[#111827]">{t.value}</p>
+                  <p className="mt-0.5 text-sm text-slate-500">{t.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
     </AppShell>
   );
