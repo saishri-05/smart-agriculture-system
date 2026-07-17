@@ -28,10 +28,8 @@ export function useFreeDraw({ map, active, tolerance = 0.00005, onComplete }) {
   const layerRef = useRef(new L.LayerGroup());
   const drawingRef = useRef(false);
   const ptsRef = useRef([]);
-  const onCompleteRef = useRef(onComplete);
-  onCompleteRef.current = onComplete;
 
-  const clear = useCallback(() => {
+  const cleanupLayer = useCallback(() => {
     try { layerRef.current.clearLayers(); } catch (_) {}
     ptsRef.current.length = 0;
     drawingRef.current = false;
@@ -40,14 +38,14 @@ export function useFreeDraw({ map, active, tolerance = 0.00005, onComplete }) {
   useEffect(() => {
     if (!map) return;
     const layer = layerRef.current;
-    layer.addTo(map);
+    try { layer.addTo(map); } catch (_) {}
     return () => { try { map.removeLayer(layer); } catch (_) {} };
   }, [map]);
 
   useEffect(() => {
     if (!map) return;
     if (!active) {
-      clear();
+      cleanupLayer();
       return;
     }
 
@@ -59,32 +57,36 @@ export function useFreeDraw({ map, active, tolerance = 0.00005, onComplete }) {
       drawingRef.current = true;
       ptsRef.current.length = 0;
       ptsRef.current.push([e.latlng.lat, e.latlng.lng]);
-      layerRef.current.clearLayers();
+      try { layerRef.current.clearLayers(); } catch (_) {}
     };
 
     const onMouseMove = (e) => {
       if (!drawingRef.current) return;
       ptsRef.current.push([e.latlng.lat, e.latlng.lng]);
-      layerRef.current.clearLayers();
-      L.polyline([...ptsRef.current], { color: "#2E7D32", weight: 3, opacity: 0.7 }).addTo(layerRef.current);
+      try { layerRef.current.clearLayers(); } catch (_) {}
+      try {
+        L.polyline([...ptsRef.current], { color: "#2E7D32", weight: 3, opacity: 0.7 }).addTo(layerRef.current);
+      } catch (_) {}
     };
 
     const onMouseUp = () => {
       if (!drawingRef.current) return;
       drawingRef.current = false;
       const pts = ptsRef.current;
-      const simplified = simplifyPolygon(pts, tolerance);
-      if (simplified.length >= 3) {
-        const boundary = simplified.map(p => [p[0].toFixed(6), p[1].toFixed(6)]);
-        layerRef.current.clearLayers();
-        L.polygon(boundary.map(c => [parseFloat(c[0]), parseFloat(c[1])]), {
-          color: "#2E7D32", weight: 2, fillColor: "#2E7D32", fillOpacity: 0.12,
-        }).addTo(layerRef.current);
-        setTimeout(() => {
-          if (onCompleteRef.current) onCompleteRef.current(boundary);
-        }, 0);
-      } else {
-        layerRef.current.clearLayers();
+      try {
+        const simplified = simplifyPolygon(pts, tolerance);
+        if (simplified.length >= 3) {
+          const boundary = simplified.map(p => [p[0].toFixed(6), p[1].toFixed(6)]);
+          layerRef.current.clearLayers();
+          L.polygon(boundary.map(c => [parseFloat(c[0]), parseFloat(c[1])]), {
+            color: "#2E7D32", weight: 2, fillColor: "#2E7D32", fillOpacity: 0.12,
+          }).addTo(layerRef.current);
+          if (onComplete) onComplete(boundary);
+        } else {
+          layerRef.current.clearLayers();
+        }
+      } catch (_) {
+        try { layerRef.current.clearLayers(); } catch (_) {}
       }
       pts.length = 0;
     };
@@ -99,9 +101,9 @@ export function useFreeDraw({ map, active, tolerance = 0.00005, onComplete }) {
       map.off("mouseup", onMouseUp);
       try { map.dragging.enable(); } catch (_) {}
       try { map.doubleClickZoom.enable(); } catch (_) {}
-      clear();
+      cleanupLayer();
     };
-  }, [map, active, tolerance, clear]);
+  }, [map, active, tolerance, onComplete, cleanupLayer]);
 
-  return { clear };
+  return { clear: cleanupLayer };
 }
