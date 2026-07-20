@@ -37,11 +37,21 @@ function FarmSectors({ sectors }) {
       polygon.bindPopup(`<b>${s.name}</b><br/>${s.area || ""}${s.crop ? " — " + s.crop : ""}`);
       polygon.addTo(group);
 
+      s.coords.forEach((c) => {
+        L.circleMarker(c, {
+          radius: 5,
+          color: s.mapColor,
+          fillColor: "#fff",
+          fillOpacity: 1,
+          weight: 2,
+        }).addTo(group);
+      });
+
       const center = polygon.getBounds().getCenter();
       L.marker(center, {
         icon: L.divIcon({
           className: "",
-          html: `<div style="background:${s.mapColor};color:#fff;font-weight:900;font-size:13px;padding:4px 10px;border-radius:8px;white-space:nowrap">${s.name}</div>`,
+          html: `<div style="display:flex;align-items:center;gap:4px;background:#fff;border:2px solid ${s.mapColor};color:${s.mapColor};font-weight:900;font-size:12px;padding:3px 10px;border-radius:8px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.15)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="${s.mapColor}" stroke="${s.mapColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>${s.name}</div>`,
         }),
       }).addTo(group);
     });
