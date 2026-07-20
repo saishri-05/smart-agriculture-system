@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Activity, Battery, Bot, Camera, Eye, Key, Link as LinkIcon, MapPin, Plus, X, XCircle } from "lucide-react";
+
+import { Activity, Battery, Bot, Eye, Link as LinkIcon, MapPin, XCircle } from "lucide-react";
 import AppShell from "../components/AppShell";
 
 const robots = [
@@ -50,9 +50,6 @@ function batteryColor(value) {
 }
 
 function Robots() {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [scanMode, setScanMode] = useState(false);
-
   return (
     <AppShell>
       <section className="mx-auto max-w-7xl space-y-6 md:space-y-8">
@@ -61,9 +58,6 @@ function Robots() {
             <h1 className="text-xl md:text-2xl font-bold text-[#111827]">Robot Management</h1>
             <p className="mt-1 text-sm text-[#5A7A5A]">Monitor and manage your agricultural robots</p>
           </div>
-          <button className="btn btn-primary" onClick={() => setModalOpen(true)}>
-            <Plus size={20} /> Add Robot
-          </button>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -135,63 +129,8 @@ function Robots() {
             </table>
           </div>
         </section>
-
       </section>
 
-      {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={() => { setModalOpen(false); setScanMode(false); }}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between px-6 py-4 border-b border-[#DDE8DD]">
-              <h2 className="text-lg font-bold text-[#111827]">{scanMode ? "Scan QR Code" : "Add Robot"}</h2>
-              <button onClick={() => { setModalOpen(false); setScanMode(false); }} className="rounded-lg p-1.5 text-[#5A7A5A] hover:bg-[#F3F7F3] transition">
-                <X size={20} />
-              </button>
-            </div>
-
-            {scanMode ? (
-              <div className="p-6 space-y-5">
-                <div className="aspect-square max-w-[240px] mx-auto rounded-xl border-2 border-dashed border-[#2E7D32] flex items-center justify-center bg-[#F3F7F3]">
-                  <Camera size={64} className="text-[#2E7D32] opacity-50" />
-                </div>
-                <p className="text-center text-sm text-[#5A7A5A]">Point your camera at the robot&rsquo;s QR code to register it automatically.</p>
-                <div className="flex gap-3">
-                  <button onClick={() => setScanMode(false)} className="flex-1 rounded-xl border-2 border-[#DDE8DD] py-3 font-bold text-[#5A7A5A] hover:bg-[#F3F7F3] transition">Back</button>
-                  <button className="flex-1 rounded-xl bg-[#2E7D32] py-3 font-bold text-white hover:bg-[#256D28] transition">Start Scanning</button>
-                </div>
-              </div>
-            ) : (
-              <div className="p-6 space-y-5">
-                <p className="text-sm text-[#5A7A5A]">Choose how to register a new robot:</p>
-
-                <button onClick={() => setScanMode(true)}
-                  className="w-full flex items-center gap-4 rounded-xl border-2 border-[#DDE8DD] p-4 text-left hover:border-[#2E7D32] hover:bg-[#F3F7F3] transition group">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#F3F7F3] text-[#2E7D32] group-hover:bg-white transition">
-                    <Camera size={24} />
-                  </span>
-                  <div>
-                    <p className="font-bold text-[#111827]">Scan QR Code</p>
-                    <p className="text-sm text-[#5A7A5A]">Use camera to scan the robot&rsquo;s QR code</p>
-                  </div>
-                </button>
-
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[#DDE8DD]" /></div>
-                  <div className="relative flex justify-center"><span className="bg-white px-3 text-sm text-[#5A7A5A]">or</span></div>
-                </div>
-
-                <div className="space-y-3">
-                  <label className="block text-sm font-semibold text-[#5A7A5A]">Enter Robot ID Manually</label>
-                  <div className="flex items-center gap-3 rounded-xl border border-[#DDE8DD] px-4 py-3 focus-within:border-[#2E7D32] transition">
-                    <Key size={18} className="text-[#5A7A5A]" />
-                    <input className="w-full text-base outline-none bg-transparent" placeholder="e.g. ROBOT-0042" />
-                  </div>
-                  <button className="w-full rounded-xl bg-[#2E7D32] py-3 font-bold text-white hover:bg-[#256D28] transition">Register Robot</button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </AppShell>
   );
 }
