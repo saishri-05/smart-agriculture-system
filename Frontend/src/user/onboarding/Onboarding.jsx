@@ -603,6 +603,14 @@ function Onboarding() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
+          <div className="min-w-[180px]">
+            <span className="label">Select Farm</span>
+            <select value={activeFarmIndex} onChange={e => { setActiveFarmIndex(Number(e.target.value)); setDrawTool(null); setSelectedTemplate(""); }} className="input">
+              {farms.map((f, i) => (
+                <option key={f.id} value={i}>{f.farmName || "Farm " + (i + 1)}</option>
+              ))}
+            </select>
+          </div>
           <div className="min-w-[220px]">
             <span className="label">Quick Template</span>
             <select value={selectedTemplate} onChange={e => handleTemplateSelect(e.target.value)} className="input">

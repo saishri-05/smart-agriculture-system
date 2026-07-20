@@ -63,6 +63,10 @@ const statusIcon = (s) => {
 
 function Dashboard() {
   const [sectors, setSectors] = useState([]);
+  const [selectedFarmId, setSelectedFarmId] = useState("");
+
+  const selectedFarm = selectedFarmId ? sectors.find((s) => s.id === Number(selectedFarmId)) : null;
+  const filteredSectors = selectedFarm ? [selectedFarm] : sectors;
 
   useEffect(() => {
     const stored = localStorage.getItem("onboardingData");
@@ -206,17 +210,40 @@ function Dashboard() {
 
         <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
           <section className="glass-card p-4 md:p-6">
-            <h2 className="mb-1 text-lg md:text-xl font-bold text-[#111827]">Farm Sectors Map</h2>
-            <p className="mb-3 md:mb-5 text-sm text-[#5A7A5A]">Click on a sector for details</p>
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 className="text-lg md:text-xl font-bold text-[#111827]">Farm Sectors Map</h2>
+                <p className="text-sm text-[#5A7A5A]">Click on a sector for details</p>
+              </div>
+              {sectors.length > 0 && (
+                <select
+                  value={selectedFarmId}
+                  onChange={(e) => setSelectedFarmId(e.target.value)}
+                  className="input w-48 text-sm"
+                >
+                  <option value="">All Farms</option>
+                  {sectors.map((s) => (
+                    <option key={s.id} value={s.id}>{s.name}</option>
+                  ))}
+                </select>
+              )}
+            </div>
             <div className="h-[250px] sm:h-[320px] md:h-[420px] overflow-hidden rounded-xl border border-white/50">
               <MapContainer center={[28.6239, 77.2190]} zoom={14} className="h-full w-full">
                 <TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <FarmSectors sectors={sectors} />
+                <FarmSectors sectors={filteredSectors} />
               </MapContainer>
             </div>
+            {selectedFarm && (
+              <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm text-[#5A7A5A]">
+                <span><strong>Area:</strong> {selectedFarm.area || "\u2014"}</span>
+                <span><strong>Crop:</strong> {selectedFarm.crop || "\u2014"}</span>
+                <span><strong>Status:</strong> {selectedFarm.status === "completed" ? "Mapped" : "Pending"}</span>
+              </div>
+            )}
           </section>
 
           <section className="glass-card p-4 md:p-6">
