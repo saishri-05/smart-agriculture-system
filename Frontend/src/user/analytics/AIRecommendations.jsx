@@ -240,7 +240,7 @@ function AIRecommendations() {
         <section>
           <h2 className="mb-6 text-xl font-bold text-[#111827]">Task Overview</h2>
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-            <article className="card cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all" onClick={() => navigate("/alerts")}>
+            <article className="card">
               <div className="mb-5 flex items-center gap-4">
                 <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]"><ListTodo size={30} /></span>
                 <h3 className="font-black">Total Tasks</h3>
@@ -248,7 +248,7 @@ function AIRecommendations() {
               <p className="text-3xl font-bold text-black">28</p>
               <p className="mt-2 text-sm text-slate-600">All tasks across farms</p>
             </article>
-            <article className="card cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all" onClick={() => navigate("/alerts")}>
+            <article className="card">
               <div className="mb-5 flex items-center gap-4">
                 <span className="rounded-lg bg-[rgba(245,158,11,0.12)] p-3 text-[#F59E0B]"><Clock size={30} /></span>
                 <h3 className="font-black">Pending</h3>
@@ -256,7 +256,7 @@ function AIRecommendations() {
               <p className="text-3xl font-bold text-black">10</p>
               <p className="mt-2 text-sm text-slate-600">Awaiting start</p>
             </article>
-            <article className="card cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all" onClick={() => navigate("/alerts")}>
+            <article className="card">
               <div className="mb-5 flex items-center gap-4">
                 <span className="rounded-lg bg-[rgba(37,99,235,0.12)] p-3 text-[#2563EB]"><TrendingUp size={30} /></span>
                 <h3 className="font-black">In Progress</h3>
@@ -264,7 +264,7 @@ function AIRecommendations() {
               <p className="text-3xl font-bold text-black">6</p>
               <p className="mt-2 text-sm text-slate-600">Currently active</p>
             </article>
-            <article className="card cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all" onClick={() => navigate("/alerts")}>
+            <article className="card">
               <div className="mb-5 flex items-center gap-4">
                 <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]"><CheckCircle2 size={30} /></span>
                 <h3 className="font-black">Completed</h3>
