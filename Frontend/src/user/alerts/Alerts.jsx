@@ -4,7 +4,10 @@ import AppShell from "../components/AppShell";
 const alerts = [
   { type: "Critical", time: "10:20 AM", field: "Green Valley Farm", message: "Low soil moisture detected in Sector A.", status: "Open" },
   { type: "Critical", time: "09:50 AM", field: "Water Tank", message: "Motor temperature is too high.", status: "Open" },
+  { type: "Critical", time: "08:30 AM", field: "Sector C", message: "Water requirement is urgent — 120L needed within 4 hours.", status: "Open" },
   { type: "Warning", time: "08:45 AM", field: "Rice Field", message: "Possible fungal infection detected.", status: "Checking" },
+  { type: "Warning", time: "07:20 AM", field: "Sector D", message: "Fertilizer level is low — apply nitrogen within 2 days.", status: "Open" },
+  { type: "Warning", time: "07:00 AM", field: "Sector C", message: "Fertilizer over-applied in Sector C — risk of crop burn.", status: "Open" },
   { type: "Info", time: "06:10 AM", field: "Robot Alpha", message: "Daily crop scan report is ready.", status: "Done" },
 ];
 
@@ -23,11 +26,11 @@ function Alerts() {
           <p className="mt-1 text-sm font-[400] text-[#5A7A5A]">Important farm problems in simple language</p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-3">
-          <div className="card"><ShieldAlert className="text-[#EF4444]" size={44} /><p className="mt-4 text-3xl font-bold text-black">2</p><p className="font-bold text-[#EF4444]">Critical</p></div>
-          <div className="card"><AlertTriangle className="text-[#F59E0B]" size={44} /><p className="mt-4 text-3xl font-bold text-black">1</p><p className="font-bold text-[#F59E0B]">Warning</p></div>
-          <div className="card"><Bell className="text-[#0D9488]" size={44} /><p className="mt-4 text-3xl font-bold text-black">1</p><p className="font-bold text-[#0D9488]">Info</p></div>
-        </div>
+          <div className="grid gap-6 sm:grid-cols-3">
+            <div className="card"><ShieldAlert className="text-[#EF4444]" size={44} /><p className="mt-4 text-3xl font-bold text-black">{alerts.filter(a => a.type === "Critical").length}</p><p className="font-bold text-[#EF4444]">Critical</p></div>
+            <div className="card"><AlertTriangle className="text-[#F59E0B]" size={44} /><p className="mt-4 text-3xl font-bold text-black">{alerts.filter(a => a.type === "Warning").length}</p><p className="font-bold text-[#F59E0B]">Warning</p></div>
+            <div className="card"><Bell className="text-[#0D9488]" size={44} /><p className="mt-4 text-3xl font-bold text-black">{alerts.filter(a => a.type === "Info").length}</p><p className="font-bold text-[#0D9488]">Info</p></div>
+          </div>
 
         <div className="space-y-4">
           {alerts.map((alert) => {
