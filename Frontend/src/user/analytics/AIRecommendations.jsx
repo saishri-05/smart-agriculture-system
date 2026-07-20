@@ -4,6 +4,7 @@ import { MapContainer, TileLayer } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {
+  AlertTriangle,
   CheckCircle2,
   Clock,
   Cpu,
@@ -29,6 +30,7 @@ const legend = [
   { color: "bg-[#F59E0B]", label: "Nutrient Low" },
   { color: "bg-[#2E7D32]", label: "Healthy" },
   { color: "bg-[#EF4444]", label: "Risk Zone" },
+  { color: "bg-red-500", label: "Task Not Completed", icon: AlertTriangle },
 ];
 
 const summaryBadges = [
@@ -39,32 +41,43 @@ const summaryBadges = [
 ];
 
 const markers = [
-  { icon: Droplets, x: "23%", y: "20%", color: "text-blue-600", bg: "bg-blue-100", size: "h-12 w-12", sector: "Sector A", info: "Water needed: 80L", priority: "Medium" },
-  { icon: FlaskConical, x: "56%", y: "14%", color: "text-green-600", bg: "bg-green-100", size: "h-10 w-10", sector: "Sector B", info: "Fertilizer: Optimal", priority: "Healthy" },
-  { icon: FlaskConical, x: "78%", y: "25%", color: "text-red-600", bg: "bg-red-100", size: "h-12 w-12", sector: "Sector C", info: "Fertilizer: Over-Applied", priority: "High" },
-  { icon: Droplets, x: "61%", y: "31%", color: "text-blue-600", bg: "bg-blue-100", size: "h-9 w-9", sector: "Sector B", info: "Water needed: 45L", priority: "Low" },
-  { icon: Droplets, x: "33%", y: "57%", color: "text-blue-600", bg: "bg-blue-100", size: "h-12 w-12", sector: "Sector C", info: "Water needed: 120L", priority: "High" },
-  { icon: FlaskConical, x: "18%", y: "73%", color: "text-amber-600", bg: "bg-amber-100", size: "h-10 w-10", sector: "Sector D", info: "Fertilizer: Low", priority: "Medium" },
-  { icon: FlaskConical, x: "84%", y: "57%", color: "text-amber-600", bg: "bg-amber-100", size: "h-10 w-10", sector: "Sector D", info: "Fertilizer: Low", priority: "Medium" },
-  { icon: Droplets, x: "73%", y: "73%", color: "text-blue-600", bg: "bg-blue-100", size: "h-9 w-9", sector: "Sector A", info: "Water needed: 30L", priority: "Low" },
-  { icon: Droplets, x: "46%", y: "89%", color: "text-blue-600", bg: "bg-blue-100", size: "h-8 w-8", sector: "Sector A", info: "Water needed: 20L", priority: "Low" },
+  { icon: Droplets, x: "23%", y: "20%", color: "text-blue-600", bg: "bg-blue-100", size: "h-12 w-12", sector: "Sector A", info: "Water needed: 80L", priority: "Medium", completed: false },
+  { icon: FlaskConical, x: "56%", y: "14%", color: "text-green-600", bg: "bg-green-100", size: "h-10 w-10", sector: "Sector B", info: "Fertilizer: Optimal", priority: "Healthy", completed: true },
+  { icon: FlaskConical, x: "78%", y: "25%", color: "text-red-600", bg: "bg-red-100", size: "h-12 w-12", sector: "Sector C", info: "Fertilizer: Over-Applied", priority: "High", completed: false },
+  { icon: Droplets, x: "61%", y: "31%", color: "text-blue-600", bg: "bg-blue-100", size: "h-9 w-9", sector: "Sector B", info: "Water needed: 45L", priority: "Low", completed: true },
+  { icon: Droplets, x: "33%", y: "57%", color: "text-blue-600", bg: "bg-blue-100", size: "h-12 w-12", sector: "Sector C", info: "Water needed: 120L", priority: "High", completed: false },
+  { icon: FlaskConical, x: "18%", y: "73%", color: "text-amber-600", bg: "bg-amber-100", size: "h-10 w-10", sector: "Sector D", info: "Fertilizer: Low", priority: "Medium", completed: false },
+  { icon: FlaskConical, x: "84%", y: "57%", color: "text-amber-600", bg: "bg-amber-100", size: "h-10 w-10", sector: "Sector D", info: "Fertilizer: Low", priority: "Medium", completed: false },
+  { icon: Droplets, x: "73%", y: "73%", color: "text-blue-600", bg: "bg-blue-100", size: "h-9 w-9", sector: "Sector A", info: "Water needed: 30L", priority: "Low", completed: true },
+  { icon: Droplets, x: "46%", y: "89%", color: "text-blue-600", bg: "bg-blue-100", size: "h-8 w-8", sector: "Sector A", info: "Water needed: 20L", priority: "Low", completed: true },
 ];
 
-function MapMarker({ marker, index, hoveredMarker, setHoveredMarker }) {
+function MapMarker({ marker, index, hoveredMarker, setHoveredMarker, onMarkerClick }) {
   const isHovered = hoveredMarker === index;
 
   return (
     <div
-      className="absolute pointer-events-auto"
+      className="absolute pointer-events-auto cursor-pointer"
       style={{ left: marker.x, top: marker.y }}
       onMouseEnter={() => setHoveredMarker(index)}
       onMouseLeave={() => setHoveredMarker(null)}
+      onClick={() => onMarkerClick?.(marker)}
     >
       {isHovered && (
-        <div className="absolute left-1/2 z-50 mb-2 -translate-x-1/2 bottom-full" style={{ pointerEvents: "none" }}>
+        <div className="absolute left-1/2 z-50 mb-2 -translate-x-1/2 bottom-full">
           <div className="rounded-lg bg-gray-900 px-4 py-3 text-white shadow-xl">
-            <p className="whitespace-nowrap font-bold text-white">{marker.sector} - {marker.priority === "High" ? "High Priority" : marker.priority === "Medium" ? "Medium Priority" : "Low Priority"}</p>
+            <p className="whitespace-nowrap font-bold text-white flex items-center gap-2">
+              {marker.sector}
+              {marker.completed ? (
+                <CheckCircle2 size={16} className="text-green-400" />
+              ) : (
+                <AlertTriangle size={16} className="text-red-400" />
+              )}
+            </p>
             <p className="mt-0.5 whitespace-nowrap text-sm text-slate-300">{marker.info}</p>
+            <p className="mt-1 whitespace-nowrap text-xs text-slate-400">
+              {marker.completed ? "Task completed" : "Click to view alert"}
+            </p>
           </div>
           <div className="mx-auto h-0 w-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-gray-900" />
         </div>
@@ -79,9 +92,13 @@ function MapMarker({ marker, index, hoveredMarker, setHoveredMarker }) {
         className={`relative z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full shadow-md transition-all duration-200 ${
           marker.bg
         } ${marker.color} ${marker.size} ${isHovered ? "scale-110 ring-2 ring-blue-400" : ""}`}
-        style={{ pointerEvents: "none" }}
       >
         <marker.icon size={marker.size === "h-12 w-12" ? 26 : marker.size === "h-10 w-10" ? 22 : 20} />
+        {!marker.completed && (
+          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-white">
+            <AlertTriangle size={10} />
+          </span>
+        )}
       </span>
     </div>
   );
@@ -141,7 +158,11 @@ function AIRecommendations() {
               <div className="flex flex-wrap gap-4 border-b px-6 py-4">
                 {legend.map((item) => (
                   <div key={item.label} className="flex items-center gap-2 text-sm font-semibold text-slate-600">
-                    <span className={`h-3.5 w-3.5 rounded ${item.color}`} />
+                    {item.icon ? (
+                      <item.icon size={14} className={item.color.replace("bg-", "text-")} />
+                    ) : (
+                      <span className={`h-3.5 w-3.5 rounded ${item.color}`} />
+                    )}
                     {item.label}
                   </div>
                 ))}
@@ -168,6 +189,7 @@ function AIRecommendations() {
                       index={index}
                       hoveredMarker={hoveredMarker}
                       setHoveredMarker={setHoveredMarker}
+                      onMarkerClick={() => navigate("/alerts")}
                     />
                   ))}
                 </div>
