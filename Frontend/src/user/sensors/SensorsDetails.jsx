@@ -10,8 +10,17 @@ import {
 import {
   Thermometer, Droplets, MapPin, Cpu,
   ArrowLeft, Wifi, WifiOff, RefreshCw,
+  Sprout, CheckCircle2, Leaf,
 } from 'lucide-react';
 import AppShell from "../components/AppShell";
+
+const farmDetails = {
+  "Green Valley Farm": { crop: "Rice", area: "18 acres", status: "Active", growth: "Healthy", fertilizer: 74, water: 72 },
+  "Sunny Acres":       { crop: "Corn", area: "12 acres", status: "Monitoring", growth: "Good", fertilizer: 62, water: 61 },
+  "Riverside Farm":    { crop: "Rice", area: "9 acres", status: "In Progress", growth: "Fair", fertilizer: 41, water: 42 },
+  "Bluebell Estates":  { crop: "Soybean", area: "15 acres", status: "Active", growth: "Healthy", fertilizer: 68, water: 55 },
+  "Meadow Creek Farms":{ crop: "Wheat", area: "22 acres", status: "Active", growth: "Good", fertilizer: 55, water: 63 },
+};
 
 const tempColor = (t) => {
   if (t < 15) return '#3B82F6';
@@ -162,6 +171,50 @@ export default function SensorsDetails() {
               </span>
             </div>
           </div>
+
+          <section>
+            <h2 className="mb-6 text-xl font-bold text-[#111827]">Farm Assignment</h2>
+            {(() => {
+              const fd = farmDetails[r.farm];
+              if (!fd) return <p className="text-sm text-[#5A7A5A]">No farm details available.</p>;
+              return (
+                <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+                  <article className="card">
+                    <div className="mb-5 flex items-center gap-4">
+                      <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]"><Sprout size={30} /></span>
+                      <h3 className="font-black">Farm</h3>
+                    </div>
+                    <p className="text-3xl font-bold text-black">{r.farm}</p>
+                    <p className="mt-2 text-sm text-slate-600">{fd.crop} &middot; {fd.area}</p>
+                  </article>
+                  <article className="card">
+                    <div className="mb-5 flex items-center gap-4">
+                      <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]"><CheckCircle2 size={30} /></span>
+                      <h3 className="font-black">Growth Status</h3>
+                    </div>
+                    <p className="text-3xl font-bold text-black">{fd.growth}</p>
+                    <p className="mt-2 text-sm text-slate-600">Status: {fd.status}</p>
+                  </article>
+                  <article className="card">
+                    <div className="mb-5 flex items-center gap-4">
+                      <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]"><Droplets size={30} /></span>
+                      <h3 className="font-black">Water Level</h3>
+                    </div>
+                    <p className="text-3xl font-bold text-black">{fd.water}%</p>
+                    <p className="mt-2 text-sm text-slate-600">{fd.water >= 70 ? "Optimal" : fd.water >= 40 ? "Moderate" : "Low"}</p>
+                  </article>
+                  <article className="card">
+                    <div className="mb-5 flex items-center gap-4">
+                      <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]"><Leaf size={30} /></span>
+                      <h3 className="font-black">Fertilizer</h3>
+                    </div>
+                    <p className="text-3xl font-bold text-black">{fd.fertilizer}%</p>
+                    <p className="mt-2 text-sm text-slate-600">{fd.fertilizer >= 70 ? "Well Nourished" : fd.fertilizer >= 40 ? "Adequate" : "Needs Attention"}</p>
+                  </article>
+                </div>
+              );
+            })()}
+          </section>
 
           <div className="grid gap-6 sm:grid-cols-2">
             <div className="card">
