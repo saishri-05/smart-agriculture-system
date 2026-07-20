@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Droplets, FlaskConical, Leaf, MapPin, Search } from "lucide-react";
+import { Droplets, Leaf, MapPin, Search, Sprout } from "lucide-react";
 import AppShell from "../components/AppShell";
 
 const allFarms = [
-  { name: "Green Valley Farm", crop: "Rice", area: "18 acres", fertilizer: 74, water: 72, status: "Active" },
-  { name: "Sunny Acres", crop: "Corn", area: "12 acres", fertilizer: 62, water: 61, status: "Monitoring" },
-  { name: "Riverside Farm", crop: "Rice", area: "9 acres", fertilizer: 41, water: 42, status: "In Progress" },
+  { name: "Green Valley Farm", crop: "Rice", area: "18 acres", water: 72, status: "Active" },
+  { name: "Sunny Acres", crop: "Corn", area: "12 acres", water: 61, status: "Monitoring" },
+  { name: "Riverside Farm", crop: "Rice", area: "9 acres", water: 42, status: "In Progress" },
 ];
 
 function Farms() {
@@ -25,6 +25,16 @@ function Farms() {
           <div>
             <h1 className="text-xl md:text-2xl font-bold text-[#111827]">Farms</h1>
             <p className="mt-1 text-sm text-[#5A7A5A]">Simple view of your fields, crops, water, and soil health</p>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="mb-4 flex items-center gap-3">
+            <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-2.5 text-[#2E7D32]"><Sprout size={24} /></span>
+            <div>
+              <p className="text-xl font-bold text-[#111827]">{allFarms.length} Farm{allFarms.length !== 1 ? "s" : ""}</p>
+              <p className="text-xs text-[#5A7A5A]">{allFarms.map(f => f.name).join(", ")}</p>
+            </div>
           </div>
         </div>
 
@@ -61,15 +71,6 @@ function Farms() {
               </div>
 
               <div className="mt-5 md:mt-6 space-y-4 md:space-y-5">
-                <div>
-                  <div className="mb-2 flex justify-between text-sm font-black">
-                    <span className="flex items-center gap-2"><FlaskConical size={16} /> Fertilizer Level</span>
-                    <span>{farm.fertilizer}%</span>
-                  </div>
-                  <div className="h-2.5 md:h-3 rounded-full bg-white/30">
-                    <div className="h-2.5 md:h-3 rounded-full bg-[#2E7D32]" style={{ width: `${farm.fertilizer}%` }} />
-                  </div>
-                </div>
                 <div>
                   <div className="mb-2 flex justify-between text-sm font-black">
                     <span className="flex items-center gap-2"><Droplets size={16} /> Water Level</span>
