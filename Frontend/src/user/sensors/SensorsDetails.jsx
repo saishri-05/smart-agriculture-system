@@ -142,17 +142,17 @@ export default function SensorsDetails() {
 
     return (
       <AppShell>
-        <div className="mx-auto max-w-7xl space-y-6">
-          <div className="flex items-center gap-3">
+        <div className="mx-auto max-w-7xl space-y-8">
+          <div className="flex items-center gap-4">
             <button onClick={() => setSelectedRobot(null)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-[rgba(46,125,50,0.1)] text-[#2E7D32] hover:bg-[rgba(46,125,50,0.2)] transition-all">
-              <ArrowLeft size={18} />
+              className="flex h-10 w-10 items-center justify-center rounded-lg bg-[rgba(46,125,50,0.12)] text-[#2E7D32] hover:bg-[rgba(46,125,50,0.2)] transition-all">
+              <ArrowLeft size={22} />
             </button>
             <div>
-              <h1 className="text-xl font-bold text-[#111827]">{r.id}</h1>
-              <p className="text-sm text-[#5A7A5A]">{r.farm} &middot; {r.model}</p>
+              <h1 className="text-2xl font-bold text-[#111827]">{r.id}</h1>
+              <p className="mt-1 text-sm text-[#5A7A5A]">{r.farm} &middot; {r.model}</p>
             </div>
-            <div className="ml-auto flex items-center gap-3">
+            <div className="ml-auto flex items-center gap-4">
               <span className={`badge ${isOnline ? "badge-success" : "badge-danger"}`}>
                 <span className={`mr-1.5 inline-block h-2 w-2 rounded-full ${isOnline ? "bg-[#2E7D32]" : "bg-[#EF4444]"}`} />
                 {r.status}
@@ -165,8 +165,8 @@ export default function SensorsDetails() {
 
           <div className="grid gap-6 sm:grid-cols-2">
             <div className="card">
-              <h3 className="mb-4 flex items-center gap-2 text-sm font-bold text-[#111827]">
-                <Thermometer size={16} className="text-[#2E7D32]" /> DHT11 — Temperature & Humidity
+              <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-[#111827]">
+                <Thermometer size={20} className="text-[#2E7D32]" /> DHT11 — Temperature & Humidity
               </h3>
               {isOnline && readings ? (
                 <div className="flex items-center justify-around">
@@ -181,8 +181,8 @@ export default function SensorsDetails() {
             </div>
 
             <div className="card">
-              <h3 className="mb-4 flex items-center gap-2 text-sm font-bold text-[#111827]">
-                <Droplets size={16} className="text-[#2E7D32]" /> Soil Moisture
+              <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-[#111827]">
+                <Droplets size={20} className="text-[#2E7D32]" /> Soil Moisture
               </h3>
               {isOnline && readings ? (
                 <div className="flex justify-center">
@@ -196,8 +196,8 @@ export default function SensorsDetails() {
             </div>
 
             <div className="card">
-              <h3 className="mb-4 flex items-center gap-2 text-sm font-bold text-[#111827]">
-                <MapPin size={16} className="text-[#2E7D32]" /> WiFi Location
+              <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-[#111827]">
+                <MapPin size={20} className="text-[#2E7D32]" /> WiFi Location
               </h3>
               {isOnline && readings ? (
                 <div className="flex flex-col items-center gap-3">
@@ -222,7 +222,7 @@ export default function SensorsDetails() {
 
           <div className="card">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-sm font-bold text-[#111827]">Sensor Reading History</h3>
+              <h3 className="text-xl font-bold text-[#111827]">Sensor Reading History</h3>
             </div>
             {historyData.length > 0 ? (
               <ResponsiveContainer width="100%" height={220}>
@@ -247,50 +247,51 @@ export default function SensorsDetails() {
 
   return (
     <AppShell>
-      <section className="mx-auto max-w-7xl space-y-6">
-        <div className="flex items-start gap-4">
-          <span className="rounded-xl bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]">
-            <Cpu size={28} />
-          </span>
+      <section className="mx-auto max-w-7xl space-y-8">
+        <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
           <div>
-            <h1 className="text-xl md:text-2xl font-bold text-[#111827]">Robot Sensor Details</h1>
-            <p className="mt-1 text-sm text-[#5A7A5A]">Live sensor readings from every robot in the fleet</p>
+            <h1 className="text-2xl font-bold text-[#111827]">Robot Sensor Details</h1>
+            <p className="mt-1 text-sm font-[400] text-[#5A7A5A]">Live sensor readings from every robot in the fleet</p>
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="card">
-            <div className="mb-3 flex items-center gap-3">
-              <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-2 text-[#2E7D32]"><Wifi size={18} /></span>
-              <p className="text-sm font-semibold text-[#5A7A5A]">Sensors Online</p>
-            </div>
-            <p className="text-2xl font-bold text-[#111827]">{fleetStats.online}</p>
+        <section>
+          <h2 className="mb-6 text-xl font-bold text-[#111827]">Fleet Overview</h2>
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            <article className="card">
+              <div className="mb-5 flex items-center gap-4">
+                <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]"><Wifi size={30} /></span>
+                <h3 className="font-black">Sensors Online</h3>
+              </div>
+              <p className="text-3xl font-bold text-black">{fleetStats.online}</p>
+            </article>
+            <article className="card">
+              <div className="mb-5 flex items-center gap-4">
+                <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]"><Thermometer size={30} /></span>
+                <h3 className="font-black">Avg Temperature</h3>
+              </div>
+              <p className="text-3xl font-bold text-black">{fleetStats.avgTemp}°C</p>
+            </article>
+            <article className="card">
+              <div className="mb-5 flex items-center gap-4">
+                <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]"><Droplets size={30} /></span>
+                <h3 className="font-black">Avg Soil Moisture</h3>
+              </div>
+              <p className="text-3xl font-bold text-black">{fleetStats.avgMoisture}%</p>
+            </article>
+            <article className="card">
+              <div className="mb-5 flex items-center gap-4">
+                <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]"><RefreshCw size={30} /></span>
+                <h3 className="font-black">Last Synced</h3>
+              </div>
+              <p className="text-3xl font-bold text-black">{lastSyncStr}</p>
+            </article>
           </div>
-          <div className="card">
-            <div className="mb-3 flex items-center gap-3">
-              <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-2 text-[#2E7D32]"><Thermometer size={18} /></span>
-              <p className="text-sm font-semibold text-[#5A7A5A]">Avg Temperature</p>
-            </div>
-            <p className="text-2xl font-bold text-[#111827]">{fleetStats.avgTemp}°C</p>
-          </div>
-          <div className="card">
-            <div className="mb-3 flex items-center gap-3">
-              <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-2 text-[#2E7D32]"><Droplets size={18} /></span>
-              <p className="text-sm font-semibold text-[#5A7A5A]">Avg Soil Moisture</p>
-            </div>
-            <p className="text-2xl font-bold text-[#111827]">{fleetStats.avgMoisture}%</p>
-          </div>
-          <div className="card">
-            <div className="mb-3 flex items-center gap-3">
-              <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-2 text-[#2E7D32]"><RefreshCw size={18} /></span>
-              <p className="text-sm font-semibold text-[#5A7A5A]">Last Synced</p>
-            </div>
-            <p className="text-2xl font-bold text-[#111827]">{lastSyncStr}</p>
-          </div>
-        </div>
+        </section>
 
-        <h2 className="text-lg font-bold text-[#111827]">Robot Sensor Grid</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <section>
+          <h2 className="mb-6 text-xl font-bold text-[#111827]">Robot Sensor Grid</h2>
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
           {robots.filter(r => r.status !== 'Offline').map((r) => {
             const rId = r.id;
             const readings = readingFor(rId);
@@ -351,6 +352,7 @@ export default function SensorsDetails() {
             );
           })}
         </div>
+        </section>
       </section>
     </AppShell>
   );
