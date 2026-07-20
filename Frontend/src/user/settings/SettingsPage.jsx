@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { Bell, Moon, Sun } from "lucide-react";
+import { Bell } from "lucide-react";
 import AppShell from "../components/AppShell";
 
 const toggleClass =
@@ -10,17 +9,6 @@ const thumbClass =
   "absolute left-1 top-1 h-5 w-5 rounded-full bg-white shadow-md transition-all duration-200 peer-checked:translate-x-5";
 
 function SettingsPage() {
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("darkMode") === "true");
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-    localStorage.setItem("darkMode", darkMode);
-  }, [darkMode]);
-
   return (
     <AppShell>
       <div className="mx-auto max-w-5xl space-y-8">
@@ -41,15 +29,6 @@ function SettingsPage() {
           </div>
         </div>
       </div>
-
-      {/* Dark Mode Toggle */}
-      <button
-        onClick={() => setDarkMode(!darkMode)}
-        className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full shadow-xl transition-all hover:scale-110 bg-[#2E7D32] text-white"
-        title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-      >
-        {darkMode ? <Sun size={22} /> : <Moon size={22} />}
-      </button>
     </AppShell>
   );
 }
