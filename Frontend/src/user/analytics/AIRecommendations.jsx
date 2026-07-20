@@ -4,11 +4,13 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {
   CheckCircle2,
+  Clock,
   Cpu,
   DollarSign,
   Droplets,
   FlaskConical,
   Leaf,
+  ListTodo,
   Sparkles,
   TrendingUp,
 } from "lucide-react";
@@ -210,31 +212,42 @@ function AIRecommendations() {
           </div>
         </div>
 
-        {/* Total Tasks Completed */}
-        <section className="card">
-          <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-5">
-              <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#2E7D32] text-white shadow-lg">
-                <CheckCircle2 size={34} />
-              </span>
-              <div>
-                <p className="text-sm font-bold uppercase tracking-wide text-slate-500">Total Tasks Completed</p>
-                <p className="mt-1 text-4xl font-black text-[#111827]">12</p>
-                <p className="mt-0.5 text-sm text-[#2E7D32]">↗ +3 from last week</p>
+        {/* Task Overview */}
+        <section>
+          <h2 className="mb-6 text-xl font-bold text-[#111827]">Task Overview</h2>
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            <article className="card">
+              <div className="mb-5 flex items-center gap-4">
+                <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]"><ListTodo size={30} /></span>
+                <h3 className="font-black">Total Tasks</h3>
               </div>
-            </div>
-            <div className="grid grid-cols-3 gap-6">
-              {[
-                { label: "Irrigation", value: "5" },
-                { label: "Fertilization", value: "4" },
-                { label: "Inspection", value: "3" },
-              ].map((t) => (
-                <div key={t.label} className="text-center">
-                  <p className="text-2xl font-black text-[#111827]">{t.value}</p>
-                  <p className="mt-0.5 text-sm text-slate-500">{t.label}</p>
-                </div>
-              ))}
-            </div>
+              <p className="text-3xl font-bold text-black">28</p>
+              <p className="mt-2 text-sm text-slate-600">All tasks across farms</p>
+            </article>
+            <article className="card">
+              <div className="mb-5 flex items-center gap-4">
+                <span className="rounded-lg bg-[rgba(245,158,11,0.12)] p-3 text-[#F59E0B]"><Clock size={30} /></span>
+                <h3 className="font-black">Pending</h3>
+              </div>
+              <p className="text-3xl font-bold text-black">10</p>
+              <p className="mt-2 text-sm text-slate-600">Awaiting start</p>
+            </article>
+            <article className="card">
+              <div className="mb-5 flex items-center gap-4">
+                <span className="rounded-lg bg-[rgba(37,99,235,0.12)] p-3 text-[#2563EB]"><TrendingUp size={30} /></span>
+                <h3 className="font-black">In Progress</h3>
+              </div>
+              <p className="text-3xl font-bold text-black">6</p>
+              <p className="mt-2 text-sm text-slate-600">Currently active</p>
+            </article>
+            <article className="card">
+              <div className="mb-5 flex items-center gap-4">
+                <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]"><CheckCircle2 size={30} /></span>
+                <h3 className="font-black">Completed</h3>
+              </div>
+              <p className="text-3xl font-bold text-black">12</p>
+              <p className="mt-2 text-sm text-[#2E7D32]">↗ +3 from last week</p>
+            </article>
           </div>
         </section>
       </div>
