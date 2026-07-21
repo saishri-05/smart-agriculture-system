@@ -344,7 +344,7 @@ export default function SensorsDetails() {
 
         <section>
           <h2 className="mb-6 text-xl font-bold text-[#111827]">Robot Sensor Grid</h2>
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
           {robots.filter(r => r.status !== 'Offline').map((r) => {
             const rId = r.id;
             const readings = readingFor(rId);
@@ -353,47 +353,47 @@ export default function SensorsDetails() {
             return (
               <div key={r.id} onClick={() => setSelectedRobot(r)}
                 className="card cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-md">
-                <div className="mb-3 flex items-center justify-between">
+                <div className="mb-4 flex items-center justify-between">
                   <div className="min-w-0">
-                    <p className="text-sm font-bold text-[#111827] truncate">{r.id}</p>
-                    <p className="text-[10px] text-[#5A7A5A] truncate">{r.farm}</p>
+                    <p className="text-base font-bold text-[#111827] truncate">{r.id}</p>
+                    <p className="text-xs text-[#5A7A5A] truncate">{r.farm}</p>
                   </div>
                   <span className={`h-2.5 w-2.5 shrink-0 rounded-full ml-2 ${r.status === 'Active' ? 'bg-[#2E7D32]' : r.status === 'Idle' ? 'bg-[#F59E0B]' : 'bg-[#EF4444]'}`} />
                 </div>
 
                 {!isOnline ? (
-                  <div className="flex items-center justify-center h-[120px]">
-                    <div className="flex flex-col items-center gap-1.5">
-                      <WifiOff size={20} className="text-[#9CA3AF]" />
+                  <div className="flex items-center justify-center h-[140px]">
+                    <div className="flex flex-col items-center gap-2">
+                      <WifiOff size={24} className="text-[#9CA3AF]" />
                       <span className="badge badge-neutral">Sensor Offline</span>
                     </div>
                   </div>
                 ) : readings ? (
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-[9px] font-semibold text-[#5A7A5A] uppercase tracking-wider">DHT11</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[11px] font-bold" style={{ color: tempColor(readings.dht11.temperature) }}>
-                          <Thermometer size={12} className="mr-0.5 inline" />{readings.dht11.temperature}°C
+                      <span className="text-[10px] font-semibold text-[#5A7A5A] uppercase tracking-wider">DHT11</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm font-bold" style={{ color: tempColor(readings.dht11.temperature) }}>
+                          <Thermometer size={14} className="mr-0.5 inline" />{readings.dht11.temperature}°C
                         </span>
-                        <span className="text-[11px] font-bold" style={{ color: humidityColor(readings.dht11.humidity) }}>
-                          <Droplets size={12} className="mr-0.5 inline" />{readings.dht11.humidity}%
+                        <span className="text-sm font-bold" style={{ color: humidityColor(readings.dht11.humidity) }}>
+                          <Droplets size={14} className="mr-0.5 inline" />{readings.dht11.humidity}%
                         </span>
                       </div>
                     </div>
                     <div>
-                      <div className="mb-1 flex items-center justify-between">
-                        <span className="text-[9px] font-semibold text-[#5A7A5A] uppercase tracking-wider">Soil Moisture</span>
-                        <span className="text-[10px] font-bold" style={{ color: soilColor(readings.soilMoisture) }}>{readings.soilMoisture}%</span>
+                      <div className="mb-1.5 flex items-center justify-between">
+                        <span className="text-[10px] font-semibold text-[#5A7A5A] uppercase tracking-wider">Soil Moisture</span>
+                        <span className="text-xs font-bold" style={{ color: soilColor(readings.soilMoisture) }}>{readings.soilMoisture}%</span>
                       </div>
-                      <div className="h-1.5 rounded-full bg-[rgba(0,0,0,0.06)]">
+                      <div className="h-2 rounded-full bg-[rgba(0,0,0,0.06)]">
                         <div className="h-full rounded-full transition-all" style={{ width: `${readings.soilMoisture}%`, background: soilColor(readings.soilMoisture) }} />
                       </div>
-                      <div className="mt-0.5 text-[9px] font-medium" style={{ color: soilColor(readings.soilMoisture) }}>{soilLabel(readings.soilMoisture)}</div>
+                      <div className="mt-1 text-[10px] font-medium" style={{ color: soilColor(readings.soilMoisture) }}>{soilLabel(readings.soilMoisture)}</div>
                     </div>
-                    <div className="flex items-center gap-1.5 pt-1">
-                      <MapPin size={11} className="text-[#5A7A5A]" />
-                      <span className="text-[9px] text-[#5A7A5A]">({readings.wifiLocation.lat.toFixed(2)}, {readings.wifiLocation.lng.toFixed(2)})</span>
+                    <div className="flex items-center gap-1.5 pt-2">
+                      <MapPin size={13} className="text-[#5A7A5A]" />
+                      <span className="text-[10px] text-[#5A7A5A]">({readings.wifiLocation.lat.toFixed(2)}, {readings.wifiLocation.lng.toFixed(2)})</span>
                     </div>
                   </div>
                 ) : (
