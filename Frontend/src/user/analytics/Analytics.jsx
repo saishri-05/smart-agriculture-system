@@ -10,9 +10,16 @@ import {
   TrendingUp,
 } from "lucide-react";
 import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
   CartesianGrid,
+  Cell,
   Line,
   LineChart,
+  Pie,
+  PieChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -35,16 +42,15 @@ const farmsData = [
       { title: "Temperature", value: "28°C", status: "Normal", dataKey: "temperature", color: "#ff5b1a", icon: Thermometer, iconBg: "bg-orange-500" },
       { title: "Soil Moisture", value: "56%", status: "Low", dataKey: "moisture", color: "#2f7df6", icon: Droplets, iconBg: "bg-blue-500" },
       { title: "Humidity", value: "72%", status: "Normal", dataKey: "humidity", color: "#06b6d4", icon: Droplets, iconBg: "bg-cyan-500" },
-      { title: "NPK Level", value: "45 ppm", status: "Optimal", dataKey: "npk", color: "#0F2440", icon: Leaf, iconBg: "bg-[#0F2440]" },
     ],
     sensorData: [
-      { time: "00:00", temperature: 18, moisture: 65, humidity: 74, npk: 38 },
-      { time: "04:00", temperature: 16, moisture: 62, humidity: 76, npk: 40 },
-      { time: "08:00", temperature: 22, moisture: 58, humidity: 73, npk: 42 },
-      { time: "12:00", temperature: 28, moisture: 55, humidity: 70, npk: 45 },
-      { time: "16:00", temperature: 26, moisture: 53, humidity: 72, npk: 46 },
-      { time: "20:00", temperature: 22, moisture: 56, humidity: 75, npk: 44 },
-      { time: "24:00", temperature: 19, moisture: 60, humidity: 77, npk: 45 },
+      { time: "00:00", temperature: 18, moisture: 65, humidity: 74 },
+      { time: "04:00", temperature: 16, moisture: 62, humidity: 76 },
+      { time: "08:00", temperature: 22, moisture: 58, humidity: 73 },
+      { time: "12:00", temperature: 28, moisture: 55, humidity: 70 },
+      { time: "16:00", temperature: 26, moisture: 53, humidity: 72 },
+      { time: "20:00", temperature: 22, moisture: 56, humidity: 75 },
+      { time: "24:00", temperature: 19, moisture: 60, humidity: 77 },
     ],
     summary: "Rice crop is healthy. Water is slightly low, so irrigate Sector A for 20 minutes today.",
   },
@@ -62,16 +68,15 @@ const farmsData = [
       { title: "Temperature", value: "24°C", status: "Normal", dataKey: "temperature", color: "#ff5b1a", icon: Thermometer, iconBg: "bg-orange-500" },
       { title: "Soil Moisture", value: "62%", status: "Normal", dataKey: "moisture", color: "#2f7df6", icon: Droplets, iconBg: "bg-blue-500" },
       { title: "Humidity", value: "68%", status: "Normal", dataKey: "humidity", color: "#06b6d4", icon: Droplets, iconBg: "bg-cyan-500" },
-      { title: "NPK Level", value: "38 ppm", status: "Low", dataKey: "npk", color: "#0F2440", icon: Leaf, iconBg: "bg-[#0F2440]" },
     ],
     sensorData: [
-      { time: "00:00", temperature: 15, moisture: 70, humidity: 71, npk: 32 },
-      { time: "04:00", temperature: 13, moisture: 68, humidity: 73, npk: 34 },
-      { time: "08:00", temperature: 19, moisture: 64, humidity: 70, npk: 36 },
-      { time: "12:00", temperature: 24, moisture: 62, humidity: 68, npk: 38 },
-      { time: "16:00", temperature: 23, moisture: 60, humidity: 69, npk: 40 },
-      { time: "20:00", temperature: 19, moisture: 63, humidity: 72, npk: 37 },
-      { time: "24:00", temperature: 16, moisture: 66, humidity: 74, npk: 35 },
+      { time: "00:00", temperature: 15, moisture: 70, humidity: 71 },
+      { time: "04:00", temperature: 13, moisture: 68, humidity: 73 },
+      { time: "08:00", temperature: 19, moisture: 64, humidity: 70 },
+      { time: "12:00", temperature: 24, moisture: 62, humidity: 68 },
+      { time: "16:00", temperature: 23, moisture: 60, humidity: 69 },
+      { time: "20:00", temperature: 19, moisture: 63, humidity: 72 },
+      { time: "24:00", temperature: 16, moisture: 66, humidity: 74 },
     ],
     summary: "Wheat crop in tillering stage. Apply nitrogen fertilizer in Sector B within 2 days.",
   },
@@ -89,16 +94,15 @@ const farmsData = [
       { title: "Temperature", value: "26°C", status: "Normal", dataKey: "temperature", color: "#ff5b1a", icon: Thermometer, iconBg: "bg-orange-500" },
       { title: "Soil Moisture", value: "48%", status: "Low", dataKey: "moisture", color: "#2f7df6", icon: Droplets, iconBg: "bg-blue-500" },
       { title: "Humidity", value: "65%", status: "Low", dataKey: "humidity", color: "#06b6d4", icon: Droplets, iconBg: "bg-cyan-500" },
-      { title: "NPK Level", value: "52 ppm", status: "Optimal", dataKey: "npk", color: "#0F2440", icon: Leaf, iconBg: "bg-[#0F2440]" },
     ],
     sensorData: [
-      { time: "00:00", temperature: 17, moisture: 55, humidity: 70, npk: 44 },
-      { time: "04:00", temperature: 15, moisture: 52, humidity: 72, npk: 46 },
-      { time: "08:00", temperature: 20, moisture: 50, humidity: 68, npk: 48 },
-      { time: "12:00", temperature: 26, moisture: 48, humidity: 65, npk: 52 },
-      { time: "16:00", temperature: 25, moisture: 46, humidity: 66, npk: 54 },
-      { time: "20:00", temperature: 21, moisture: 49, humidity: 69, npk: 50 },
-      { time: "24:00", temperature: 18, moisture: 53, humidity: 71, npk: 47 },
+      { time: "00:00", temperature: 17, moisture: 55, humidity: 70 },
+      { time: "04:00", temperature: 15, moisture: 52, humidity: 72 },
+      { time: "08:00", temperature: 20, moisture: 50, humidity: 68 },
+      { time: "12:00", temperature: 26, moisture: 48, humidity: 65 },
+      { time: "16:00", temperature: 25, moisture: 46, humidity: 66 },
+      { time: "20:00", temperature: 21, moisture: 49, humidity: 69 },
+      { time: "24:00", temperature: 18, moisture: 53, humidity: 71 },
     ],
     summary: "Corn approaching harvest. Moisture levels dropping — schedule irrigation in Sector C tonight.",
   },
@@ -116,23 +120,78 @@ const farmsData = [
       { title: "Temperature", value: "30°C", status: "High", dataKey: "temperature", color: "#ff5b1a", icon: Thermometer, iconBg: "bg-orange-500" },
       { title: "Soil Moisture", value: "42%", status: "Critical", dataKey: "moisture", color: "#2f7df6", icon: Droplets, iconBg: "bg-blue-500" },
       { title: "Humidity", value: "58%", status: "Low", dataKey: "humidity", color: "#06b6d4", icon: Droplets, iconBg: "bg-cyan-500" },
-      { title: "NPK Level", value: "28 ppm", status: "Low", dataKey: "npk", color: "#0F2440", icon: Leaf, iconBg: "bg-[#0F2440]" },
     ],
     sensorData: [
-      { time: "00:00", temperature: 22, moisture: 48, humidity: 62, npk: 24 },
-      { time: "04:00", temperature: 20, moisture: 46, humidity: 64, npk: 25 },
-      { time: "08:00", temperature: 25, moisture: 44, humidity: 60, npk: 26 },
-      { time: "12:00", temperature: 30, moisture: 42, humidity: 58, npk: 28 },
-      { time: "16:00", temperature: 29, moisture: 40, humidity: 59, npk: 30 },
-      { time: "20:00", temperature: 26, moisture: 43, humidity: 61, npk: 27 },
-      { time: "24:00", temperature: 23, moisture: 46, humidity: 63, npk: 26 },
+      { time: "00:00", temperature: 22, moisture: 48, humidity: 62 },
+      { time: "04:00", temperature: 20, moisture: 46, humidity: 64 },
+      { time: "08:00", temperature: 25, moisture: 44, humidity: 60 },
+      { time: "12:00", temperature: 30, moisture: 42, humidity: 58 },
+      { time: "16:00", temperature: 29, moisture: 40, humidity: 59 },
+      { time: "20:00", temperature: 26, moisture: 43, humidity: 61 },
+      { time: "24:00", temperature: 23, moisture: 46, humidity: 63 },
     ],
     summary: "Soybean under heat stress. Increase irrigation frequency and consider shade netting for Sector D.",
   },
 ];
 
+const PIE_COLORS = ["#ff5b1a", "#2f7df6", "#06b6d4", "#0F2440"];
+
+function renderChart(chartType, data, dataKey, color) {
+  const common = { width: "100%", height: "100%" };
+  const props = { data, margin: { top: 5, right: 10, left: 0, bottom: 5 } };
+
+  switch (chartType) {
+    case "Area Chart":
+      return (
+        <AreaChart {...common} {...props}>
+          <defs>
+            <linearGradient id={`grad-${dataKey}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={color} stopOpacity={0.3} />
+              <stop offset="95%" stopColor={color} stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+          <XAxis dataKey="time" />
+          <YAxis />
+          <Tooltip />
+          <Area type="monotone" dataKey={dataKey} stroke={color} fill={`url(#grad-${dataKey})`} strokeWidth={3} />
+        </AreaChart>
+      );
+    case "Bar Chart":
+      return (
+        <BarChart {...common} {...props}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+          <XAxis dataKey="time" />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey={dataKey} fill={color} radius={[4, 4, 0, 0]} />
+        </BarChart>
+      );
+    case "Pie Chart":
+      return (
+        <PieChart {...common}>
+          <Pie data={data.map((d, i) => ({ name: d.time, value: d[dataKey] }))} cx="50%" cy="50%" outerRadius={80} dataKey="value" label={({ name, value }) => `${name}: ${value}`}>
+            {data.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
+          </Pie>
+          <Tooltip />
+        </PieChart>
+      );
+    default:
+      return (
+        <LineChart {...common} {...props}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+          <XAxis dataKey="time" />
+          <YAxis />
+          <Tooltip />
+          <Line type="monotone" dataKey={dataKey} stroke={color} strokeWidth={3} dot={{ r: 4 }} />
+        </LineChart>
+      );
+  }
+}
+
 function Analytics() {
   const [selectedFarm, setSelectedFarm] = useState(farmsData[0].id);
+  const [chartType, setChartType] = useState("Line Chart");
   const farm = farmsData.find((f) => f.id === selectedFarm) || farmsData[0];
 
   return (
@@ -176,8 +235,11 @@ function Analytics() {
             <h2 className="text-xl font-bold text-[#111827]">Sensor Analytics</h2>
             <label className="w-full max-w-48">
               <span className="label">Graph Type</span>
-              <select className="input">
+              <select className="input" value={chartType} onChange={(e) => setChartType(e.target.value)}>
                 <option>Line Chart</option>
+                <option>Area Chart</option>
+                <option>Bar Chart</option>
+                <option>Pie Chart</option>
               </select>
             </label>
           </div>
@@ -202,13 +264,7 @@ function Analytics() {
                 </div>
                 <div className="h-56">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={farm.sensorData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                      <XAxis dataKey="time" />
-                      <YAxis />
-                      <Tooltip />
-                      <Line type="monotone" dataKey={chart.dataKey} stroke={chart.color} strokeWidth={3} dot={{ r: 4 }} />
-                    </LineChart>
+                    {renderChart(chartType, farm.sensorData, chart.dataKey, chart.color)}
                   </ResponsiveContainer>
                 </div>
                 <p className="mt-4 border-t pt-4 text-sm text-slate-600">
