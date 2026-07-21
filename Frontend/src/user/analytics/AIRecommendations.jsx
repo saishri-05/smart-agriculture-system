@@ -104,9 +104,54 @@ function MapMarker({ marker, index, hoveredMarker, setHoveredMarker, onMarkerCli
   );
 }
 
+const initialTasks = [
+  { id: 1, farm: "Green Valley Farm", task: "Irrigate Sector A — 80L water needed", priority: "Medium" },
+  { id: 2, farm: "Green Valley Farm", task: "Irrigate Sector C — 120L water needed urgently", priority: "High" },
+  { id: 3, farm: "Green Valley Farm", task: "Apply nitrogen fertilizer in Sector D", priority: "Medium" },
+  { id: 4, farm: "Green Valley Farm", task: "Address over-application of fertilizer in Sector C", priority: "High" },
+  { id: 5, farm: "Green Valley Farm", task: "Irrigate Sector A — 30L water needed", priority: "Low" },
+  { id: 6, farm: "Green Valley Farm", task: "Irrigate Sector A — 20L water needed", priority: "Low" },
+  { id: 7, farm: "Green Valley Farm", task: "Run crop health scan on Sector B", priority: "Low" },
+];
+
+const inProgressTasks = [
+  { id: 101, farm: "Green Valley Farm", task: "Soil sampling in Sector B", priority: "Medium" },
+  { id: 102, farm: "Green Valley Farm", task: "Fertilizer application on Sector A", priority: "Medium" },
+  { id: 103, farm: "Green Valley Farm", task: "Pest inspection on Sector D", priority: "High" },
+  { id: 104, farm: "Green Valley Farm", task: "Irrigation system maintenance", priority: "Low" },
+  { id: 105, farm: "Green Valley Farm", task: "Weed removal in Sector C", priority: "Medium" },
+  { id: 106, farm: "Green Valley Farm", task: "Crop health data collection", priority: "Low" },
+];
+
+const completedInitialTasks = [
+  { id: 201, farm: "Green Valley Farm", task: "Install drip irrigation in Sector B", priority: "High" },
+  { id: 202, farm: "Green Valley Farm", task: "Apply pesticide on Sector A", priority: "Medium" },
+  { id: 203, farm: "Green Valley Farm", task: "Harvest wheat from Sector D", priority: "High" },
+  { id: 204, farm: "Green Valley Farm", task: "Soil pH testing across all sectors", priority: "Low" },
+  { id: 205, farm: "Green Valley Farm", task: "Repair irrigation valve in Sector C", priority: "High" },
+  { id: 206, farm: "Green Valley Farm", task: "Seedling transplantation in Sector B", priority: "Medium" },
+  { id: 207, farm: "Green Valley Farm", task: "Inspect and clean water pumps", priority: "Low" },
+  { id: 208, farm: "Green Valley Farm", task: "Crop rotation planning for next season", priority: "Low" },
+  { id: 209, farm: "Green Valley Farm", task: "Fertilize wheat crop in Sector D", priority: "Medium" },
+  { id: 210, farm: "Green Valley Farm", task: "Monitor soil moisture sensors", priority: "Low" },
+  { id: 211, farm: "Green Valley Farm", task: "Prune fruit trees in Sector A", priority: "Low" },
+  { id: 212, farm: "Green Valley Farm", task: "Calibrate sprayer equipment", priority: "Medium" },
+];
+
 function AIRecommendations() {
   const navigate = useNavigate();
   const [hoveredMarker, setHoveredMarker] = useState(null);
+  const [pending, setPending] = useState(initialTasks);
+  const [inProgress, setInProgress] = useState(inProgressTasks);
+  const [completed, setCompleted] = useState(completedInitialTasks);
+
+  const completeTask = (id) => {
+    const task = pending.find(t => t.id === id);
+    if (task) {
+      setPending(prev => prev.filter(t => t.id !== id));
+      setCompleted(prev => [...prev, { ...task, id: Date.now() }]);
+    }
+  };
 
   return (
     <AppShell>
@@ -245,7 +290,7 @@ function AIRecommendations() {
                 <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]"><ListTodo size={30} /></span>
                 <h3 className="font-black">Total Tasks</h3>
               </div>
-              <p className="text-3xl font-bold text-black">28</p>
+              <p className="text-3xl font-bold text-black">{pending.length + inProgress.length + completed.length}</p>
               <p className="mt-2 text-sm text-slate-600">All tasks across farms</p>
             </article>
             <article className="card">
@@ -253,7 +298,7 @@ function AIRecommendations() {
                 <span className="rounded-lg bg-[rgba(245,158,11,0.12)] p-3 text-[#F59E0B]"><Clock size={30} /></span>
                 <h3 className="font-black">Pending</h3>
               </div>
-              <p className="text-3xl font-bold text-black">10</p>
+              <p className="text-3xl font-bold text-black">{pending.length}</p>
               <p className="mt-2 text-sm text-slate-600">Awaiting start</p>
             </article>
             <article className="card">
@@ -261,7 +306,7 @@ function AIRecommendations() {
                 <span className="rounded-lg bg-[rgba(37,99,235,0.12)] p-3 text-[#2563EB]"><TrendingUp size={30} /></span>
                 <h3 className="font-black">In Progress</h3>
               </div>
-              <p className="text-3xl font-bold text-black">6</p>
+              <p className="text-3xl font-bold text-black">{inProgress.length}</p>
               <p className="mt-2 text-sm text-slate-600">Currently active</p>
             </article>
             <article className="card">
@@ -269,11 +314,39 @@ function AIRecommendations() {
                 <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]"><CheckCircle2 size={30} /></span>
                 <h3 className="font-black">Completed</h3>
               </div>
-              <p className="text-3xl font-bold text-black">12</p>
+              <p className="text-3xl font-bold text-black">{completed.length}</p>
               <p className="mt-2 text-sm text-[#2E7D32]">↗ +3 from last week</p>
             </article>
           </div>
         </section>
+
+        {/* Pending Tasks Table */}
+        {pending.length > 0 && (
+          <section>
+            <h2 className="mb-6 text-xl font-bold text-[#111827]">Pending Tasks</h2>
+            <div className="space-y-3">
+              {pending.map((t) => (
+                <div key={t.id} className="card flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-4 min-w-0 flex-1">
+                    <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase ${
+                      t.priority === "High" ? "bg-red-100 text-red-600" :
+                      t.priority === "Medium" ? "bg-amber-100 text-amber-600" :
+                      "bg-slate-100 text-slate-600"
+                    }`}>{t.priority}</span>
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold text-[#111827]">{t.task}</p>
+                      <p className="text-xs text-[#5A7A5A]">{t.farm}</p>
+                    </div>
+                  </div>
+                  <button onClick={() => completeTask(t.id)}
+                    className="btn btn-primary shrink-0 text-xs">
+                    <CheckCircle2 size={16} className="mr-1" /> Complete
+                  </button>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </AppShell>
   );
