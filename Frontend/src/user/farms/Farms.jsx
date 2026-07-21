@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Droplets, History, Leaf, MapPin, Search, Sprout, User } from "lucide-react";
+import { ArrowLeft, CalendarDays, Clock, Droplets, History, Leaf, MapPin, Search, Sprout, User } from "lucide-react";
 import AppShell from "../components/AppShell";
 
 const allFarms = [
@@ -7,16 +7,22 @@ const allFarms = [
     name: "Green Valley Farm", location: "Sangli, Maharashtra", farmer: "Ramesh Patil",
     area: "18 acres", cropsPerYear: 2, soil: "Loamy Soil",
     previousCrops: ["Wheat", "Sugarcane"], crop: "Rice", water: 72, status: "Active",
+    yearsActive: 12,
+    description: "Green Valley Farm has been family-run for over a decade, known for its high-yield rice cultivation using traditional methods blended with modern drip irrigation. The loamy soil retains moisture well, making it ideal for two crop cycles per year. The farm also experiments with sugarcane during the off-season to maximize land use.",
   },
   {
     name: "Sunny Acres", location: "Kolhapur, Maharashtra", farmer: "Suresh Deshmukh",
     area: "12 acres", cropsPerYear: 1, soil: "Black Soil",
     previousCrops: ["Cotton"], crop: "Corn", water: 61, status: "Monitoring",
+    yearsActive: 8,
+    description: "Sunny Acres sits on rich black soil ideal for cotton and corn. The farm follows a single-crop cycle focusing on quality over quantity. Recent soil tests show adequate nutrient levels, though water retention varies during dry spells. The farmer is exploring rotation with pulses to improve nitrogen fixation.",
   },
   {
     name: "Riverside Farm", location: "Satara, Maharashtra", farmer: "Anita Jadhav",
     area: "9 acres", cropsPerYear: 2, soil: "Alluvial Soil",
     previousCrops: ["Rice", "Vegetables"], crop: "Rice", water: 42, status: "In Progress",
+    yearsActive: 6,
+    description: "Situated along the riverbank, Riverside Farm benefits from nutrient-rich alluvial deposits. The farm has been active for 6 years, growing rice and seasonal vegetables. Current water levels are lower than ideal, and the farmer is considering switching to less water-intensive crops or investing in rainwater harvesting.",
   },
 ];
 
@@ -50,7 +56,7 @@ function Farms() {
             </span>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-5">
             <article className="card">
               <div className="mb-5 flex items-center gap-4">
                 <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]"><User size={30} /></span>
@@ -66,6 +72,14 @@ function Farms() {
               </div>
               <p className="text-3xl font-bold text-black">{f.area}</p>
               <p className="mt-2 text-sm text-slate-600">{f.location}</p>
+            </article>
+            <article className="card">
+              <div className="mb-5 flex items-center gap-4">
+                <span className="rounded-lg bg-[rgba(46,125,50,0.12)] p-3 text-[#2E7D32]"><CalendarDays size={30} /></span>
+                <h3 className="font-black">Cropping Since</h3>
+              </div>
+              <p className="text-3xl font-bold text-black">{f.yearsActive} yrs</p>
+              <p className="mt-2 text-sm text-slate-600">Farming experience</p>
             </article>
             <article className="card">
               <div className="mb-5 flex items-center gap-4">
@@ -94,6 +108,13 @@ function Farms() {
                 <span key={crop} className="rounded-lg bg-[rgba(46,125,50,0.1)] px-4 py-2 text-sm font-bold text-[#2E7D32]">{crop}</span>
               ))}
             </div>
+          </div>
+
+          <div className="card">
+            <h2 className="mb-4 flex items-center gap-3 text-xl font-bold text-[#111827]">
+              <Clock size={24} className="text-[#2E7D32]" /> About {f.name}
+            </h2>
+            <p className="text-sm leading-relaxed text-[#5A7A5A]">{f.description}</p>
           </div>
         </section>
       </AppShell>
