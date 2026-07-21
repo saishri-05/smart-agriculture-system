@@ -58,9 +58,9 @@ function SemiGauge({ value, max, unit, label, color, size = 160 }) {
         <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`} fill="none" stroke={bgColor} strokeWidth="12" strokeLinecap="round" />
         <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`} fill="none" stroke={color} strokeWidth="12" strokeLinecap="round"
           strokeDasharray={circumference} strokeDashoffset={offset} style={{ transition: 'stroke-dashoffset 0.6s ease' }} />
-        <text x={cx} y={cy - 2} textAnchor="middle" fontSize="20" fontWeight="800" fill="#111827">{value}{unit}</text>
+        <text x={cx} y={cy - 2} textAnchor="middle" fontSize="24" fontWeight="800" fill="#111827">{value}{unit}</text>
       </svg>
-      <span className="text-[10px] font-medium text-[#5A7A5A] -mt-1">{label}</span>
+      <span className="text-xs font-medium text-[#5A7A5A] -mt-1">{label}</span>
     </div>
   );
 }
@@ -84,8 +84,8 @@ function SoilGauge({ value, size = 180 }) {
         <circle cx={cx} cy={cy} r={r} fill="none" stroke={color} strokeWidth="14" strokeLinecap="round"
           strokeDasharray={circumference} strokeDashoffset={offset} transform={`rotate(-90 ${cx} ${cy})`}
           style={{ transition: 'stroke-dashoffset 0.6s ease' }} />
-        <text x={cx} y={cy - 4} textAnchor="middle" fontSize="28" fontWeight="800" fill="#111827">{value}%</text>
-        <text x={cx} y={cy + 16} textAnchor="middle" fontSize="10" fontWeight="600" fill="#5A7A5A">{soilLabel(value)}</text>
+        <text x={cx} y={cy - 4} textAnchor="middle" fontSize="32" fontWeight="800" fill="#111827">{value}%</text>
+        <text x={cx} y={cy + 16} textAnchor="middle" fontSize="12" fontWeight="600" fill="#5A7A5A">{soilLabel(value)}</text>
       </svg>
     </div>
   );
@@ -262,7 +262,7 @@ export default function SensorsDetails() {
                     <p className="text-sm font-bold text-[#111827]">
                       {readings.wifiLocation.lat.toFixed(4)}, {readings.wifiLocation.lng.toFixed(4)}
                     </p>
-                    <p className="mt-1 text-[10px] text-[#5A7A5A]">{readings.wifiLocation.label}</p>
+                    <p className="mt-1 text-xs text-[#5A7A5A]">{readings.wifiLocation.label}</p>
                   </div>
                 </div>
               ) : (
@@ -371,34 +371,34 @@ export default function SensorsDetails() {
                 ) : readings ? (
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-semibold text-[#5A7A5A] uppercase tracking-wider">DHT11</span>
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm font-bold" style={{ color: tempColor(readings.dht11.temperature) }}>
-                          <Thermometer size={14} className="mr-0.5 inline" />{readings.dht11.temperature}°C
-                        </span>
-                        <span className="text-sm font-bold" style={{ color: humidityColor(readings.dht11.humidity) }}>
-                          <Droplets size={14} className="mr-0.5 inline" />{readings.dht11.humidity}%
-                        </span>
-                      </div>
+                    <span className="text-xs font-semibold text-[#5A7A5A] uppercase tracking-wider">DHT11</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm font-bold" style={{ color: tempColor(readings.dht11.temperature) }}>
+                        <Thermometer size={14} className="mr-0.5 inline" />{readings.dht11.temperature}°C
+                      </span>
+                      <span className="text-sm font-bold" style={{ color: humidityColor(readings.dht11.humidity) }}>
+                        <Droplets size={14} className="mr-0.5 inline" />{readings.dht11.humidity}%
+                      </span>
                     </div>
-                    <div>
-                      <div className="mb-1.5 flex items-center justify-between">
-                        <span className="text-[10px] font-semibold text-[#5A7A5A] uppercase tracking-wider">Soil Moisture</span>
-                        <span className="text-xs font-bold" style={{ color: soilColor(readings.soilMoisture) }}>{readings.soilMoisture}%</span>
-                      </div>
-                      <div className="h-2 rounded-full bg-[rgba(0,0,0,0.06)]">
-                        <div className="h-full rounded-full transition-all" style={{ width: `${readings.soilMoisture}%`, background: soilColor(readings.soilMoisture) }} />
-                      </div>
-                      <div className="mt-1 text-[10px] font-medium" style={{ color: soilColor(readings.soilMoisture) }}>{soilLabel(readings.soilMoisture)}</div>
+                  </div>
+                  <div>
+                    <div className="mb-1.5 flex items-center justify-between">
+                      <span className="text-xs font-semibold text-[#5A7A5A] uppercase tracking-wider">Soil Moisture</span>
+                      <span className="text-sm font-bold" style={{ color: soilColor(readings.soilMoisture) }}>{readings.soilMoisture}%</span>
                     </div>
-                    <div className="flex items-center gap-1.5 pt-2">
-                      <MapPin size={13} className="text-[#5A7A5A]" />
-                      <span className="text-[10px] text-[#5A7A5A]">({readings.wifiLocation.lat.toFixed(2)}, {readings.wifiLocation.lng.toFixed(2)})</span>
+                    <div className="h-2 rounded-full bg-[rgba(0,0,0,0.06)]">
+                      <div className="h-full rounded-full transition-all" style={{ width: `${readings.soilMoisture}%`, background: soilColor(readings.soilMoisture) }} />
+                    </div>
+                    <div className="mt-1 text-xs font-medium" style={{ color: soilColor(readings.soilMoisture) }}>{soilLabel(readings.soilMoisture)}</div>
+                  </div>
+                  <div className="flex items-center gap-1.5 pt-2">
+                    <MapPin size={14} className="text-[#5A7A5A]" />
+                    <span className="text-xs text-[#5A7A5A]">({readings.wifiLocation.lat.toFixed(2)}, {readings.wifiLocation.lng.toFixed(2)})</span>
                     </div>
                   </div>
                 ) : (
                   <div className="flex h-[120px] items-center justify-center">
-                    <span className="text-[11px] text-[#5A7A5A]">No sensor data</span>
+                    <span className="text-sm text-[#5A7A5A]">No sensor data</span>
                   </div>
                 )}
               </div>
