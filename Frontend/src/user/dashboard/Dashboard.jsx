@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Bell, Bot, CheckCircle2, Clock, Droplets, Leaf, MapPin, Sprout, Thermometer } from "lucide-react";
+import { Bell, Bot, CheckCircle2, Clock, Droplets, Leaf, MapPin, Sprout, Thermometer, Cloud } from "lucide-react";
 import AppShell from "../components/AppShell";
 
 const recentActivity = [
@@ -195,15 +195,23 @@ function Dashboard() {
             <span className="rounded-xl bg-[rgba(46,125,50,0.15)] p-2.5 md:p-3 text-[#2E7D32]"><Leaf size={28} /></span>
             <div>
               <h2 className="text-lg md:text-xl font-bold text-[#111827]">Daily Field Readings</h2>
-              <p className="text-sm text-[#5A7A5A]">Temperature and soil moisture levels</p>
+              <p className="text-sm text-[#5A7A5A]">Temperature, humidity and soil moisture levels</p>
             </div>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-3">
             <div className="flex items-center gap-3 md:gap-4 rounded-lg bg-orange-50 p-4 md:p-5">
               <span className="rounded-lg bg-orange-500 p-2.5 md:p-3 text-white"><Thermometer size={22} /></span>
               <div>
                 <p className="font-semibold text-orange-700">Temperature</p>
                 <p className="text-2xl md:text-3xl font-black">28&deg;C</p>
+                <p className="text-xs md:text-sm text-[#5A7A5A]">Daily average</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 md:gap-4 rounded-lg bg-teal-50 p-4 md:p-5">
+              <span className="rounded-lg bg-teal-600 p-2.5 md:p-3 text-white"><Cloud size={22} /></span>
+              <div>
+                <p className="font-semibold text-teal-700">Humidity</p>
+                <p className="text-2xl md:text-3xl font-black">72%</p>
                 <p className="text-xs md:text-sm text-[#5A7A5A]">Daily average</p>
               </div>
             </div>
