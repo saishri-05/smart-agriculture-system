@@ -1,4 +1,4 @@
-
+import { QRCodeSVG } from "qrcode.react";
 import { Activity, Battery, Bot, Eye, Link as LinkIcon, MapPin, XCircle } from "lucide-react";
 import AppShell from "../components/AppShell";
 
@@ -17,29 +17,11 @@ const statusStyle = {
   maintenance: "badge-warning",
 };
 
-const scannerColors = [
-  { ring: "#2E7D32", scan: "rgba(46,125,50,0.3)", bg: "#E8F5E9" },
-  { ring: "#2563EB", scan: "rgba(37,99,235,0.3)", bg: "#EFF6FF" },
-  { ring: "#D97706", scan: "rgba(217,119,6,0.3)", bg: "#FFFBEB" },
-  { ring: "#7C3AED", scan: "rgba(124,58,237,0.3)", bg: "#F5F3FF" },
-  { ring: "#DC2626", scan: "rgba(220,38,38,0.3)", bg: "#FEF2F2" },
-];
-
-const robotIdIndex = (id) => parseInt(id.slice(-1), 10) % 5;
-
-function RobotScanner({ robotId, size = 48 }) {
-  const c = scannerColors[robotIdIndex(robotId)];
-  const s = size, t = size * 0.28;
+function RobotQR({ robotId, size = 48 }) {
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${s} ${s}`} className="shrink-0">
-      <rect x={1} y={1} width={s - 2} height={s - 2} rx={4} fill={c.bg} />
-      <rect x={t} y={s * 0.22} width={s - t * 2} height={s * 0.14} rx={1.5} fill={c.ring} opacity="0.15" />
-      <rect x={t} y={s * 0.55} width={s - t * 2} height={s * 0.14} rx={1.5} fill={c.ring} opacity="0.15" />
-      <rect x={s * 0.35} y={s * 0.38} width={s * 0.08} height={s * 0.08} rx={1} fill={c.ring} opacity="0.25" />
-      <rect x={s * 0.46} y={s * 0.38} width={s * 0.08} height={s * 0.08} rx={1} fill={c.ring} opacity="0.25" />
-      <rect x={s * 0.57} y={s * 0.38} width={s * 0.08} height={s * 0.08} rx={1} fill={c.ring} opacity="0.25" />
-      <text x={s / 2} y={s * 0.88} textAnchor="middle" fontSize={s * 0.17} fontWeight="800" fill={c.ring}>{robotId.slice(-3)}</text>
-    </svg>
+    <div className="shrink-0 overflow-hidden rounded-lg border border-[#DDE8DD] bg-white p-1">
+      <QRCodeSVG value={`https://smartagri.app/robot/${robotId}`} size={size - 8} />
+    </div>
   );
 }
 
@@ -95,7 +77,7 @@ function Robots() {
                     <td className="font-semibold">{robot.id}</td>
                     <td>
                       <div className="flex items-center gap-4">
-                        <RobotScanner robotId={robot.id} size={48} />
+                        <RobotQR robotId={robot.id} size={48} />
                         <div>
                           <p className="text-lg font-black">{robot.id}</p>
                           <p className="text-[#5A7A5A]">{robot.lastSeen}</p>
