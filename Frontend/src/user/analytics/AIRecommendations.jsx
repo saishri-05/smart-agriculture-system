@@ -340,7 +340,7 @@ function AIRecommendations() {
                   </div>
                   <button onClick={() => completeTask(t.id)}
                     className="btn btn-primary shrink-0 text-xs">
-                    <CheckCircle2 size={16} className="mr-1" /> Complete
+                    <CheckCircle2 size={16} className="mr-1" /> Completed
                   </button>
                 </div>
               ))}
