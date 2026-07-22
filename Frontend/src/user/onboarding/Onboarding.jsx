@@ -432,12 +432,6 @@ function Onboarding() {
     setSelectedTemplate("");
   }
 
-  function handleRemoveFarm(index) {
-    if (farms.length <= 1) return;
-    setFarms(prev => prev.filter((_, i) => i !== index));
-    setActiveFarmIndex(prev => Math.max(0, prev >= index ? prev - 1 : prev));
-  }
-
   function isValid(s) {
     if (s === 0) return !!(form.farmerName.trim() && form.phone.trim() && form.region.trim());
     if (s === 1) return !!(form.farmName.trim() && form.farmArea.trim() && form.crop && form.soil);
@@ -472,7 +466,7 @@ function Onboarding() {
     if (Object.keys(errs).length === 0) setStep(s => s + 1);
   }
 
-  function goBack() { saveAndGo(); }
+  function goBack() { setStep(s => Math.max(0, s - 1)); }
 
   function handleTemplateSelect(val) {
     setSelectedTemplate(val);
@@ -697,101 +691,35 @@ function Onboarding() {
           </div>
         )}
 
-        <div className="card">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-[#111827]">
-              {activeFarm.farmName || "Farm " + (activeFarmIndex + 1)}
-            </h3>
-            {farms.length > 1 && (
-              <button onClick={() => handleRemoveFarm(activeFarmIndex)}
-                className="btn btn-danger btn-sm">
-                <Trash2 size={14} /> Remove Farm
-              </button>
-            )}
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-4">
-            <div>
-              <label className="label">Farm Name</label>
-              <input value={activeFarm.farmName || ""}
-                onChange={e => updateFarm(activeFarmIndex, "farmName", e.target.value)}
-                className="input" placeholder={"Farm " + (activeFarmIndex + 1)} />
-            </div>
-            <div>
-              <label className="label">Latitude</label>
-              <input value={activeFarm.lat || ""}
-                onChange={e => updateFarm(activeFarmIndex, "lat", e.target.value)}
-                className="input" placeholder="Auto from boundary" disabled={!!activeFarm.boundary} />
-            </div>
-            <div>
-              <label className="label">Longitude</label>
-              <input value={activeFarm.lng || ""}
-                onChange={e => updateFarm(activeFarmIndex, "lng", e.target.value)}
-                className="input" placeholder="Auto from boundary" disabled={!!activeFarm.boundary} />
-            </div>
-            <div>
-              <label className="label">Calculated Area</label>
-              <div className="input bg-slate-50 text-[#111827] font-semibold truncate">
-                {activeArea ? activeArea.acres + " ac (" + activeArea.hectares + " ha, " + activeArea.sqMeters.toLocaleString() + " m\xB2)" : "\u2014"}
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-4 rounded-lg border border-slate-100 bg-slate-50 px-4 py-3">
-            <div className="flex items-center gap-2 mb-2">
-              <MapPin size={14} className="text-[#2E7D32]" />
-              <span className="text-xs font-semibold text-[#5A7A5A] uppercase tracking-wide">All Registered Farms</span>
-            </div>
-            <div className="grid gap-1.5">
-              {farms.map((farm, idx) => {
-                const a = farm.boundary ? calcArea(farm.boundary) : null;
-                const isActiveFarm = idx === activeFarmIndex;
-                return (
-                  <div key={farm.id} className={"flex items-center justify-between rounded-lg px-3 py-2 text-sm " + (isActiveFarm ? "bg-white border border-[#2E7D32]/30" : "bg-white border border-slate-100")}>
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className={"w-2 h-2 rounded-full shrink-0 " + (farm.boundary && farm.boundary.length >= 3 ? "bg-[#2E7D32]" : "bg-slate-300")} />
-                      <span className="font-semibold text-[#111827] truncate">{farm.farmName || "Farm " + (idx + 1)}</span>
-                      {a && <span className="text-xs text-[#5A7A5A] whitespace-nowrap">{a.acres} ac</span>}
-                    </div>
-                    <div className="flex items-center gap-3 shrink-0 ml-2">
-                      <span className="text-xs text-[#5A7A5A]">{farm.boundary ? farm.boundary.length + " pts" : "No boundary"}</span>
-                      <span className={"text-xs font-semibold " + (farm.boundary && farm.boundary.length >= 3 ? "text-[#2E7D32]" : "text-amber-500")}>
-                        {farm.boundary && farm.boundary.length >= 3 ? "Ready" : "Incomplete"}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {activeFarm.boundary && activeFarm.boundary.length > 0 && (
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-[#5A7A5A]">
-                  Boundary Points ({activeFarm.boundary.length})
-                </span>
+        {activeFarm.boundary && activeFarm.boundary.length > 0 && (
+          <div className="rounded-lg border border-[#2E7D32]/20 bg-[#2E7D32]/5 px-4 py-3">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold text-[#5A7A5A] uppercase tracking-wide">
+                Boundary Points ({activeFarm.boundary.length})
+              </span>
+              <div className="flex items-center gap-2">
+                {activeArea && <span className="text-xs font-semibold text-[#2E7D32]">{activeArea.acres} ac</span>}
                 <button onClick={() => updateFarm(activeFarmIndex, "boundary", null)}
                   className="text-xs font-semibold text-red-500 hover:text-red-700 transition">
-                  Clear Boundary
+                  Clear
                 </button>
               </div>
-              <div className="grid gap-1.5 sm:grid-cols-2">
-                {activeFarm.boundary.map((coord, i) => (
-                  <div key={i} className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2">
-                    <span className="text-xs text-[#5A7A5A]">
-                      <span className="font-semibold text-[#111827]">P{i + 1}:</span> {coord[0]}, {coord[1]}
-                    </span>
-                    <button onClick={() => removeBoundaryPoint(activeFarmIndex, i)}
-                      className="text-red-400 hover:text-red-600 transition">
-                      <Trash2 size={12} />
-                    </button>
-                  </div>
-                ))}
-              </div>
             </div>
-          )}
-        </div>
+            <div className="grid gap-1.5 sm:grid-cols-2">
+              {activeFarm.boundary.map((coord, i) => (
+                <div key={i} className="flex items-center justify-between rounded-lg border border-slate-100 bg-white px-3 py-2">
+                  <span className="text-xs text-[#5A7A5A]">
+                    <span className="font-semibold text-[#111827]">P{i + 1}:</span> {coord[0]}, {coord[1]}
+                  </span>
+                  <button onClick={() => removeBoundaryPoint(activeFarmIndex, i)}
+                    className="text-red-400 hover:text-red-600 transition">
+                    <Trash2 size={12} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {errors.boundary && <p className="text-sm font-bold text-red-500">{errors.boundary}</p>}
 

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Bell, Bot, CheckCircle2, Clock, Droplets, Leaf, MapPin, Sprout, Thermometer, Cloud } from "lucide-react";
+import { Bot, CheckCircle2, Clock, Droplets, Leaf, MapPin, Sprout, Thermometer, Cloud } from "lucide-react";
 import AppShell from "../components/AppShell";
 
 function sortPointsByAngle(points) {
@@ -12,6 +12,12 @@ function sortPointsByAngle(points) {
   centroid[1] /= points.length;
   return [...points].sort((a, b) => Math.atan2(a[0] - centroid[0], a[1] - centroid[1]) - Math.atan2(b[0] - centroid[0], b[1] - centroid[1]));
 }
+
+const sampleFarms = [
+  { name: "Green Valley", boundary: [[28.6209, 77.215], [28.6269, 77.215], [28.6269, 77.223], [28.6209, 77.223]], area: "18 acres", crop: "Rice" },
+  { name: "Sunny Acres", boundary: [[28.6189, 77.212], [28.6289, 77.212], [28.6289, 77.226], [28.6189, 77.226]], area: "12 acres", crop: "Corn" },
+  { name: "Riverside", boundary: [[28.6209, 77.214], [28.6279, 77.211], [28.6309, 77.22], [28.6259, 77.226], [28.6189, 77.222]], area: "9 acres", crop: "Rice" },
+];
 
 const recentActivity = [
   { action: "Irrigation completed", sector: "Farm 1", time: "1 hour ago", icon: Sprout },
@@ -87,29 +93,44 @@ function Dashboard() {
   const filteredSectors = selectedFarm ? [selectedFarm] : sectors;
 
   useEffect(() => {
-    const stored = localStorage.getItem("onboardingData");
-    if (stored) {
-      try {
+    try {
+      const stored = localStorage.getItem("onboardingData");
+      if (stored) {
         const data = JSON.parse(stored);
         const { form, farms } = data;
         if (farms && farms.length > 0) {
-          const mapped = farms.map((f, i) => ({
-            id: i + 1,
-            name: f.farmName || "Farm " + (i + 1),
-            status: f.boundary && f.boundary.length >= 3 ? "completed" : "pending",
-            area: form.farmArea || "",
-            crop: form.crop || "",
-            color: f.boundary && f.boundary.length >= 3 ? "bg-[#2E7D32]" : "bg-slate-400",
-            mapColor: f.boundary && f.boundary.length >= 3 ? "#2E7D32" : "#94a3b8",
-            coords: f.boundary && f.boundary.length >= 3
+          const mapped = farms.map((f, i) => {
+            const coords = f.boundary && f.boundary.length >= 3
               ? sortPointsByAngle(f.boundary.map(c => [parseFloat(c[0]), parseFloat(c[1])]))
-              : null,
-          }));
+              : null;
+            return {
+              id: i + 1,
+              name: f.farmName || "Farm " + (i + 1),
+              status: coords ? "completed" : "pending",
+              area: form.farmArea || "",
+              crop: form.crop || "",
+              color: coords ? "bg-[#2E7D32]" : "bg-slate-400",
+              mapColor: coords ? "#2E7D32" : "#94a3b8",
+              coords,
+            };
+          });
           setSectors(mapped);
           return;
         }
-      } catch (e) { console.error("Failed to parse onboarding data", e); }
-    }
+      }
+    } catch (e) { console.error("Failed to parse onboarding data", e); }
+
+    const fallback = sampleFarms.map((f, i) => ({
+      id: i + 1,
+      name: f.name,
+      status: "completed",
+      area: f.area,
+      crop: f.crop,
+      color: "bg-[#2E7D32]",
+      mapColor: "#2E7D32",
+      coords: sortPointsByAngle(f.boundary),
+    }));
+    setSectors(fallback);
   }, []);
 
   return (
@@ -263,11 +284,23 @@ function Dashboard() {
                 <FarmSectors sectors={filteredSectors} />
               </MapContainer>
             </div>
-            {selectedFarm && (
-              <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm text-[#5A7A5A]">
-                <span><strong>Area:</strong> {selectedFarm.area || "\u2014"}</span>
-                <span><strong>Crop:</strong> {selectedFarm.crop || "\u2014"}</span>
-                <span><strong>Status:</strong> {selectedFarm.status === "completed" ? "Mapped" : "Pending"}</span>
+            {selectedFarm && selectedFarm.coords && (
+              <div className="mt-4 rounded-lg border border-[#2E7D32]/20 bg-[#2E7D32]/5 px-4 py-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-semibold text-[#5A7A5A] uppercase tracking-wide">
+                    Boundary Points ({selectedFarm.coords.length})
+                  </span>
+                  {selectedFarm.area && <span className="text-xs font-semibold text-[#2E7D32]">{selectedFarm.area}</span>}
+                </div>
+                <div className="grid gap-1.5 sm:grid-cols-2">
+                  {selectedFarm.coords.map((coord, i) => (
+                    <div key={i} className="flex items-center rounded-lg border border-slate-100 bg-white px-3 py-1.5">
+                      <span className="text-xs font-mono text-[#5A7A5A]">
+                        <span className="font-semibold text-[#111827]">P{i + 1}:</span> {coord[0].toFixed(6)}, {coord[1].toFixed(6)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </section>
