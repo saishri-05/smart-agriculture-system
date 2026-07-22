@@ -5,6 +5,14 @@ import "leaflet/dist/leaflet.css";
 import { Bell, Bot, CheckCircle2, Clock, Droplets, Leaf, MapPin, Sprout, Thermometer, Cloud } from "lucide-react";
 import AppShell from "../components/AppShell";
 
+function sortPointsByAngle(points) {
+  if (points.length < 3) return points;
+  const centroid = points.reduce((acc, p) => [acc[0] + p[0], acc[1] + p[1]], [0, 0]);
+  centroid[0] /= points.length;
+  centroid[1] /= points.length;
+  return [...points].sort((a, b) => Math.atan2(a[0] - centroid[0], a[1] - centroid[1]) - Math.atan2(b[0] - centroid[0], b[1] - centroid[1]));
+}
+
 const recentActivity = [
   { action: "Irrigation completed", sector: "Farm 1", time: "1 hour ago", icon: Sprout },
   { action: "Soil sampling done", sector: "Farm 3", time: "3 hours ago", icon: Sprout },
@@ -94,7 +102,7 @@ function Dashboard() {
             color: f.boundary && f.boundary.length >= 3 ? "bg-[#2E7D32]" : "bg-slate-400",
             mapColor: f.boundary && f.boundary.length >= 3 ? "#2E7D32" : "#94a3b8",
             coords: f.boundary && f.boundary.length >= 3
-              ? f.boundary.map(c => [parseFloat(c[0]), parseFloat(c[1])])
+              ? sortPointsByAngle(f.boundary.map(c => [parseFloat(c[0]), parseFloat(c[1])]))
               : null,
           }));
           setSectors(mapped);

@@ -109,7 +109,7 @@ function generateId() {
 
 function calcArea(boundary) {
   if (!boundary || boundary.length < 3) return { sqMeters: 0, acres: 0, hectares: 0 };
-  const pts = boundary.map(c => [parseFloat(c[0]), parseFloat(c[1])]);
+  const pts = sortPointsByAngle(boundary.map(c => [parseFloat(c[0]), parseFloat(c[1])]));
   const sqMeters = L.polygon(pts).getArea();
   return {
     sqMeters: Math.round(sqMeters),
@@ -119,48 +119,68 @@ function calcArea(boundary) {
 }
 
 
-function FarmBoundaryLayer({ farms, activeFarmIndex }) {
+function sortPointsByAngle(points) {
+  if (points.length < 3) return points;
+  const centroid = points.reduce((acc, p) => [acc[0] + p[0], acc[1] + p[1]], [0, 0]);
+  centroid[0] /= points.length;
+  centroid[1] /= points.length;
+  return [...points].sort((a, b) => Math.atan2(a[0] - centroid[0], a[1] - centroid[1]) - Math.atan2(b[0] - centroid[0], b[1] - centroid[1]));
+}
+
+function FarmBoundaryLayer({ farms, activeFarmIndex, form }) {
   const map = useMap();
-  const initialized = useRef(false);
 
   useEffect(() => {
+    if (!farms.some(f => f.boundary && f.boundary.length >= 3)) return;
     const group = new L.FeatureGroup();
 
     farms.forEach((farm, idx) => {
       if (!farm.boundary || farm.boundary.length < 3) return;
-      const pts = farm.boundary.map(c => [parseFloat(c[0]), parseFloat(c[1])]);
+      const pts = sortPointsByAngle(farm.boundary.map(c => [parseFloat(c[0]), parseFloat(c[1])]));
       const isActive = idx === activeFarmIndex;
-      L.polygon(pts, {
+      const area = calcArea(farm.boundary);
+
+      const poly = L.polygon(pts, {
         color: isActive ? "#2E7D32" : "#5A7A5A",
-        weight: isActive ? 3 : 2,
+        weight: isActive ? 4 : 2,
         fillColor: isActive ? "#2E7D32" : "#5A7A5A",
-        fillOpacity: isActive ? 0.2 : 0.1,
+        fillOpacity: isActive ? 0.25 : 0.1,
         dashArray: isActive ? null : "6 4",
-      }).addTo(group);
+      });
+      poly.bindPopup(
+        "<b>" + (farm.farmName || "Farm " + (idx + 1)) + "</b><br/>" +
+        "Area: " + area.acres + " ac (" + area.hectares + " ha)<br/>" +
+        "Points: " + farm.boundary.length + "<br/>" +
+        (form?.crop ? "Crop: " + form.crop : "") +
+        (form?.farmArea ? "<br/>Total Area: " + form.farmArea : "")
+      );
+      poly.addTo(group);
+
+      pts.forEach((c) => {
+        L.circleMarker(c, {
+          radius: 4, color: isActive ? "#2E7D32" : "#5A7A5A", fillColor: "#fff", fillOpacity: 1, weight: 2,
+        }).addTo(group);
+      });
 
       const center = L.polygon(pts).getBounds().getCenter();
       L.marker(center, {
         icon: L.divIcon({
           className: "",
-          html: "<div style=\"background:#2E7D32;color:#fff;font-weight:700;font-size:12px;padding:3px 10px;border-radius:8px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.15)\">" + (farm.farmName || "Farm " + (idx + 1)) + "</div>",
+          html: "<div style=\"background:" + (isActive ? "#2E7D32" : "#5A7A5A") + ";color:#fff;font-weight:700;font-size:12px;padding:3px 10px;border-radius:8px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.15)\">" + (farm.farmName || "Farm " + (idx + 1)) + " (" + area.acres + " ac)</div>",
         }),
       }).addTo(group);
     });
 
     group.addTo(map);
-
-    if (group.getLayers().length > 0 && !initialized.current) {
-      map.fitBounds(group.getBounds().pad(0.2));
-      initialized.current = true;
-    }
+    map.fitBounds(group.getBounds().pad(0.2));
 
     return () => { map.removeLayer(group); };
-  }, [map, farms, activeFarmIndex]);
+  }, [map, farms, activeFarmIndex, form]);
 
   return null;
 }
 
-function DrawInteraction({ farms, setFarms, activeFarmIndex, drawTool, setDrawTool }) {
+function DrawInteraction({ farms, setFarms, activeFarmIndex, drawTool, setDrawTool, onDrawingPoints }) {
   const map = useMap();
   const layerRef = useRef(new L.LayerGroup());
 
@@ -181,15 +201,18 @@ function DrawInteraction({ farms, setFarms, activeFarmIndex, drawTool, setDrawTo
     const renderPreview = () => {
       layer.clearLayers();
       if (tempPoints.length === 0) return;
+      const sorted = tempPoints.length >= 3 ? sortPointsByAngle(tempPoints) : tempPoints;
       tempPoints.forEach((p, i) => {
         L.circleMarker(p, { radius: 6, color: "#2E7D32", fillColor: "#fff", fillOpacity: 1, weight: 3 })
           .bindPopup("Point " + (i + 1) + ": " + p[0].toFixed(4) + ", " + p[1].toFixed(4))
           .addTo(layer);
       });
-      if (tempPoints.length >= 2)
-        L.polyline(tempPoints, { color: "#2E7D32", weight: 2, dashArray: "6 4" }).addTo(layer);
+      if (tempPoints.length >= 2) {
+        const sortedLine = tempPoints.length >= 3 ? sortPointsByAngle(tempPoints) : tempPoints;
+        L.polyline(sortedLine, { color: "#2E7D32", weight: 2, dashArray: "6 4" }).addTo(layer);
+      }
       if (tempPoints.length >= 3)
-        L.polygon(tempPoints, { color: "#2E7D32", weight: 2, fillColor: "#2E7D32", fillOpacity: 0.12 }).addTo(layer);
+        L.polygon(sorted, { color: "#2E7D32", weight: 2, fillColor: "#2E7D32", fillOpacity: 0.12 }).addTo(layer);
     };
 
     const onClick = (e) => {
@@ -197,6 +220,7 @@ function DrawInteraction({ farms, setFarms, activeFarmIndex, drawTool, setDrawTo
       clickTimeout = setTimeout(() => {
         tempPoints.push([e.latlng.lat, e.latlng.lng]);
         renderPreview();
+        if (onDrawingPoints) onDrawingPoints(tempPoints.map(p => [p[0].toFixed(6), p[1].toFixed(6)]));
         clickTimeout = null;
       }, 300);
     };
@@ -204,9 +228,11 @@ function DrawInteraction({ farms, setFarms, activeFarmIndex, drawTool, setDrawTo
     const onDblClick = () => {
       if (clickTimeout) { clearTimeout(clickTimeout); clickTimeout = null; }
       if (tempPoints.length >= 3) {
-        const boundary = tempPoints.map(p => [p[0].toFixed(6), p[1].toFixed(6)]);
+        const sorted = sortPointsByAngle(tempPoints);
+        const boundary = sorted.map(p => [p[0].toFixed(6), p[1].toFixed(6)]);
         setFarms(prev => prev.map((f, i) => i === activeFarmIndex ? { ...f, boundary } : f));
       }
+      if (onDrawingPoints) onDrawingPoints([]);
       tempPoints.length = 0;
       layer.clearLayers();
       map.doubleClickZoom.enable();
@@ -221,8 +247,9 @@ function DrawInteraction({ farms, setFarms, activeFarmIndex, drawTool, setDrawTo
       map.off("dblclick", onDblClick);
       map.doubleClickZoom.enable();
       layer.clearLayers();
+      if (onDrawingPoints) onDrawingPoints([]);
     };
-  }, [map, drawTool, activeFarmIndex, setFarms, setDrawTool]);
+  }, [map, drawTool, activeFarmIndex, setFarms, setDrawTool, onDrawingPoints]);
 
   useEffect(() => {
     layerRef.current.clearLayers();
@@ -238,6 +265,8 @@ function DrawInteraction({ farms, setFarms, activeFarmIndex, drawTool, setDrawTo
     const pts = farm.boundary.map(c => [parseFloat(c[0]), parseFloat(c[1])]);
     const polygon = L.polygon(pts, { color: "#2E7D32", weight: 3, fillColor: "#2E7D32", fillOpacity: 0.15 }).addTo(layer);
     const markers = [];
+
+    if (onDrawingPoints) onDrawingPoints(farm.boundary);
 
     pts.forEach((p, i) => {
       const marker = L.marker(p, {
@@ -257,14 +286,15 @@ function DrawInteraction({ farms, setFarms, activeFarmIndex, drawTool, setDrawTo
       marker.on("dragend", () => {
         const newBoundary = markers.map(m => { const ll = m.getLatLng(); return [ll.lat.toFixed(6), ll.lng.toFixed(6)]; });
         setFarms(prev => prev.map((f, idx) => idx === activeFarmIndex ? { ...f, boundary: newBoundary } : f));
+        if (onDrawingPoints) onDrawingPoints(newBoundary);
       });
 
       marker.addTo(layer);
       markers.push(marker);
     });
 
-    return () => { layer.clearLayers(); };
-  }, [map, drawTool, activeFarmIndex]);
+    return () => { layer.clearLayers(); if (onDrawingPoints) onDrawingPoints([]); };
+  }, [map, drawTool, activeFarmIndex, onDrawingPoints]);
 
   return null;
 }
@@ -359,6 +389,16 @@ function Onboarding() {
   const [drawTool, setDrawTool] = useState(null);
   const [mapLayer, setMapLayer] = useState("street");
   const [selectedTemplate, setSelectedTemplate] = useState("");
+  const [drawingPoints, setDrawingPoints] = useState([]);
+
+  useEffect(() => {
+    const farm = farms[activeFarmIndex];
+    if (!drawTool && farm?.boundary && farm.boundary.length > 0) {
+      setDrawingPoints(farm.boundary);
+    } else if (!drawTool) {
+      setDrawingPoints([]);
+    }
+  }, [activeFarmIndex, farms, drawTool]);
   const [form, setForm] = useState({
     farmerName: "", phone: "", region: "", farmName: "", farmArea: "", crop: "", soil: "",
   });
@@ -439,7 +479,8 @@ function Onboarding() {
     if (!val) return;
     const template = predefinedBoundaries[parseInt(val)];
     if (template) {
-      const coords = template.coords.map(c => [c[0].toFixed(6), c[1].toFixed(6)]);
+      const sorted = sortPointsByAngle(template.coords);
+      const coords = sorted.map(c => [c[0].toFixed(6), c[1].toFixed(6)]);
       updateFarm(activeFarmIndex, "boundary", coords);
       setDrawTool(null);
     }
@@ -623,9 +664,9 @@ function Onboarding() {
         <div className="relative h-[480px] overflow-hidden rounded-xl border border-slate-200 shadow-md">
           <MapContainer center={[28.6239, 77.219]} zoom={14} className="h-full w-full">
             <TileLayer key={mapLayer} url={LAYER_CONFIGS[mapLayer].url} attribution={LAYER_CONFIGS[mapLayer].attribution} />
-            <FarmBoundaryLayer farms={farms} activeFarmIndex={activeFarmIndex} />
+            <FarmBoundaryLayer farms={farms} activeFarmIndex={activeFarmIndex} form={form} />
             <DrawInteraction farms={farms} setFarms={setFarms} activeFarmIndex={activeFarmIndex}
-              drawTool={drawTool} setDrawTool={setDrawTool} />
+              drawTool={drawTool} setDrawTool={setDrawTool} onDrawingPoints={setDrawingPoints} />
             <FloatingToolbar drawTool={drawTool} setDrawTool={setDrawTool}
               farms={farms} setFarms={setFarms} activeFarmIndex={activeFarmIndex}
               mapLayer={mapLayer} setMapLayer={setMapLayer} />
@@ -638,6 +679,23 @@ function Onboarding() {
           {drawTool === "edit" && "Drag the green handles to adjust boundary points."}
           {!drawTool && "Select a drawing tool above to define your farm boundary."}
         </p>
+
+        {drawingPoints.length > 0 && (
+          <div className="rounded-lg border border-[#2E7D32]/20 bg-[#2E7D32]/5 px-4 py-3">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold text-[#5A7A5A] uppercase tracking-wide">
+                Drawing Points ({drawingPoints.length})
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-x-4 gap-y-1">
+              {drawingPoints.map((coord, i) => (
+                <span key={i} className="text-xs font-mono text-[#111827]">
+                  <span className="font-bold text-[#2E7D32]">P{i + 1}</span>: {coord[0]}, {coord[1]}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="card">
           <div className="flex items-center justify-between mb-4">
@@ -676,6 +734,34 @@ function Onboarding() {
               <div className="input bg-slate-50 text-[#111827] font-semibold truncate">
                 {activeArea ? activeArea.acres + " ac (" + activeArea.hectares + " ha, " + activeArea.sqMeters.toLocaleString() + " m\xB2)" : "\u2014"}
               </div>
+            </div>
+          </div>
+
+          <div className="mb-4 rounded-lg border border-slate-100 bg-slate-50 px-4 py-3">
+            <div className="flex items-center gap-2 mb-2">
+              <MapPin size={14} className="text-[#2E7D32]" />
+              <span className="text-xs font-semibold text-[#5A7A5A] uppercase tracking-wide">All Registered Farms</span>
+            </div>
+            <div className="grid gap-1.5">
+              {farms.map((farm, idx) => {
+                const a = farm.boundary ? calcArea(farm.boundary) : null;
+                const isActiveFarm = idx === activeFarmIndex;
+                return (
+                  <div key={farm.id} className={"flex items-center justify-between rounded-lg px-3 py-2 text-sm " + (isActiveFarm ? "bg-white border border-[#2E7D32]/30" : "bg-white border border-slate-100")}>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className={"w-2 h-2 rounded-full shrink-0 " + (farm.boundary && farm.boundary.length >= 3 ? "bg-[#2E7D32]" : "bg-slate-300")} />
+                      <span className="font-semibold text-[#111827] truncate">{farm.farmName || "Farm " + (idx + 1)}</span>
+                      {a && <span className="text-xs text-[#5A7A5A] whitespace-nowrap">{a.acres} ac</span>}
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0 ml-2">
+                      <span className="text-xs text-[#5A7A5A]">{farm.boundary ? farm.boundary.length + " pts" : "No boundary"}</span>
+                      <span className={"text-xs font-semibold " + (farm.boundary && farm.boundary.length >= 3 ? "text-[#2E7D32]" : "text-amber-500")}>
+                        {farm.boundary && farm.boundary.length >= 3 ? "Ready" : "Incomplete"}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 

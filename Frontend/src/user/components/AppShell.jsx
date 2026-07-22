@@ -20,18 +20,19 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 const navItems = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/analytics", label: "Analytics", icon: BarChart3 },
-  { to: "/sensors-details", label: "Sensors Details", icon: Cpu },
-  { to: "/farms", label: "Farms", icon: Sprout },
-  { to: "/robots", label: "Robots", icon: Bot },
-  { to: "/robot-assignment", label: "Robot Assignment", icon: LinkIcon },
-  { to: "/ai-recommendations", label: "AI Recommendations", icon: Brain },
-  { to: "/historical-data", label: "Historical Data", icon: ChartColumn },
-  { to: "/alerts", label: "Alerts", icon: Bell, count: 4 },
-  { to: "/settings", label: "Settings", icon: Settings },
+  { to: "/dashboard", label: "Dashboard", tKey: "nav.dashboard", icon: LayoutDashboard },
+  { to: "/analytics", label: "Analytics", tKey: "nav.analytics", icon: BarChart3 },
+  { to: "/sensors-details", label: "Sensors Details", tKey: "nav.sensors", icon: Cpu },
+  { to: "/farms", label: "Farms", tKey: "nav.farms", icon: Sprout },
+  { to: "/robots", label: "Robots", tKey: "nav.robots", icon: Bot },
+  { to: "/robot-assignment", label: "Robot Assignment", tKey: "nav.robotAssignment", icon: LinkIcon },
+  { to: "/ai-recommendations", label: "AI Recommendations", tKey: "nav.aiRecommendations", icon: Brain },
+  { to: "/historical-data", label: "Historical Data", tKey: "nav.historicalData", icon: ChartColumn },
+  { to: "/alerts", label: "Alerts", tKey: "nav.alerts", icon: Bell, count: 4 },
+  { to: "/settings", label: "Settings", tKey: "nav.settings", icon: Settings },
 ];
 
 const searchData = [
@@ -63,12 +64,15 @@ const searchData = [
 function AppShell({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { lang, setLang, t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const profileRef = useRef(null);
   const searchRef = useRef(null);
+  const langRef = useRef(null);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -77,6 +81,9 @@ function AppShell({ children }) {
       }
       if (searchRef.current && !searchRef.current.contains(e.target)) {
         setSearchOpen(false);
+      }
+      if (langRef.current && !langRef.current.contains(e.target)) {
+        setLangOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -111,7 +118,7 @@ function AppShell({ children }) {
           </button>
           <Link to="/dashboard" className="flex items-center gap-2 text-lg font-bold text-[#111827]">
             <Sprout size={24} className="text-[#2E7D32]" />
-            <span className="hidden sm:inline">Smart Agriculture</span>
+            <span className="hidden sm:inline">{t("app.name")}</span>
           </Link>
         </div>
 
@@ -124,7 +131,7 @@ function AppShell({ children }) {
                 onChange={(e) => { setSearchQuery(e.target.value); setSearchOpen(true); }}
                 onFocus={() => searchQuery.trim() && setSearchOpen(true)}
                 className="h-9 w-48 rounded-lg border border-[#DDE8DD] bg-white/80 pl-9 pr-3 text-sm text-[#111827] outline-none transition placeholder:text-[#9CA3AF] focus:border-[#2E7D32] lg:w-56"
-                placeholder="Search..."
+                placeholder={t("search.placeholder")}
               />
               {searchOpen && searchResults.length > 0 && (
                 <div className="absolute left-0 right-0 top-full mt-1.5 overflow-hidden rounded-xl border border-[#DDE8DD] bg-white shadow-lg">
@@ -147,7 +154,7 @@ function AppShell({ children }) {
 
           <div className="hidden md:flex items-center gap-1 px-3 py-1 rounded-lg bg-[#F3F7F3] text-xs font-semibold text-[#5A7A5A]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] mr-1.5" />
-            Online
+            {t("status.online")}
           </div>
 
           <Link
@@ -160,9 +167,24 @@ function AppShell({ children }) {
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-1 px-3 py-1 rounded-lg bg-[#F3F7F3] text-xs font-semibold text-[#5A7A5A]">
-            <Globe size={14} />
-            EN
+          <div className="relative hidden md:block" ref={langRef}>
+            <button onClick={() => setLangOpen(!langOpen)}
+              className="flex items-center gap-1 px-3 py-1 rounded-lg bg-[#F3F7F3] text-xs font-semibold text-[#5A7A5A] hover:bg-[#E8F0E8] transition">
+              <Globe size={14} />
+              {lang === "en" ? "EN" : "JP"}
+            </button>
+            {langOpen && (
+              <div className="absolute right-0 top-full mt-1.5 w-28 overflow-hidden rounded-xl border border-[#DDE8DD] bg-white shadow-lg">
+                <button onClick={() => { setLang("en"); setLangOpen(false); }}
+                  className={"flex w-full items-center gap-2 px-3 py-2 text-xs font-semibold transition hover:bg-[#F3F7F3] " + (lang === "en" ? "text-[#2E7D32]" : "text-[#5A7A5A]")}>
+                  EN &mdash; English
+                </button>
+                <button onClick={() => { setLang("ja"); setLangOpen(false); }}
+                  className={"flex w-full items-center gap-2 px-3 py-2 text-xs font-semibold transition hover:bg-[#F3F7F3] " + (lang === "ja" ? "text-[#2E7D32]" : "text-[#5A7A5A]")}>
+                  JP &mdash; 日本語
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="relative" ref={profileRef}>
@@ -179,13 +201,13 @@ function AppShell({ children }) {
                     onClick={() => { navigate("/settings"); setProfileOpen(false); }}
                     className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold text-[#111827] transition hover:bg-[#F3F7F3]"
                   >
-                    <User size={16} /> My Profile
+                    <User size={16} /> {t("profile.myProfile")}
                   </button>
                   <button
                     onClick={() => { navigate("/login"); setProfileOpen(false); }}
                     className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold text-[#EF4444] transition hover:bg-[rgba(239,68,68,0.06)]"
                   >
-                    <LogOut size={16} /> Logout
+                    <LogOut size={16} /> {t("profile.logout")}
                   </button>
                 </div>
               </div>
@@ -204,8 +226,8 @@ function AppShell({ children }) {
                 JD
               </span>
               <div>
-                <p className="font-bold text-[#111827]">John Doe</p>
-                <p className="text-sm text-[#5A7A5A]">Farm Owner</p>
+                <p className="font-bold text-[#111827]">{t("profile.name")}</p>
+                <p className="text-sm text-[#5A7A5A]">{t("profile.role")}</p>
               </div>
             </div>
             <div className="space-y-1 pb-6">
@@ -223,7 +245,7 @@ function AppShell({ children }) {
                     }`}
                   >
                     <item.icon size={20} />
-                    <span className="flex-1">{item.label}</span>
+                    <span className="flex-1">{t(item.tKey)}</span>
                     {item.count ? (
                       <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#EF4444] px-1.5 text-xs font-bold text-white">
                         {item.count}
@@ -245,8 +267,8 @@ function AppShell({ children }) {
               <Sprout size={20} className="text-white" />
             </div>
             <div>
-              <p className="text-sm font-bold text-white">Smart Agri</p>
-              <p className="text-[10px] text-white/50">IoT & AI Farming</p>
+              <p className="text-sm font-bold text-white">{t("app.name")}</p>
+              <p className="text-[10px] text-white/50">{t("app.tagline")}</p>
             </div>
           </div>
         </div>
@@ -261,7 +283,7 @@ function AppShell({ children }) {
                 className={`sidebar-link ${active ? "sidebar-link-active" : ""}`}
               >
                 <item.icon className="sidebar-link-icon" size={20} />
-                <span>{item.label}</span>
+                <span>{t(item.tKey)}</span>
                 {item.count ? (
                   <span className="sidebar-link-badge">{item.count}</span>
                 ) : null}
@@ -274,8 +296,8 @@ function AppShell({ children }) {
           <div className="sidebar-profile">
             <div className="sidebar-profile-avatar">JD</div>
             <div className="sidebar-profile-info">
-              <p className="sidebar-profile-name">John Doe</p>
-              <p className="sidebar-profile-role">Farm Owner</p>
+              <p className="sidebar-profile-name">{t("profile.name")}</p>
+              <p className="sidebar-profile-role">{t("profile.role")}</p>
             </div>
           </div>
         </div>

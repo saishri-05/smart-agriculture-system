@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { RobotProvider } from "../context/RobotContext";
+import { LanguageProvider } from "../context/LanguageContext";
 import Home from "../user/home/Home";
 import Login from "../user/pages/Login";
 import Onboarding from "../user/onboarding/Onboarding";
@@ -24,6 +25,7 @@ function UserRoutes() {
 
   return (
     <BrowserRouter>
+      <LanguageProvider>
       <RobotProvider>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -42,6 +44,7 @@ function UserRoutes() {
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
       </RobotProvider>
+      </LanguageProvider>
     </BrowserRouter>
   );
 }
